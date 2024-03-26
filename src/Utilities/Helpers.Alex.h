@@ -183,7 +183,7 @@ namespace Helpers {
 			DistinctCollector<TechnoClass*> set;
 
 			// the quick way. only look at stuff residing on the very cells we are affecting.
-			auto const cellCoords = MapClass::Instance->GetCellAt(coords)->MapCoords;
+			auto const cellCoords = MapClass::Instance->GetCellAt(coords)->Position;
 			auto const range = static_cast<size_t>(spread + 0.99);
 			for (CellSpreadEnumerator it(range); it; ++it) {
 				auto const pCell = MapClass::Instance->GetCellAt(*it + cellCoords);

@@ -67,7 +67,7 @@ DEFINE_HOOK(0x5213B4, InfantryClass_AIDeployment_CheckRad, 0x7)
 		auto const pWeaponExt = WeaponTypeExt::ExtMap.Find(pWeapon);
 		auto const pRadType = pWeaponExt->RadType;
 		auto const warhead = pWeapon->Warhead;
-		auto currentCoord = pInf->GetCell()->MapCoords;
+		auto currentCoord = pInf->GetCell()->Position;
 
 		auto const it = std::find_if(RadSiteExt::ExtMap.begin(), RadSiteExt::ExtMap.end(),
 			[=](std::pair<RadSiteClass* const, RadSiteExt::ExtData* const> const& pair)
@@ -187,7 +187,7 @@ DEFINE_HOOK(0x4DA59F, FootClass_AI_Radiation, 0x5)
 	if (!pFoot->IsIronCurtained() && pFoot->IsInPlayfield && !pFoot->TemporalTargetingMe &&
 		(!RulesExt::Global()->UseGlobalRadApplicationDelay || Unsorted::CurrentFrame % radDelay == 0))
 	{
-		CellStruct CurrentCoord = pFoot->GetCell()->MapCoords;
+		CellStruct CurrentCoord = pFoot->GetCell()->Position;
 
 		// Loop for each different radiation stored in the RadSites container
 		for (auto& [pRadSite, pRadExt] : RadSiteExt::ExtMap)

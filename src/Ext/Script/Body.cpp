@@ -1260,8 +1260,8 @@ void ScriptExt::ChronoshiftTeamToTarget(TeamClass* pTeam, TechnoClass* pTeamLead
 
 	if (pTargetCell)
 	{
-		pOwner->Fire_SW(pSuperChronosphere->Type->ArrayIndex, pTeam->SpawnCell->MapCoords);
-		pOwner->Fire_SW(pSuperChronowarp->Type->ArrayIndex, pTargetCell->MapCoords);
+		pOwner->Fire_SW(pSuperChronosphere->Type->ArrayIndex, pTeam->SpawnCell->Position);
+		pOwner->Fire_SW(pSuperChronowarp->Type->ArrayIndex, pTargetCell->Position);
 		pTeam->AssignMissionTarget(pTargetCell);
 		ScriptExt::Log(logTextJump, "Finished successfully");
 	}

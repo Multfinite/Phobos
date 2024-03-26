@@ -111,7 +111,7 @@ DEFINE_HOOK(0x6D528A, TacticalClass_DrawPlacement_PlacementPreview, 0x6)
 			CoordStruct offset = pTypeExt->PlacementPreview_Offset;
 			int nHeight = offset.Z + pCell->GetFloorHeight({ 0, 0 });
 			Point2D nPoint = TacticalClass::Instance->CoordsToClient(
-				CellClass::Cell2Coord(pCell->MapCoords, nHeight)
+				CellClass::Cell2Coord(pCell->Position, nHeight)
 			).first;
 			nPoint.X += offset.X;
 			nPoint.Y += offset.Y;

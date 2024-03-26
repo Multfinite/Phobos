@@ -104,7 +104,7 @@ DEFINE_HOOK(0x48381D, CellClass_SpreadTiberium_CellSpread, 0x6)
 		for (unsigned int i = 0; i < size; i++)
 		{
 			unsigned int cellIndex = (i + rand) % size;
-			CellStruct tgtPos = pThis->MapCoords + adjacentCells[cellIndex];
+			CellStruct tgtPos = pThis->Position + adjacentCells[cellIndex];
 			CellClass* tgtCell = MapClass::Instance->GetCellAt(tgtPos);
 
 			if (tgtCell && tgtCell->CanTiberiumGerminate(pTib))

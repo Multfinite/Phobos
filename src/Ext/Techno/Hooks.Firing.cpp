@@ -421,7 +421,7 @@ DEFINE_HOOK(0x6FE19A, TechnoClass_FireAt_AreaFire, 0x6)
 			{
 				int rand = ScenarioClass::Instance->Random.RandomRanged(0, size - 1);
 				unsigned int cellIndex = (i + rand) % size;
-				CellStruct tgtPos = pCell->MapCoords + adjacentCells[cellIndex];
+				CellStruct tgtPos = pCell->Position + adjacentCells[cellIndex];
 				CellClass* tgtCell = MapClass::Instance->GetCellAt(tgtPos);
 				bool allowBridges = tgtCell && tgtCell->ContainsBridge() && (pThis->OnBridge || tgtCell->Level + CellClass::BridgeLevels == pThis->GetCell()->Level);
 

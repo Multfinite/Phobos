@@ -571,7 +571,7 @@ DEFINE_HOOK(0x56BD8B, MapClass_PlaceRandomCrate_Sampling, 0x5)
 		return SkipSpawn;
 
 	REF_STACK(CellStruct, cell, STACK_OFFSET(0x28, -0x18));
-	cell = MapClass::Instance->NearByLocation(pCell->MapCoords,
+	cell = MapClass::Instance->NearByLocation(pCell->Position,
 		isWater ? SpeedType::Float : SpeedType::Track,
 		-1, MovementZone::Normal, false, 1, 1, false, false, false, true, CellStruct::Empty, false, false);
 

@@ -31,6 +31,8 @@ const wchar_t* Phobos::VersionDescription = L"Phobos development build #" _STR(B
 //const wchar_t* Phobos::VersionDescription = L"Phobos release build v" FILE_VERSION_STR L".";
 #endif
 
+// Run without exception handler?
+DEFINE_PATCH_TYPED(bool, 0xA8F7AC, false)
 
 void Phobos::CmdLineParse(char** ppArgs, int nNumArgs)
 {
