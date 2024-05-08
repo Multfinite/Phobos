@@ -188,6 +188,9 @@ public:
 		Nullable<Leptons> SpawnDistanceFromTarget;
 		Nullable<int> SpawnHeight;
 		Nullable<int> LandingDir;
+		
+		Valueable<bool> AlwaysBeInAir;
+		Valueable<bool> AlwaysBeInAir_StayGrounded;
 
 		Valueable<TechnoTypeClass*> Convert_HumanToComputer;
 		Valueable<TechnoTypeClass*> Convert_ComputerToHuman;
@@ -403,6 +406,9 @@ public:
 			, AttachmentTopLayerMinHeight { RulesExt::Global()->AttachmentTopLayerMinHeight }
 			, AttachmentUndergroundLayerMaxHeight { RulesExt::Global()->AttachmentUndergroundLayerMaxHeight }
 			, AttachmentData {}
+			
+			, AlwaysBeInAir { false }
+			, AlwaysBeInAir_StayGrounded { false }
 		{ }
 
 		virtual ~ExtData() = default;

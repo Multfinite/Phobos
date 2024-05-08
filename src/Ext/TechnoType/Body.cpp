@@ -314,6 +314,9 @@ void TechnoTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	this->SpawnHeight.Read(exINI, pSection, "SpawnHeight");
 	this->LandingDir.Read(exINI, pSection, "LandingDir");
 
+	this->AlwaysBeInAir.Read(exINI, pSection, "AlwaysBeInAir");
+	this->AlwaysBeInAir_StayGrounded.Read(exINI, pSection, "AlwaysBeInAir.StayGrounded");
+
 	this->Convert_HumanToComputer.Read(exINI, pSection, "Convert.HumanToComputer");
 	this->Convert_ComputerToHuman.Read(exINI, pSection, "Convert.ComputerToHuman");
 
@@ -645,6 +648,9 @@ void TechnoTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->AttachmentTopLayerMinHeight)
 		.Process(this->AttachmentUndergroundLayerMaxHeight)
 		.Process(this->AttachmentData)
+		
+		.Process(this->AlwaysBeInAir)
+		.Process(this->AlwaysBeInAir_StayGrounded)
 		;
 }
 void TechnoTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
