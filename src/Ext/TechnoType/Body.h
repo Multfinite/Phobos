@@ -191,10 +191,17 @@ public:
 		
 		Valueable<bool> AlwaysBeInAir;
 		Valueable<bool> AlwaysBeInAir_StayGrounded;
-
+		
+		Valueable<bool> Prone_Always;
+		Valueable<bool> Prone_PrimaryInStand;
+		Valueable<bool> Prone_SecondaryInStand;
+		Valueable<bool> Prone_Sprint;
+		
+		Valueable<TechnoTypeClass*> Convert_Deploy;
+		
 		Valueable<TechnoTypeClass*> Convert_HumanToComputer;
 		Valueable<TechnoTypeClass*> Convert_ComputerToHuman;
-
+		
 		Valueable<int> AttachmentTopLayerMinHeight;
 		Valueable<int> AttachmentUndergroundLayerMaxHeight;
 
@@ -409,6 +416,13 @@ public:
 			
 			, AlwaysBeInAir { false }
 			, AlwaysBeInAir_StayGrounded { false }
+			
+			, Prone_Always { false }
+			, Prone_PrimaryInStand { false }
+			, Prone_SecondaryInStand { false }
+			, Prone_Sprint { false }
+			
+			, Convert_Deploy { }
 		{ }
 
 		virtual ~ExtData() = default;
