@@ -443,6 +443,24 @@ Prone.SecondaryInStand=false ; like the aboce, but for secondary weapon
 Prone.Sprint=false ; when moving unit will do it in standing instead of crawling.
 ```
 
+Also, it fine works with infantry type conversion via deployment.
+
+### Deploy type conversion like vehicle type
+
+Now you can change techno type for infantry with enabled `Deployer` tag via `Convert.Deploy=TECHNOTYPE` tag. You should know that in this case infantry will never be considered as deployed (it will change type instead).
+
+```{warning}
+Image MUST HAVE an defined sequence for deployment (just use placeholders)!
+```
+
+```{warning}
+This feature has the same limitations as [Ares' Type Conversion](https://ares-developers.github.io/Ares-docs/new/typeconversion.html). This feature does not support BuildingTypes.
+```
+
+```{warning}
+This feature requires Ares 3.0 or higher to function! When Ares 3.0+ is not detected, not all properties of a unit may be updated.
+```
+
 ## Projectiles
 
 

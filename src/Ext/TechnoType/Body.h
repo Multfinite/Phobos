@@ -195,6 +195,8 @@ public:
 		Valueable<bool> Prone_PrimaryInStand;
 		Valueable<bool> Prone_SecondaryInStand;
 		Valueable<bool> Prone_Sprint;
+		Valueable<TechnoTypeClass*> Convert_Deploy;
+
 		struct LaserTrailDataEntry
 		{
 			ValueableIdx<LaserTrailTypeClass> idxType;
@@ -385,6 +387,8 @@ public:
 			, Prone_PrimaryInStand { false }
 			, Prone_SecondaryInStand { false }
 			, Prone_Sprint { false }
+
+			, Convert_Deploy { }
 		{ }
 
 		virtual ~ExtData() = default;

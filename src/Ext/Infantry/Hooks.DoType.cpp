@@ -2,6 +2,8 @@
 #include <InfantryTypeClass.h>
 #include <Ext/TechnoType/Body.h>
 
+#include <Utilities/AresHelper.h>
+#include <Utilities/AresFunctions.h>
 #include <Helpers/Macro.h>
 
 #include <set>
@@ -37,6 +39,13 @@ std::set<Sequence> Proned {
 
 	Sequence::Crawl,
 };
+std::set<Sequence> Deployed {
+	Sequence::Deploy,
+	Sequence::Deployed,
+	Sequence::DeployedFire,
+	Sequence::DeployedIdle,
+	Sequence::Undeploy,
+};
 
 inline bool contains(std::set<Sequence>& set, Sequence item)
 {
@@ -52,8 +61,7 @@ DEFINE_HOOK(0x51D9D2, InfantryClass_DoType_51D9D2, 0x6)
 
 	auto state = pThis->SequenceAnim;
 	auto isStanding = contains(Standing, state);
-	//auto isWalking = contains(Walking, state);
-	auto isProned = contains(Proned, state);
+	auto isDeployed = contains(Standing, state);
 
 	switch (newState)
 	{
@@ -92,6 +100,25 @@ DEFINE_HOOK(0x51D9D2, InfantryClass_DoType_51D9D2, 0x6)
 	case(Sequence::SecondaryProne):
 		if (pExtType->Prone_SecondaryInStand)
 			newState = isStanding ? Sequence::SecondaryFire : Sequence::Up;
+		break;
+	case(Sequence::Deploy):
+	case(Sequence::Deployed):
+	case(Sequence::DeployedFire):
+	case(Sequence::DeployedIdle):
+	case(Sequence::Undeploy):
+		if (AresHelper::AresBaseAddress && pExtType->Convert_Deploy)
+			if (AresFunctions::ConvertTypeTo(pThis, pExtType->Convert_Deploy))
+			{
+				pThis->ShouldDeploy = false;
+				pThis->IsDeploying = false;
+
+				auto pNewType = (InfantryTypeClass*) pExtType->Convert_Deploy.Get();
+				auto pExtNewType = TechnoTypeExt::ExtMap.Find(pNewType);
+				if (pExtNewType->Prone_Always)
+					newState = (isStanding || isDeployed) ? Sequence::Down : state;
+				else
+					newState = (isStanding || isDeployed) ? state : Sequence::Up;
+			}
 		break;
 #ifdef DEBUG
 	case(Sequence::Prone):
