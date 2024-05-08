@@ -191,6 +191,10 @@ public:
 		Valueable<TechnoTypeClass*> Convert_HumanToComputer;
 		Valueable<TechnoTypeClass*> Convert_ComputerToHuman;
 
+		Valueable<bool> Prone_Always;
+		Valueable<bool> Prone_PrimaryInStand;
+		Valueable<bool> Prone_SecondaryInStand;
+		Valueable<bool> Prone_Sprint;
 		struct LaserTrailDataEntry
 		{
 			ValueableIdx<LaserTrailTypeClass> idxType;
@@ -377,6 +381,10 @@ public:
 			, DroppodType {}
 			, Convert_HumanToComputer { }
 			, Convert_ComputerToHuman { }
+			, Prone_Always { false }
+			, Prone_PrimaryInStand { false }
+			, Prone_SecondaryInStand { false }
+			, Prone_Sprint { false }
 		{ }
 
 		virtual ~ExtData() = default;

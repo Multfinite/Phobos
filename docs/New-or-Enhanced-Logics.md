@@ -431,6 +431,18 @@ In `rulesmd.ini`
 SlavesFreeSound=      ; sound entry
 ```
 
+### Prone state control
+
+Now you can force infantry to be in proned state always and define some additions - like force unit to fire at standing position or sprint instead of crawl.
+
+```ini
+[SOMEINFANTRY]
+Prone.Always=false ; forces infantry to stay proned always
+Prone.PrimaryInStand=false ; forces infantry stand to fire with this weapon (during fire it will be NOT considered as proned and fill use non-proned fire graphics)
+Prone.SecondaryInStand=false ; like the aboce, but for secondary weapon
+Prone.Sprint=false ; when moving unit will do it in standing instead of crawling.
+```
+
 ## Projectiles
 
 

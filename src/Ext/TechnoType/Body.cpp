@@ -276,6 +276,10 @@ void TechnoTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	this->SpawnHeight.Read(exINI, pSection, "SpawnHeight");
 	this->LandingDir.Read(exINI, pSection, "LandingDir");
 
+	this->Prone_Always.Read(exINI, pSection, "Prone.Always");
+	this->Prone_PrimaryInStand.Read(exINI, pSection, "Prone.PrimaryInStand");
+	this->Prone_SecondaryInStand.Read(exINI, pSection, "Prone.SecondaryInStand");
+	this->Prone_Sprint.Read(exINI, pSection, "Prone.Sprint");
 	this->Convert_HumanToComputer.Read(exINI, pSection, "Convert.HumanToComputer");
 	this->Convert_ComputerToHuman.Read(exINI, pSection, "Convert.ComputerToHuman");
 
@@ -605,6 +609,10 @@ void TechnoTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->DroppodType)
 		.Process(this->Convert_HumanToComputer)
 		.Process(this->Convert_ComputerToHuman)
+		.Process(this->Prone_Always)
+		.Process(this->Prone_PrimaryInStand)
+		.Process(this->Prone_SecondaryInStand)
+		.Process(this->Prone_Sprint)
 		;
 }
 void TechnoTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
