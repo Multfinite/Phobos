@@ -247,6 +247,7 @@ This page lists all the individual contributions to the project by their author.
   - Added `AlwaysBeInAir` and `AlwaysBeInAir.StayGrounded` flags
   - Added feature to control prone over infantry (`Prone.Always`, `Prone.PrimaryInStand`, `Prone.SecondaryInStand`, `Prone.Sprint`)
   - Added support for type convrsion via `Convert.Deploy` for infantry with `Deployer=true`
+  - techno Attachment logic: type conversion handling and `Attachment.ForcedLayer` flag
 - **ChrisLv_CN** (work relicensed under [following permission](https://github.com/Phobos-developers/Phobos/blob/develop/images/ChrisLv-relicense.png)):
    - General assistance
    - Interceptor logic prototype
