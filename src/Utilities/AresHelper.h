@@ -44,4 +44,9 @@ public:
 	static bool CanUseAres;
 
 	static void Init();
+
+	inline static uintptr_t DynamicOffset(uintptr_t offset)
+	{
+		return AresBaseAddress + offset;
+	}
 };
