@@ -34,6 +34,7 @@
 
 #include <ArrayClasses.h>
 #include <vector>
+#include <set>
 
 template<typename T>
 class Iterator {

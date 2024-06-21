@@ -8,6 +8,9 @@
 #include <Ext/WeaponType/Body.h>
 #include <Utilities/EnumFunctions.h>
 
+#include <Common/Common.hpp>
+#include <Common/AreaAffection.Post.hpp>
+
 DEFINE_HOOK(0x6F9E50, TechnoClass_AI, 0x5)
 {
 	GET(TechnoClass*, pThis, ECX);
@@ -59,6 +62,12 @@ DEFINE_HOOK(0x6F42F7, TechnoClass_Init, 0x2)
 
 	pExt->CurrentShieldType = pExt->TypeExtData->ShieldType;
 	pExt->InitializeLaserTrails();
+
+	Initialize<TechnoExt
+		, SensorTypeClass
+		, CloakTypeClass
+		, ElectronicWarfareTypeClass
+	>(pThis);
 
 	return 0;
 }

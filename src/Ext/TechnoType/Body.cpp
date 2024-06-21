@@ -343,7 +343,14 @@ void TechnoTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	this->Prone_PrimaryInStand.Read(exINI, pSection, "Prone.PrimaryInStand");
 	this->Prone_SecondaryInStand.Read(exINI, pSection, "Prone.SecondaryInStand");
 	this->Prone_Sprint.Read(exINI, pSection, "Prone.Sprint");
-	
+
+	this->Sensor.LoadFromINI(pINI, pSection);
+	this->Cloak.LoadFromINI(pINI, pSection);
+	this->EW.LoadFromINI(pINI, pSection);
+
+	this->Cloak_In_SoundMode.Read(exINI, pSection, "Cloak.In.SoundMode");
+	this->Cloak_Out_SoundMode.Read(exINI, pSection, "Cloak.Out.SoundMode");
+
 	this->Convert_Deploy.Read(exINI, pSection, "Convert.Deploy");
 
 	this->Convert_HumanToComputer.Read(exINI, pSection, "Convert.HumanToComputer");
@@ -686,7 +693,11 @@ void TechnoTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->Prone_PrimaryInStand)
 		.Process(this->Prone_SecondaryInStand)
 		.Process(this->Prone_Sprint)
-		
+
+		.Process(this->Sensor)
+		.Process(this->Cloak_In_SoundMode)
+		.Process(this->Cloak_Out_SoundMode)
+
 		.Process(this->Convert_Deploy)
 		;
 }

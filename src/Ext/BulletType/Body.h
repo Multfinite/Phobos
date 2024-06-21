@@ -6,6 +6,9 @@
 #include <Utilities/TemplateDef.h>
 
 #include <New/Type/LaserTrailTypeClass.h>
+#include <New/Type/SensorTypeClass.hpp>
+#include <New/Type/CloakTypeClass.hpp>
+#include <New/Type/ElectronicWarfareTypeClass.hpp>
 
 #include <Ext/Bullet/Trajectories/PhobosTrajectory.h>
 
@@ -45,6 +48,10 @@ public:
 		Valueable<bool> Arcing_AllowElevationInaccuracy;
 		Nullable<WeaponTypeClass*> ReturnWeapon;
 
+		SensorTypeClass::DataEntry Sensor;
+		CloakTypeClass::DataEntry Cloak;
+		ElectronicWarfareTypeClass::DataEntry EW;
+
 		// Ares 0.7
 		Nullable<Leptons> BallisticScatter_Min;
 		Nullable<Leptons> BallisticScatter_Max;
@@ -71,6 +78,9 @@ public:
 			, AAOnly { false }
 			, Arcing_AllowElevationInaccuracy { true }
 			, ReturnWeapon {}
+			, Sensor { OwnerObject }
+			, Cloak { OwnerObject }
+			, EW { OwnerObject }
 		{ }
 
 		virtual ~ExtData() = default;

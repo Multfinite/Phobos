@@ -22,3 +22,6 @@ concept CanBeTechno = std::is_base_of<TechnoClass, T>::value;
 
 template<typename T>
 concept CanBeAbstractType = std::is_base_of<AbstractTypeClass, T>::value;
+
+template<typename TInvocable, typename ...TArgs>
+concept ItemHandler = requires(TInvocable invocable, TArgs ...args) { invocable(args...); };

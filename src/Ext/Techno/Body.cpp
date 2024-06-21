@@ -7,16 +7,43 @@
 #include <Ext/House/Body.h>
 
 #include <Utilities/AresFunctions.h>
+#include <Common/AreaAffection.Post.hpp>
 
 #include <math.h>
 
 TechnoExt::ExtContainer TechnoExt::ExtMap;
 
+TechnoExt::ExtData::ExtData(TechnoClass* OwnerObject) : Extension<TechnoClass>(OwnerObject)
+	, TypeExtData { nullptr }
+	, Shield {}
+	, LaserTrails {}
+	, ReceiveDamage { false }
+	, LastKillWasTeamTarget { false }
+	, PassengerDeletionTimer {}
+	, CurrentShieldType { nullptr }
+	, LastWarpDistance {}
+	, AutoDeathTimer {}
+	, MindControlRingAnimType { nullptr }
+	, DamageNumberOffset { INT32_MIN }
+	, OriginalPassengerOwner {}
+	, IsInTunnel { false }
+	, HasBeenPlacedOnMap { false }
+	, DeployFireTimer {}
+	, ForceFullRearmDelay { false }
+	, WHAnimRemainingCreationInterval { 0 }
+	, CanCurrentlyDeployIntoBuilding { false }
+	, ParentAttachment {}
+	, ChildAttachments {}
+	, ChildAttachmentsPerType { }
+	, AreaAffection { new AreaAffection::InstanceEntry(OwnerObject) }
+{ }
 TechnoExt::ExtData::~ExtData()
 {
 	auto const pTypeExt = this->TypeExtData;
 	auto const pType = pTypeExt->OwnerObject();
 	auto pThis = this->OwnerObject();
+
+	delete AreaAffection;
 
 	if (pTypeExt->AutoDeath_Behavior.isset())
 	{
@@ -569,6 +596,8 @@ void TechnoExt::ExtData::Serialize(T& Stm)
 		// In theory it should be serialized too
 		//.Process(this->ChildAttachments)
 		//.Process(this->ChildAttachmentsPerType)
+		.Process(this->Sensor)
+		.Process(this->Cloak)
 		;
 }
 

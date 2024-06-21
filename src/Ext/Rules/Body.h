@@ -122,6 +122,8 @@ public:
 		Valueable<int> AttachmentTopLayerMinHeight;
 		Valueable<int> AttachmentUndergroundLayerMaxHeight;
 
+		Valueable<bool> SharedSensors;
+
 		ExtData(RulesClass* OwnerObject) : Extension<RulesClass>(OwnerObject)
 			, Storage_TiberiumIndex { -1 }
 			, InfantryGainSelfHealCap {}
@@ -203,6 +205,8 @@ public:
 			, PodImage { }
 			, AttachmentTopLayerMinHeight { 500 }
 			, AttachmentUndergroundLayerMaxHeight { -256 }
+
+			, SharedSensors { false }
 		{ }
 
 		virtual ~ExtData() = default;

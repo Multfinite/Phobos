@@ -10,6 +10,8 @@
 #include <New/Entity/LaserTrailClass.h>
 #include <New/Entity/AttachmentClass.h>
 
+#include <Common/AreaAffection.Forward.hpp>
+
 class BulletClass;
 
 class TechnoExt
@@ -52,29 +54,9 @@ public:
 		AttachmentVector ChildAttachments;
 		std::map<TechnoTypeExt::ExtData*, AttachmentVector> ChildAttachmentsPerType;
 
-		ExtData(TechnoClass* OwnerObject) : Extension<TechnoClass>(OwnerObject)
-			, TypeExtData { nullptr }
-			, Shield {}
-			, LaserTrails {}
-			, ReceiveDamage { false }
-			, LastKillWasTeamTarget { false }
-			, PassengerDeletionTimer {}
-			, CurrentShieldType { nullptr }
-			, LastWarpDistance {}
-			, AutoDeathTimer {}
-			, MindControlRingAnimType { nullptr }
-			, DamageNumberOffset { INT32_MIN }
-			, OriginalPassengerOwner {}
-			, IsInTunnel { false }
-			, HasBeenPlacedOnMap { false }
-			, DeployFireTimer {}
-			, ForceFullRearmDelay { false }
-			, WHAnimRemainingCreationInterval { 0 }
-			, CanCurrentlyDeployIntoBuilding { false }
-			, ParentAttachment {}
-			, ChildAttachments {}
-			, ChildAttachmentsPerType { }
-		{ }
+		AreaAffection::InstanceEntry* const AreaAffection;
+
+		ExtData(TechnoClass* OwnerObject);
 
 		void OnEarlyUpdate();
 
@@ -204,3 +186,4 @@ public:
 	static void ProcessDigitalDisplays(TechnoClass* pThis);
 	static void GetValuesForDisplay(TechnoClass* pThis, DisplayInfoType infoType, int& value, int& maxValue);
 };
+using TechnoExt_ExtData = TechnoExt::ExtData;

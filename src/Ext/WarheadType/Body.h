@@ -7,6 +7,9 @@
 #include <New/Type/ShieldTypeClass.h>
 #include <Ext/Bullet/Body.h>
 #include <New/Type/Affiliated/TypeConvertGroup.h>
+#include <New/Type/SensorTypeClass.hpp>
+#include <New/Type/CloakTypeClass.hpp>
+#include <New/Type/ElectronicWarfareTypeClass.hpp>
 
 class WarheadTypeExt
 {
@@ -115,6 +118,9 @@ public:
 		Valueable<bool> InflictLocomotor;
 		Valueable<bool> RemoveInflictedLocomotor;
 
+		SensorTypeClass::DataEntry Sensor;
+		CloakTypeClass::DataEntry Cloak;
+		ElectronicWarfareTypeClass::DataEntry EW;
 
 		// Ares tags
 		// http://ares-developers.github.io/Ares-docs/new/warheads/general.html
@@ -127,7 +133,6 @@ public:
 		bool Splashed;
 		int RemainingAnimCreationInterval;
 		bool PossibleCellSpreadDetonate;
-
 	private:
 		Valueable<double> Shield_Respawn_Rate_InMinutes;
 		Valueable<double> Shield_SelfHealing_Rate_InMinutes;
@@ -238,6 +243,10 @@ public:
 			, Splashed { false }
 			, RemainingAnimCreationInterval { 0 }
 			, PossibleCellSpreadDetonate {false}
+
+			, Sensor { OwnerObject }
+			, Cloak { OwnerObject }
+			, EW { OwnerObject }
 		{ }
 
 	private:

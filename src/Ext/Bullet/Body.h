@@ -8,6 +8,8 @@
 #include <New/Entity/LaserTrailClass.h>
 #include "Trajectories/PhobosTrajectory.h"
 
+#include <Common/AreaAffection.Forward.hpp>
+
 class BulletExt
 {
 public:
@@ -30,21 +32,10 @@ public:
 		int DamageNumberOffset;
 
 		PhobosTrajectory* Trajectory; // TODO: why not unique_ptr
+		AreaAffection::InstanceEntry* const AreaAffection;
 
-		ExtData(BulletClass* OwnerObject) : Extension<BulletClass>(OwnerObject)
-			, TypeExtData { nullptr }
-			, FirerHouse { nullptr }
-			, CurrentStrength { 0 }
-			, IsInterceptor { false }
-			, InterceptedStatus { InterceptedStatus::None }
-			, DetonateOnInterception { true }
-			, LaserTrails {}
-			, Trajectory { nullptr }
-			, SnappedToTarget { false }
-			, DamageNumberOffset { INT32_MIN }
-		{ }
-
-		virtual ~ExtData() = default;
+		ExtData(BulletClass* OwnerObject);
+		virtual ~ExtData();
 
 		virtual void InvalidatePointer(void* ptr, bool bRemoved) override
 		{

@@ -2,6 +2,7 @@
 #include <Ext/Anim/Body.h>
 #include <Ext/BulletType/Body.h>
 #include <Utilities/Macro.h>
+#include <Utilities/Common.hpp>
 
 #include <ScenarioClass.h>
 
@@ -18,6 +19,12 @@ DEFINE_HOOK(0x466556, BulletClass_Init, 0x6)
 
 		if (!pThis->Type->Inviso)
 			pExt->InitializeLaserTrails();
+
+		Init<BulletExt,
+			SensorClass
+			, ElectronicWarfareClass
+			, CloakClass>
+			(pThis);
 	}
 
 	return 0;

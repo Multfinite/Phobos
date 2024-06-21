@@ -20,3 +20,36 @@ namespace detail
 		}
 	};
 }
+
+template<typename T>
+concept HasRadius = requires(T x) { x.Radius; };
+
+template<typename T> requires HasRadius<T>
+struct RadiusLess
+{
+	using type = std::remove_pointer_t<std::remove_reference_t<T>>;
+
+	bool operator() (type const& lhs, type const& rhs) const
+	{
+		return lhs.Radius < rhs.Radius;
+	}
+	bool operator() (type const* lhs, type const* rhs) const
+	{
+		return lhs->Radius < rhs->Radius;
+	}
+};
+
+template<typename T> requires HasRadius<T>
+struct RadiusGreater
+{
+	using type = std::remove_pointer_t<std::remove_reference_t<T>>;
+
+	bool operator() (type const& lhs, type const& rhs) const
+	{
+		return lhs.Radius > rhs.Radius;
+	}
+	bool operator() (type const* lhs, type const* rhs) const
+	{
+		return lhs->Radius > rhs->Radius;
+	}
+};

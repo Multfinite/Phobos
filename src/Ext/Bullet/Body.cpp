@@ -7,7 +7,27 @@
 #include <Utilities/EnumFunctions.h>
 #include <Misc/FlyingStrings.h>
 
+#include <Common/AreaAffection.Post.hpp>
+
 BulletExt::ExtContainer BulletExt::ExtMap;
+
+BulletExt::ExtData::ExtData(BulletClass* OwnerObject) : Extension<BulletClass>(OwnerObject)
+	, TypeExtData { nullptr }
+	, FirerHouse { nullptr }
+	, CurrentStrength { 0 }
+	, IsInterceptor { false }
+	, InterceptedStatus { InterceptedStatus::None }
+	, DetonateOnInterception { true }
+	, LaserTrails {}
+	, Trajectory { nullptr }
+	, SnappedToTarget { false }
+	, DamageNumberOffset { INT32_MIN }
+	, AreaAffection { new AreaAffection::InstanceEntry(OwnerObject) }
+{ }
+BulletExt::ExtData::~ExtData()
+{
+	delete AreaAffection;
+}
 
 void BulletExt::ExtData::InterceptBullet(TechnoClass* pSource, WeaponTypeClass* pWeapon)
 {
@@ -173,6 +193,8 @@ void BulletExt::ExtData::Serialize(T& Stm)
 		.Process(this->LaserTrails)
 		.Process(this->SnappedToTarget)
 		.Process(this->DamageNumberOffset)
+		.Process(this->Sensor)
+		.Process(this->Cloak)
 		;
 
 	this->Trajectory = PhobosTrajectory::ProcessFromStream(Stm, this->Trajectory);

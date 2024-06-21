@@ -1057,6 +1057,34 @@ namespace detail
 	}
 
 	template <>
+	inline bool read<CloakSoundMode>(CloakSoundMode& value, INI_EX& parser, const char* pSection, const char* pKey)
+	{
+		if (parser.ReadString(pSection, pKey))
+		{
+			bool success;
+			value = ParseEnum<CloakSoundMode>(parser.value(), success);
+			if (!success)
+				Debug::INIParseFailed(pSection, pKey, parser.value(), "Expected a cloak sound mode, use default value.");
+			return success;
+		}
+		return false;
+	}
+
+	template <>
+	inline bool read<SensorShareMode>(SensorShareMode& value, INI_EX& parser, const char* pSection, const char* pKey)
+	{
+		if (parser.ReadString(pSection, pKey))
+		{
+			bool success;
+			value = ParseEnum<SensorShareMode>(parser.value(), success);
+			if (!success)
+				Debug::INIParseFailed(pSection, pKey, parser.value(), "Expected a sensor share mode, use default value.");
+			return success;
+		}
+		return false;
+	}
+
+	template <>
 	inline bool read<Layer>(Layer& value, INI_EX& parser, const char* pSection, const char* pKey)
 	{
 		if (parser.ReadString(pSection, pKey))
@@ -1572,6 +1600,103 @@ bool ValueableVector<T>::Save(PhobosStreamWriter& Stm) const
 
 template <>
 inline bool ValueableVector<bool>::Save(PhobosStreamWriter& stm) const
+{
+	auto size = this->size();
+	if (Savegame::WritePhobosStream(stm, size))
+	{
+		for (bool item : *this)
+		{
+			if (!Savegame::WritePhobosStream(stm, item))
+				return false;
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+// ValueableSet
+
+template <typename T, class TComparer, class TAllocator >
+void __declspec(noinline) ValueableSet<T, TComparer, TAllocator>::Read(INI_EX& parser, const char* pSection, const char* pKey)
+{
+	if (parser.ReadString(pSection, pKey))
+	{
+		this->clear();
+		detail::parse_values<T>(*this, parser, pSection, pKey);
+	}
+}
+
+template <typename T, typename TComparer, typename TAllocator>
+bool ValueableSet<T, TComparer, TAllocator>::Load(PhobosStreamReader& Stm, bool RegisterForChange)
+{
+	size_t size = 0;
+	if (Savegame::ReadPhobosStream(Stm, size, RegisterForChange))
+	{
+		this->clear();
+		this->reserve(size);
+
+		for (size_t i = 0; i < size; ++i)
+		{
+			value_type buffer = value_type();
+			Savegame::ReadPhobosStream(Stm, buffer, false);
+			this->push_back(std::move(buffer));
+
+			if (RegisterForChange)
+				Swizzle swizzle(this->back());
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+template <>
+inline bool ValueableSet<bool>::Load(PhobosStreamReader& stm, bool registerForChange)
+{
+	size_t size = 0;
+	if (Savegame::ReadPhobosStream(stm, size, registerForChange))
+	{
+		this->clear();
+
+		for (size_t i = 0; i < size; ++i)
+		{
+			bool value;
+
+			if (!Savegame::ReadPhobosStream(stm, value, false))
+				return false;
+
+			this->emplace(value);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+template <typename T, typename TComparer, typename TAllocator>
+bool ValueableSet<T, TComparer, TAllocator>::Save(PhobosStreamWriter& Stm) const
+{
+	auto size = this->size();
+	if (Savegame::WritePhobosStream(Stm, size))
+	{
+		for (auto const& item : *this)
+		{
+			if (!Savegame::WritePhobosStream(Stm, item))
+				return false;
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+template <>
+inline bool ValueableSet<bool>::Save(PhobosStreamWriter& stm) const
 {
 	auto size = this->size();
 	if (Savegame::WritePhobosStream(stm, size))

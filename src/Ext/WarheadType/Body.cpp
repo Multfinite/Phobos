@@ -197,6 +197,10 @@ void WarheadTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	this->DetonateOnAllMapObjects_AffectTypes.Read(exINI, pSection, "DetonateOnAllMapObjects.AffectTypes");
 	this->DetonateOnAllMapObjects_IgnoreTypes.Read(exINI, pSection, "DetonateOnAllMapObjects.IgnoreTypes");
 
+	this->Sensor.LoadFromINI(pINI, pSection);
+	this->Cloak.LoadFromINI(pINI, pSection);
+	this->EW.LoadFromINI(pINI, pSection);
+
 	// Convert.From & Convert.To
 	TypeConvertGroup::Parse(this->Convert_Pairs, exINI, pSection, AffectedHouse::All);
 
@@ -348,6 +352,10 @@ void WarheadTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->WasDetonatedOnAllMapObjects)
 		.Process(this->RemainingAnimCreationInterval)
 		.Process(this->PossibleCellSpreadDetonate)
+
+		.Process(this->Sensor)
+		.Process(this->Cloak)
+		.Process(this->EW)
 		;
 }
 

@@ -12,6 +12,9 @@
 #include <New/Type/DigitalDisplayTypeClass.h>
 #include <New/Type/Affiliated/DroppodTypeClass.h>
 #include <New/Type/AttachmentTypeClass.h>
+#include <New/Type/SensorTypeClass.hpp>
+#include <New/Type/CloakTypeClass.hpp>
+#include <New/Type/ElectronicWarfareTypeClass.hpp>
 
 class Matrix3D;
 
@@ -196,7 +199,14 @@ public:
 		Valueable<bool> Prone_PrimaryInStand;
 		Valueable<bool> Prone_SecondaryInStand;
 		Valueable<bool> Prone_Sprint;
-		
+
+		Valueable<CloakSoundMode> Cloak_In_SoundMode;
+		Valueable<CloakSoundMode> Cloak_Out_SoundMode;
+
+		SensorTypeClass::DataEntry Sensor;
+		CloakTypeClass::DataEntry Cloak;
+		ElectronicWarfareTypeClass::DataEntry EW;
+
 		Valueable<TechnoTypeClass*> Convert_Deploy;
 		
 		Valueable<TechnoTypeClass*> Convert_HumanToComputer;
@@ -427,7 +437,14 @@ public:
 			, Prone_PrimaryInStand { false }
 			, Prone_SecondaryInStand { false }
 			, Prone_Sprint { false }
-			
+
+			, Sensor { OwnerObject }
+			, Cloak { OwnerObject }
+			, EW { OwnerObject }
+
+			, Cloak_In_SoundMode { CloakSoundMode::Default }
+			, Cloak_Out_SoundMode { CloakSoundMode::Default }
+
 			, Convert_Deploy { }
 		{ }
 
@@ -480,3 +497,4 @@ public:
 	static const char* GetSelectionGroupID(ObjectTypeClass* pType);
 	static bool HasSelectionGroupID(ObjectTypeClass* pType, const char* pID);
 };
+using TechnoTypeExt_ExtData = TechnoTypeExt::ExtData;

@@ -162,6 +162,8 @@ void RulesExt::ExtData::LoadBeforeTypeData(RulesClass* pThis, CCINIClass* pINI)
 	this->AttachmentTopLayerMinHeight.Read(exINI, GameStrings::General, "AttachmentTopLayerMinHeight");
 	this->AttachmentUndergroundLayerMaxHeight.Read(exINI, GameStrings::General, "AttachmentUndergroundLayerMaxHeight");
 
+	this->SharedSensors.Read(exINI, GameStrings::General, "SharedSensors");
+
 	// Section AITargetTypes
 	int itemsCount = pINI->GetKeyCount(sectionAITargetTypes);
 	for (int i = 0; i < itemsCount; ++i)
@@ -307,6 +309,7 @@ void RulesExt::ExtData::Serialize(T& Stm)
 		.Process(this->PodImage)
 		.Process(this->AttachmentTopLayerMinHeight)
 		.Process(this->AttachmentUndergroundLayerMaxHeight)
+		.Process(this->SharedSensors)
 		;
 }
 

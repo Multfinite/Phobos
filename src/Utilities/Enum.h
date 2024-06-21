@@ -411,6 +411,43 @@ inline std::map<std::string, AttachmentInstanceConversionMode, detail::CaseInsen
 	};
 };
 
+enum class CloakSoundMode : unsigned char
+{
+	// as parameter passed in TechnoClass::Do_Cloak 0x703770 and TechnoClass::Do_Uncloak 0x
+	Default,
+	Sound,
+	Silence
+};
+
+template<>
+inline std::map<std::string, CloakSoundMode, detail::CaseInsensitiveComparator> GetEnumMapping<CloakSoundMode>()
+{
+	return
+	{
+		  { "Default", CloakSoundMode::Default }
+		, { "Sound", CloakSoundMode::Sound }
+		, { "Silence", CloakSoundMode::Silence }
+	};
+};
+
+enum class SensorShareMode : unsigned char
+{
+	Default,
+	Shared,
+	Private
+};
+
+template<>
+inline std::map<std::string, SensorShareMode, detail::CaseInsensitiveComparator> GetEnumMapping<SensorShareMode>()
+{
+	return
+	{
+		  { "Default", SensorShareMode::Default }
+		, { "Shared", SensorShareMode::Shared }
+		, { "Private", SensorShareMode::Private }
+	};
+};
+
 template<>
 inline std::map<std::string, Layer, detail::CaseInsensitiveComparator> GetEnumMapping<Layer>()
 {

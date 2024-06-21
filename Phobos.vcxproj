@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ShowAllFiles>true</ShowAllFiles>
@@ -18,6 +18,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Common\AreaAffection.cpp" />
+    <ClCompile Include="src\Misc\Hooks.Logics.cpp" />
+    <ClCompile Include="src\New\Entity\ElectronicWarfareClass.cpp" />
+    <ClCompile Include="src\New\Senses.cpp" />
+    <ClCompile Include="src\New\Type\ElectronicWarfareTypeClass.cpp" />
+    <ClCompile Include="src\New\Entity\CloakClass.cpp" />
     <ClCompile Include="src\Commands\Commands.cpp" />
     <ClCompile Include="src\Commands\DamageDisplay.cpp" />
     <ClCompile Include="src\Commands\FrameByFrame.cpp" />
@@ -37,6 +43,7 @@
     <ClCompile Include="src\Ext\Bullet\Trajectories\StraightTrajectory.cpp" />
     <ClCompile Include="src\Ext\CaptureManager\Hooks.cpp" />
     <ClCompile Include="src\Ext\CaptureManager\Body.cpp" />
+    <ClCompile Include="src\Ext\Cell\Body.cpp" />
     <ClCompile Include="src\Ext\Infantry\Hooks.DoType.cpp" />
     <ClCompile Include="src\Ext\OverlayType\Body.cpp" />
     <ClCompile Include="src\Ext\OverlayType\Hooks.cpp" />
@@ -54,6 +61,7 @@
     <ClCompile Include="src\Ext\TAction\Hooks.cpp" />
     <ClCompile Include="src\Ext\Team\Body.cpp" />
     <ClCompile Include="src\Ext\Team\Hooks.cpp" />
+    <ClCompile Include="src\Ext\Techno\Hooks.Stealth.cpp" />
     <ClCompile Include="src\Ext\Techno\Hooks.Pips.cpp" />
     <ClCompile Include="src\Ext\Techno\Body.Visuals.cpp" />
     <ClCompile Include="src\Ext\TEvent\Hooks.cpp" />
@@ -68,11 +76,14 @@
     <ClCompile Include="src\Misc\Hooks.VeinholeMonster.cpp" />
     <ClCompile Include="src\Misc\PhobosToolTip.cpp" />
     <ClCompile Include="src\Misc\TextInput.cpp" />
+    <ClCompile Include="src\New\Entity\SensorClass.cpp" />
     <ClCompile Include="src\New\Entity\ShieldClass.cpp" />
     <ClCompile Include="src\Misc\RetryDialog.cpp" />
     <ClCompile Include="src\New\Type\Affiliated\DroppodTypeClass.cpp" />
+    <ClCompile Include="src\New\Type\CloakTypeClass.cpp" />
     <ClCompile Include="src\New\Type\DigitalDisplayTypeClass.cpp" />
     <ClCompile Include="src\New\Type\RadTypeClass.cpp" />
+    <ClCompile Include="src\New\Type\SensorTypeClass.cpp" />
     <ClCompile Include="src\New\Type\ShieldTypeClass.cpp" />
     <ClCompile Include="src\New\Type\LaserTrailTypeClass.cpp" />
     <ClCompile Include="src\New\Type\Affiliated\InterceptorTypeClass.cpp" />
@@ -183,6 +194,18 @@
     <ClCompile Include="YRpp\StaticInits.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Common\AreaAffection.Forward.hpp" />
+    <ClInclude Include="src\Common\AreaAffection.Post.hpp" />
+    <ClInclude Include="src\Common\AreaAffection.Pre.hpp" />
+    <ClInclude Include="src\Common\AreaAffection.Body.hpp" />
+    <ClInclude Include="src\Common\Entry.Post.hpp" />
+    <ClInclude Include="src\Common\Entry.Pre.hpp" />
+    <ClInclude Include="src\Common\Lifetime.hpp" />
+    <ClInclude Include="src\Common\Processable.hpp" />
+    <ClInclude Include="src\New\Entity\ElectronicWarfareClass.hpp" />
+    <ClInclude Include="src\New\Senses.hpp" />
+    <ClInclude Include="src\New\Type\ElectronicWarfareTypeClass.hpp" />
+    <ClInclude Include="src\New\Entity\CloakClass.hpp" />
     <ClInclude Include="src\Commands\FrameByFrame.h" />
     <ClInclude Include="src\Commands\FrameStep.h" />
     <ClInclude Include="src\Commands\NextIdleHarvester.h" />
@@ -197,6 +220,7 @@
     <ClInclude Include="src\Ext\Bullet\Trajectories\BombardTrajectory.h" />
     <ClInclude Include="src\Ext\Bullet\Trajectories\PhobosTrajectory.h" />
     <ClInclude Include="src\Ext\Bullet\Trajectories\StraightTrajectory.h" />
+    <ClInclude Include="src\Ext\Cell\Body.hpp" />
     <ClInclude Include="src\Ext\OverlayType\Body.h" />
     <ClInclude Include="src\Ext\ParticleType\Body.h" />
     <ClInclude Include="src\Ext\Sidebar\Body.h" />
@@ -212,10 +236,13 @@
     <ClInclude Include="src\Misc\FlyingStrings.h" />
     <ClInclude Include="src\Misc\PhobosToolTip.h" />
     <ClInclude Include="src\Misc\SyncLogging.h" />
+    <ClInclude Include="src\New\Entity\SensorClass.hpp" />
     <ClInclude Include="src\New\Type\Affiliated\TypeConvertGroup.h" />
     <ClInclude Include="src\New\Type\Affiliated\DroppodTypeClass.h" />
+    <ClInclude Include="src\New\Type\CloakTypeClass.hpp" />
     <ClInclude Include="src\New\Type\DigitalDisplayTypeClass.h" />
     <ClInclude Include="src\New\Type\RadTypeClass.h" />
+    <ClInclude Include="src\New\Type\SensorTypeClass.hpp" />
     <ClInclude Include="src\New\Type\ShieldTypeClass.h" />
     <ClInclude Include="src\New\Type\LaserTrailTypeClass.h" />
     <ClInclude Include="src\New\Type\Affiliated\InterceptorTypeClass.h" />
@@ -225,6 +252,7 @@
     <ClInclude Include="src\New\Entity\ShieldClass.h" />
     <ClInclude Include="src\New\Entity\AttachmentClass.h" />
     <ClInclude Include="src\Utilities\Anchor.h" />
+    <ClInclude Include="src\Common\Common.hpp" />
     <ClInclude Include="src\Utilities\Misc.hpp" />
     <ClInclude Include="src\Utilities\Enumerable.h" />
     <ClInclude Include="src\Ext\Aircraft\Body.h" />
