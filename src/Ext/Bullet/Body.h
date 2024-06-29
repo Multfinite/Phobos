@@ -8,7 +8,7 @@
 #include <New/Entity/LaserTrailClass.h>
 #include "Trajectories/PhobosTrajectory.h"
 
-#include <Common/AreaAffection.Forward.hpp>
+#include <Common/AreaAffection.hpp>
 
 class BulletExt
 {

@@ -13,7 +13,43 @@
 #include <Utilities/Debug.h>
 
 #include <Common/Common.hpp>
-#include <Common/AreaAffection.Forward.hpp>
+#include <Common/AreaAffection.hpp>
+
+class __CellExt_ExtData final : public Extension<CellClass>
+{
+public:
+	AreaAffection::CellEntry* AreaAffectionCache;
+	AreaAffection::InstanceEntry* const AreaAffection;
+
+	__CellExt_ExtData(CellClass* ownerObject);
+	virtual ~__CellExt_ExtData();
+
+	virtual void LoadFromINIFile(CCINIClass* pINI) override;
+	virtual void LoadBeforeTypeData(RulesClass* pThis, CCINIClass* pINI);
+	virtual void LoadAfterTypeData(RulesClass* pThis, CCINIClass* pINI);
+	virtual void InitializeConstants() override;
+	void InitializeAfterTypeData(RulesClass* pThis);
+
+	virtual void InvalidatePointer(void* ptr, bool bRemoved) override { }
+
+	virtual void LoadFromStream(PhobosStreamReader& Stm) override;
+	virtual void SaveToStream(PhobosStreamWriter& Stm) override;
+
+	template<typename THandler> requires ItemHandler<THandler, ObjectClass*>
+	inline void IterateObjects(const THandler& handler)
+	{
+		auto pObject = OwnerObject()->FirstObject;
+		while (pObject != nullptr)
+		{
+			handler(pObject);
+			pObject = pObject->NextObject;
+		}
+	}
+
+private:
+	template <typename T>
+	void Serialize(T& Stm);
+};
 
 class CellExt
 {
@@ -23,41 +59,7 @@ public:
 	static constexpr DWORD Canary = 0x91828291;
 	static constexpr size_t ExtPointerOffset = 0x144;
 
-	class ExtData final : Extension<CellClass>
-	{
-	public:
-		AreaAffection::CellEntry* AreaAffectionCache;
-		AreaAffection::InstanceEntry* const AreaAffection;
-
-		ExtData(CellClass* ownerObject);
-		virtual ~ExtData();
-
-		virtual void LoadFromINIFile(CCINIClass* pINI) override;
-		virtual void LoadBeforeTypeData(RulesClass* pThis, CCINIClass* pINI);
-		virtual void LoadAfterTypeData(RulesClass* pThis, CCINIClass* pINI);
-		virtual void InitializeConstants() override;
-		void InitializeAfterTypeData(RulesClass* pThis);
-
-		virtual void InvalidatePointer(void* ptr, bool bRemoved) override { }
-
-		virtual void LoadFromStream(PhobosStreamReader& Stm) override;
-		virtual void SaveToStream(PhobosStreamWriter& Stm) override;
-
-		template<typename THandler> requires ItemHandler<THandler, ObjectClass*>
-		inline void IterateObjects(const THandler& handler)
-		{
-			auto pObject = OwnerObject()->FirstObject;
-			while (pObject != nullptr)
-			{
-				handler(pObject);
-				pObject = pObject->NextObject;
-			}
-		}
-
-	private:
-		template <typename T>
-		void Serialize(T& Stm);
-	};
+	using ExtData = __CellExt_ExtData;
 
 	class ExtContainer final : public Container<CellExt>
 	{
@@ -164,5 +166,3 @@ public:
 		IterateRadius<decltype(handler)>(where, radius, radiusSquared, handler);
 	}
 };
-
-using CellExt_ExtData = CellExt::ExtData;

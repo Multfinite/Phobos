@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Timer.h>
-#include <vector>;
+#include <vector>
 
 #include <AbstractClass.h>
 
@@ -11,11 +11,18 @@
 #include <Utilities/Macro.h>
 #include <Utilities/TemplateDef.h>
 
-#include <Common/AreaAffection.Body.hpp>
+#include <Common/AreaAffection.hpp>
 
 #include <New/Type/CloakTypeClass.hpp>
 #include <New/Type/SensorTypeClass.hpp>
 
-using SensorClass = AreaAffection::Instance<SensorTypeClass>;
+class SensorClass : public AreaAffection::Instance<SensorTypeClass, AreaAffection::DataEntry<SensorClass>>
+{
+public:
+	void In(__CellExt_ExtData& cell, short radius, int radiusSq) override;
+	void Out(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 
-static_assert(AreaAffection::IsAreaAffection<SensorClass>, "It is not a Area Affection!");
+	SensorClass(SensorTypeClass* type, AbstractClass* parent, HouseClass* owner, short radius) : Instance(type, parent, owner, radius) {}
+};
+
+static_assert(AreaAffection::IsInstance<SensorClass>, "It is not a Area Affection!");

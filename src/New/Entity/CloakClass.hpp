@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Timer.h>
-#include <vector>;
+#include <vector>
 
 #include <AbstractClass.h>
 
@@ -11,10 +11,17 @@
 #include <Utilities/Macro.h>
 #include <Utilities/TemplateDef.h>
 
-#include <Common/AreaAffection.Body.hpp>
+#include <Common/AreaAffection.hpp>
 
 #include <New/Type/CloakTypeClass.hpp>
 
-using CloakClass = AreaAffection::Instance<CloakTypeClass>;
+class CloakClass : public AreaAffection::Instance<CloakTypeClass, AreaAffection::DataEntry<CloakClass>>
+{
+public:
+	void In(__CellExt_ExtData& cell, short radius, int radiusSq) override;
+	void Out(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 
-static_assert(AreaAffection::IsAreaAffection<CloakClass>, "It is not a Area Affection!");
+	CloakClass(CloakTypeClass* type, AbstractClass* parent, HouseClass* owner, short radius) : Instance(type, parent, owner, radius) { }
+};
+
+static_assert(AreaAffection::IsInstance<CloakClass>, "It is not a Area Affection!");

@@ -10,7 +10,7 @@
 #include <New/Entity/LaserTrailClass.h>
 #include <New/Entity/AttachmentClass.h>
 
-#include <Common/AreaAffection.Forward.hpp>
+#include <Common/AreaAffection.hpp>
 
 class BulletClass;
 

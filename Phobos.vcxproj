@@ -194,14 +194,14 @@
     <ClCompile Include="YRpp\StaticInits.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Common\AreaAffection.Forward.hpp" />
-    <ClInclude Include="src\Common\AreaAffection.Post.hpp" />
-    <ClInclude Include="src\Common\AreaAffection.Pre.hpp" />
     <ClInclude Include="src\Common\AreaAffection.Body.hpp" />
+    <ClInclude Include="src\Common\AreaAffection.Post.hpp" />
+    <ClInclude Include="src\Common\AreaAffection.hpp" />
     <ClInclude Include="src\Common\Entry.Post.hpp" />
     <ClInclude Include="src\Common\Entry.Pre.hpp" />
     <ClInclude Include="src\Common\Lifetime.hpp" />
     <ClInclude Include="src\Common\Processable.hpp" />
+    <ClInclude Include="src\Ext\traits.hpp" />
     <ClInclude Include="src\New\Entity\ElectronicWarfareClass.hpp" />
     <ClInclude Include="src\New\Senses.hpp" />
     <ClInclude Include="src\New\Type\ElectronicWarfareTypeClass.hpp" />

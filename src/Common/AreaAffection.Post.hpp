@@ -11,7 +11,7 @@
 #include <New/Entity/ElectronicWarfareClass.hpp>
 #include <New/Senses.hpp>
 
-#include <Common/AreaAffection.Body.hpp>
+#include <Common/AreaAffection.hpp>
 
 namespace AreaAffection
 {

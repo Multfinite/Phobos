@@ -2,11 +2,11 @@
 
 #include <Common/AreaAffection.Post.hpp>
 
-CellExt::ExtData::ExtData(CellClass* ownerObject) : Extension<CellClass>(ownerObject)
+__CellExt_ExtData::__CellExt_ExtData(CellClass* ownerObject) : Extension<CellClass>(ownerObject)
 	, AreaAffection { new AreaAffection::InstanceEntry(ownerObject) }
 	, AreaAffectionCache { new AreaAffection::CellEntry() }
 { }
-CellExt::ExtData::~ExtData()
+__CellExt_ExtData::~__CellExt_ExtData()
 {
 	delete AreaAffection;
 	delete AreaAffectionCache;

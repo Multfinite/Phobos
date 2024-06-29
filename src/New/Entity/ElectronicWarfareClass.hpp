@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Timer.h>
-#include <vector>;
+#include <vector>
 
 #include <AbstractClass.h>
 
@@ -11,10 +11,17 @@
 #include <Utilities/Macro.h>
 #include <Utilities/TemplateDef.h>
 
-#include <Common/AreaAffection.Body.hpp>
+#include <Common/AreaAffection.hpp>
 
 #include <New/Type/ElectronicWarfareTypeClass.hpp>
 
-using ElectronicWarfareClass = AreaAffection::Instance<ElectronicWarfareTypeClass>;
+class ElectronicWarfareClass : public AreaAffection::Instance<ElectronicWarfareTypeClass, AreaAffection::DataEntry<ElectronicWarfareClass>>
+{
+public:
+	void In(__CellExt_ExtData& cell, short radius, int radiusSq) override;
+	void Out(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 
-static_assert(AreaAffection::IsAreaAffection<ElectronicWarfareClass>, "It is not a Area Affection!");
+	ElectronicWarfareClass(ElectronicWarfareTypeClass* type, AbstractClass* parent, HouseClass* owner, short radius) : Instance(type, parent, owner, radius) { }
+};
+
+static_assert(AreaAffection::IsInstance<ElectronicWarfareClass>, "It is not a Area Affection!");

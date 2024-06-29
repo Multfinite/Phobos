@@ -1,3 +1,4 @@
+#include "AreaAffection.Body.hpp"
 #include "AreaAffection.Post.hpp"
 
 #include <FootClass.h>
@@ -63,7 +64,7 @@ std::shared_ptr<DetectResult> AreaAffection::CellEntry::DetectBy(CloakTypeClass*
 {
 	auto r = std::make_shared<DetectResult>(pSubject, pCloakType);
 
-	auto iter = std::find(SensedBy.begin(), SensedBy.end(), pCloakType);
+	auto iter = SensedBy.find(pCloakType);
 	if (iter == SensedBy.end())
 		return r;
 	for (auto& pair : iter->second)
@@ -82,12 +83,12 @@ std::shared_ptr<DetectResult> AreaAffection::CellEntry::DetectBy(CloakTypeClass*
 }
 
 
-template<typename ...TAreaAffectionDataEntries>
-	requires (AreaAffection::IsDataEntry<TAreaAffectionDataEntries> && ...)
+template<typename ...TDataEntries>
+	requires (AreaAffection::IsDataEntry<TDataEntries> && ...)
 inline void __PerCellProcess(
 	FootClass* pThis, TechnoExt::ExtData* pExt
 	, TechnoTypeClass* pType, TechnoTypeExt::ExtData* pTypeExt
-	, typename TAreaAffectionDataEntries& ...entries
+	, typename TDataEntries& ...entries
 ) {
 	short radius; int radiusSquared;
 	AreaAffection::MaxRanges(radius, radiusSquared, entries...);
