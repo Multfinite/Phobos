@@ -17,7 +17,7 @@ DEFINE_HOOK(0x7037DD, TechnoClass__DoCloak_Quiet, 0x10)
 	GET(TechnoClass*, pThis, ESI);
 
 	// restored code
-	pThis->CloakProgress->Step = 1;
+	pThis->CloakProgress.Step = 1;
 
 	auto pExt = TechnoExt::ExtMap.Find(pThis);
 	switch (pExt->TypeExtData->Cloak_In_SoundMode)
@@ -44,7 +44,7 @@ DEFINE_HOOK(0x70372A, TechnoClass__DoUncloak_Quiet, 0x10)
 	GET(TechnoClass*, pThis, ESI);
 
 	// restored code
-	pThis->CloakProgress->Step = 1;
+	pThis->CloakProgress.Step = 1;
 
 	auto pExt = TechnoExt::ExtMap.Find(pThis);
 	switch (pExt->TypeExtData->Cloak_Out_SoundMode)
@@ -75,6 +75,6 @@ DEFINE_HOOK(0x4D85FA, FootClass__Per_Cell_Process__ReplaceSensorLogic, 0x6)
 
 	AreaAffection::PerCellProcess(pThis, pExt, pType, pTypeExt);
 
-	// We have reimplemented vanilla behavior in `AreaAffection::PerCellProcess`
+	// We have reimplemented vanilla behavior in `AreaAffection::PerCellProcess` --Multfinite
 	return SKIP_SENSORS;
 }

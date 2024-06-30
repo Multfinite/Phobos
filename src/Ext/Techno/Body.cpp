@@ -596,8 +596,7 @@ void TechnoExt::ExtData::Serialize(T& Stm)
 		// In theory it should be serialized too
 		//.Process(this->ChildAttachments)
 		//.Process(this->ChildAttachmentsPerType)
-		.Process(this->Sensor)
-		.Process(this->Cloak)
+		.Process(*this->AreaAffection)
 		;
 }
 

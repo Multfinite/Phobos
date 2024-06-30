@@ -12,8 +12,30 @@ __CellExt_ExtData::~__CellExt_ExtData()
 	delete AreaAffectionCache;
 }
 
+void CellExt::ExtData::LoadFromINIFile(CCINIClass* pINI) {}
+void CellExt::ExtData::LoadBeforeTypeData(RulesClass* pThis, CCINIClass* pINI) { }
+void CellExt::ExtData::LoadAfterTypeData(RulesClass* pThis, CCINIClass* pINI) { }
+void CellExt::ExtData::InitializeConstants() { }
+void CellExt::ExtData::InitializeAfterTypeData(RulesClass* pThis) { }
+
+void CellExt::ExtData::InvalidatePointer(void* ptr, bool bRemoved){ }
+
+void CellExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
+{
+	Serialize(Stm);
+}
+void CellExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
+{
+	Serialize(Stm);
+}
+
+bool CellExt::LoadGlobals(PhobosStreamReader& Stm) { return true; }
+bool CellExt::SaveGlobals(PhobosStreamWriter& Stm) { return true; }
+
 // =============================
 // container
+
+CellExt::ExtContainer CellExt::ExtMap;
 
 CellExt::ExtContainer::ExtContainer() : Container("CellClass") { }
 CellExt::ExtContainer::~ExtContainer() = default;

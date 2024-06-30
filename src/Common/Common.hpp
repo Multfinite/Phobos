@@ -15,17 +15,20 @@ concept __IsExtensionInitializable_HasInitialize_Overload= requires(typename TEx
 
 template<typename TExtension, typename T>
 concept IsExtensionInitializable =
-	__IsExtensionInitializable_HasInitialize_Template<TExtension, T> ||
-	__IsExtensionInitializable_HasInitialize_Overload<TExtension, T>;
+		__IsExtensionInitializable_HasInitialize_Template<TExtension, T>
+	//||  __IsExtensionInitializable_HasInitialize_Overload<TExtension, T>
+;
 
 template<typename TExtension, typename ...T> requires (IsExtensionInitializable<TExtension, T> && ...)
 inline void __fastcall Initialize(typename TExtension::base_type* on)
 {
 	([&]
 	{
-		if (__IsExtensionInitializable_HasInitialize_Template<TExtension, T>)
+		//if (__IsExtensionInitializable_HasInitialize_Overload<TExtension, T>)
+		//	T::Initialize(on);
+		//else if (__IsExtensionInitializable_HasInitialize_Template<TExtension, T>)
 			T::template Initialize<TExtension>(on);
-		else
-			T::Initialize(on);
+		//else
+		//	static_assert(false, "T::Initialize template/overload not found.");
 	}(), ...);
 }

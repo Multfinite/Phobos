@@ -12,11 +12,12 @@
 #include <Utilities/Stream.h>
 #include <Utilities/Misc.hpp>
 
-struct __CellExt_ExtData;
+class __CellExt_ExtData;
 
 /*!
 * @brief All logic for cell radius affection stored here.
 * @brief File structure are:
+* @author Multfinite
 */
 namespace AreaAffection
 {
@@ -40,6 +41,11 @@ namespace AreaAffection
 		pInst = x.GetMostRanged();
 	};
 
+	/*!
+	* @brief It is generic way to store area affection data on different extension types.
+	* @brief All data entries stored in `AreaAffection::InstanceEntry` struct which is must be the field of extension as `AreaAffection::InstanceEntry* const AreaAffection`.
+	* @author Multfinite
+	*/
 	template<typename TInstance>
 	struct DataEntry
 	{
@@ -49,28 +55,33 @@ namespace AreaAffection
 
 		/*!
 		* @brief Owning instance
+		* @brief Currently supported: TechnoClass, BulletClass (projectile), CellClass
 		*/
 		Valueable<AbstractClass*> Parent;
-		ValueableSet<instance_ptr, typename instance::radius_less> Items;
+
+		std::list<instance_ptr> Items;
+		/*!
+		* @brief Sorting is necessary for process functions.
+		* @brief It will pass proceed of objects which radius is less then distance from center to current processing cell.
+		*/
+		std::set<instance*, typename instance::radius_less> SortedItems;
+		/*!
+		* @brief Flag to control destruction. TRUE means that this data entry was cleared by `Logic<TInstance>::ClearEntry`.
+		*/
 		bool ClearedByEntry = false;
 
 		DataEntry(AbstractClass* pParent) : Parent(pParent) { }
 
 		instance* GetMostRanged() const
 		{
-			auto& pItem = // unique_ptr
-				*(Items.begin()); // std::set is sorted
-			return pItem.get();
+			return *SortedItems.begin(); // std::set is sorted
 		}
 
 		instance* Instantiate(typename instance::type* pType, HouseClass* pHouse, short radius)
 		{
-			instance* pInst = Items.emplace();
-			pInst->Parent = Parent;
-			pInst->Type = pType;
-			pInst->Owner = pHouse;
-			pInst->Radius = radius; pInst->RadiusSq = radius ^ 2;
-			return pInst;
+			instance_ptr& inst = Items.emplace_back(std::make_unique<instance>(pType, Parent, pHouse, radius));
+			SortedItems.insert(inst.get());
+			return inst.get();
 		}
 
 		bool Load(PhobosStreamReader& stm, bool registerForChange)
@@ -88,7 +99,8 @@ namespace AreaAffection
 		{
 			return stm
 				.Process(this->Parent)
-				.Process(this->Items)
+				// TODO
+				//.Process(this->Items)
 				.Success();
 		}
 	};
@@ -123,8 +135,8 @@ namespace AreaAffection
 
 	/*!
 	* @author Multfinite
-	* @brief Interface for any area affection instance.
-	* @bruef It links area affection type and it's owner.
+	* @brief Interface (with generic implementation lol) for any area affection instance.
+	* @brief It links area affection type and it's owner.
 	*/
 	struct IInstance
 	{
@@ -214,14 +226,17 @@ namespace AreaAffection
 		}
 	};
 
-	template<typename TType, typename TDataEntry>
+	/*!
+	* @author Multfinite
+	* @brief Generic implementation of IInstance with specific area affection type.
+	*/
+	template<typename TDerived, typename TType, typename TDataEntry>
 	struct Instance : public IInstance
 	{
 		using type = TType;
+		using derived_type = TDerived;
 		using data_entry = TDataEntry;
-		using self = Instance<type, data_entry>;		
-
-		static std::list<self*> Array;
+		using self = Instance<derived_type, type, data_entry>;		
 
 		Valueable<type*> Type;
 
@@ -237,14 +252,15 @@ namespace AreaAffection
 			return static_cast<IInstance*>(pThis)->Save(Stm) && pThis->Serialize(Stm);
 		}
 
-		friend class AreaAffection::Logic<self>;
+		friend struct AreaAffection::Logic<self>;
 		bool ClearedByEntry = false;
 	protected:
 		Instance(type* type, AbstractClass* parent, HouseClass* owner, short radius) :
 			IInstance(parent, owner, radius), Type(type)
 		{
-			Array.push_back(this);
+			derived_type::Array.push_back(reinterpret_cast<derived_type*>(this));
 		}
+		void remove_from_array() { derived_type::Array.remove(reinterpret_cast<derived_type*>(this)); }
 		~Instance();
 	private:
 		template<typename T>
@@ -289,7 +305,7 @@ namespace AreaAffection
 		static Logic<instance> Instance;
 
 		/*!
-		* @brief For special use-case in PerCellProcess for FootClass, BulletClass
+		* @brief For special use-case in PerCellProcess for FootClass. This should be called on every place where object is changing position.
 		*/
 		void InOut(const data_entry& entry, short radius, int radiusSq
 			, __CellExt_ExtData* pCurrentExt
@@ -309,21 +325,21 @@ namespace AreaAffection
 
 	template<typename ...TDataEntries>
 		requires (IsDataEntry<TDataEntries> && ...)
-	void In(int radius, int radiusSq
+	void In(short radius, int radiusSq
 		, __CellExt_ExtData* pExt
 		, typename TDataEntries&... entries
 	);
 
 	template<typename ...TDataEntries>
 		requires (IsDataEntry<TDataEntries> && ...)
-	void Out(int radius, int radiusSq
+	void Out(short radius, int radiusSq
 		, __CellExt_ExtData* pExt
 		, typename TDataEntries&... entries
 	);
 
 	template<typename ...TDataEntries>
 		requires (IsDataEntry<TDataEntries> && ...)
-	void InOut(int radius, int radiusSq
+	void InOut(short radius, int radiusSq
 		, __CellExt_ExtData* pCurrent, __CellExt_ExtData* pPrevious
 		, typename TDataEntries&... entries
 	);	

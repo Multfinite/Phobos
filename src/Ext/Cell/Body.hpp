@@ -18,7 +18,7 @@
 class __CellExt_ExtData final : public Extension<CellClass>
 {
 public:
-	AreaAffection::CellEntry* AreaAffectionCache;
+	AreaAffection::CellEntry* const AreaAffectionCache;
 	AreaAffection::InstanceEntry* const AreaAffection;
 
 	__CellExt_ExtData(CellClass* ownerObject);
@@ -30,7 +30,7 @@ public:
 	virtual void InitializeConstants() override;
 	void InitializeAfterTypeData(RulesClass* pThis);
 
-	virtual void InvalidatePointer(void* ptr, bool bRemoved) override { }
+	virtual void InvalidatePointer(void* ptr, bool bRemoved) override;
 
 	virtual void LoadFromStream(PhobosStreamReader& Stm) override;
 	virtual void SaveToStream(PhobosStreamWriter& Stm) override;
@@ -48,7 +48,13 @@ public:
 
 private:
 	template <typename T>
-	void Serialize(T& Stm);
+	bool Serialize(T& Stm)
+	{
+		return Stm
+			.Process(*this->AreaAffectionCache)
+			.Process(*this->AreaAffection)
+			.Success();
+	}
 };
 
 class CellExt

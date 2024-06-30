@@ -345,55 +345,6 @@ public:
 	inline bool Save(PhobosStreamWriter& Stm) const;
 };
 
-template<
-	class T,
-	class TComparer = std::less<T>,
-	class TAllocator = std::allocator<T>
->
-class ValueableSet : public std::set<T, TComparer, TAllocator>
-{
-public:
-	using base_container = std::set<T, TComparer, TAllocator>;
-	using value_type = T;
-	using base_type = std::remove_pointer_t<T>;
-	using comparer_type = TComparer;
-	using allocator_type = TAllocator;
-
-	ValueableSet() noexcept = default;
-
-	inline void Read(INI_EX& parser, const char* pSection, const char* pKey);
-
-	bool Contains(const T& other) const
-	{
-		return std::find(this->begin(), this->end(), other) != this->end();
-	}
-
-	void AddUnique(const T& item)
-	{
-		if (!this->Contains(item))
-			this->emplace(item);
-	}
-
-	int IndexOf(const T& other) const
-	{
-		auto it = std::find(this->begin(), this->end(), other);
-		if (it != this->end())
-		{
-			return it - this->begin();
-		}
-		return -1;
-	}
-
-	Iterator<T> GetElements() const noexcept
-	{
-		return Iterator<T>(*this);
-	}
-
-	inline bool Load(PhobosStreamReader& Stm, bool RegisterForChange);
-
-	inline bool Save(PhobosStreamWriter& Stm) const;
-};
-
 template<class T>
 class NullableVector : public ValueableVector<T>
 {

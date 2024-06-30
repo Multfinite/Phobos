@@ -4,17 +4,6 @@
 #include <Ext/BulletType/Body.h>
 #include <Ext/WarheadType/Body.h>
 
-CloakTypeClass::DataEntry* CloakTypeClass::DataEntry::Get(AbstractTypeClass* pAbsType)
-{
-	if (auto* pExtType = TechnoTypeExt::ExtMap.Find(abstract_cast<TechnoTypeExt::base_type*>(pAbsType)))
-		return &pExtType->Cloak;
-	if (auto* pExtType = BulletTypeExt::ExtMap.Find(abstract_cast<BulletTypeExt::base_type*>(pAbsType)))
-		return &pExtType->Cloak;
-	if (auto* pExtType = WarheadTypeExt::ExtMap.Find(abstract_cast<WarheadTypeExt::base_type*>(pAbsType)))
-		return &pExtType->Cloak;
-	return nullptr;
-}
-
 void CloakTypeClass::DataEntry::LoadFromINI(CCINIClass* pINI, const char* pSection)
 {
 	INI_EX exINI(pINI);

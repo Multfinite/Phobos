@@ -2,7 +2,8 @@
 #include <Ext/Anim/Body.h>
 #include <Ext/BulletType/Body.h>
 #include <Utilities/Macro.h>
-#include <Utilities/Common.hpp>
+#include <Common/AreaAffection.Body.hpp>
+#include <Common/AreaAffection.Post.hpp>
 
 #include <ScenarioClass.h>
 
@@ -20,10 +21,10 @@ DEFINE_HOOK(0x466556, BulletClass_Init, 0x6)
 		if (!pThis->Type->Inviso)
 			pExt->InitializeLaserTrails();
 
-		Init<BulletExt,
-			SensorClass
-			, ElectronicWarfareClass
-			, CloakClass>
+		Initialize<BulletExt
+			, SensorTypeClass
+			, ElectronicWarfareTypeClass
+			, CloakTypeClass>
 			(pThis);
 	}
 
@@ -44,6 +45,9 @@ DEFINE_HOOK(0x4666F7, BulletClass_AI, 0x6)
 	auto pBulletExt = BulletExt::ExtMap.Find(pThis);
 	BulletAITemp::ExtData = pBulletExt;
 	BulletAITemp::TypeExtData = pBulletExt->TypeExtData;
+
+	// BulletClass now supports area affection mechanic. --Multfinite
+	AreaAffection::PerCellProcess(pThis, pBulletExt, pBulletExt->TypeExtData->OwnerObject(), pBulletExt->TypeExtData);
 
 	if (pBulletExt->InterceptedStatus == InterceptedStatus::Intercepted)
 	{

@@ -37,7 +37,7 @@ public:
 	};
 
 	using data_entry = ElectronicWarfareTypeClass::DataEntry;
-	friend class data_entry;
+	friend struct data_entry;
 
 	inline static data_entry* EntryOf(AbstractTypeClass* pAbsType);
 	template<typename TExtension>

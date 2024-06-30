@@ -39,7 +39,7 @@ public:
 		bool Serialize(T& stm);
 	};
 	using data_entry = CloakTypeClass::DataEntry;
-	friend class data_entry;
+	friend struct data_entry;
 
 	inline static data_entry* EntryOf(AbstractTypeClass* pAbsType);
 	template<typename TExtension>

@@ -16,9 +16,13 @@
 #include <New/Type/CloakTypeClass.hpp>
 #include <New/Type/SensorTypeClass.hpp>
 
-class SensorClass : public AreaAffection::Instance<SensorTypeClass, AreaAffection::DataEntry<SensorClass>>
+class SensorClass : public AreaAffection::Instance<SensorClass, SensorTypeClass, AreaAffection::DataEntry<SensorClass>>
 {
 public:
+	using typed_instance = AreaAffection::Instance<SensorClass, SensorTypeClass, AreaAffection::DataEntry<SensorClass>>;
+
+	static std::list<SensorClass*> Array;
+
 	void In(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 	void Out(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 

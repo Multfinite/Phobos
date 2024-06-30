@@ -1,5 +1,11 @@
 #pragma once
 
+#include <TechnoClass.h>
+#include <TechnoTypeClass.h>
+#include <BulletClass.h>
+#include <BulletTypeClass.h>
+#include <WarheadTypeClass.h>
+
 #include <Ext/Cell/Body.hpp>
 #include <Ext/Techno/Body.h>
 #include <Ext/TechnoType/Body.h>
@@ -12,6 +18,7 @@
 #include <New/Senses.hpp>
 
 #include <Common/AreaAffection.hpp>
+#include <Common/Entry.Post.hpp>
 
 namespace AreaAffection
 {
@@ -23,6 +30,20 @@ namespace AreaAffection
 		, TechnoTypeClass* pType, TechnoTypeExt::ExtData* pTypeExt
 	);
 
+	/*!
+	* @brief All affections (for BulletClass) must be invoked here. Just register it inside.
+	*/
+	void PerCellProcess(
+		BulletClass* pThis, BulletExt::ExtData* pExt
+		, BulletTypeClass* pType, BulletTypeExt::ExtData* pTypeExt
+	);
+
+	/*!
+	* @author Multfinite
+	* @brief Per-extension data block with inforamtion of all area affections.
+	* @brief It's here to be easy in control.
+	* @brief Always must be included to extension data as field `AreaAffection::InstanceEntry* const AreaAffection`
+	*/
 	struct InstanceEntry
 	{
 		SensorClass::data_entry Sensor;
@@ -41,8 +62,34 @@ namespace AreaAffection
 				, EW
 			);
 		}
+
+		bool Load(PhobosStreamReader& Stm, bool RegisterForChange)
+		{
+			return Serialize(Stm);
+		}
+		bool Save(PhobosStreamWriter& Stm) const 
+		{
+			using this_ptr = std::remove_const_t<std::remove_pointer_t<decltype(this)>>*;
+			return const_cast<this_ptr>(this)->Serialize(Stm);
+		}
+	private:
+		template<typename T>
+		bool Serialize(T& Stm)
+		{
+			return Stm
+				.Process(this->Sensor)
+				.Process(this->Cloak)
+				.Process(this->EW)
+				.Success();
+		}
 	};
 
+	/*!
+	* @author Multfinite
+	* @brief Cell extension data block with cache of all area affection types.
+	* @brief Included to cell extension as `AreaAffection::InstanceEntry* const AreaAffectionCache`
+	* @brief NOTE: you must specify new `Register/Unregister` function pair for each new instance type of area affection as overload.
+	*/
 	struct CellEntry
 	{
 		// Current presented objects which works centered on this cell
@@ -67,6 +114,8 @@ namespace AreaAffection
 			HouseClass* pSubject
 		);
 	};
+
+	/* Place all your specialization for generalized logic here. --Multfinite */
 
 	template<typename TExtension>
 	struct Entry<SensorClass, TExtension>
@@ -132,7 +181,7 @@ namespace AreaAffection
 		auto* pType = pParent->GetTechnoType();
 		auto* pTypeExt = pExt->TypeExtData;
 		auto& pExtEntry = AreaAffection::Entry<TAreaAffection, TExtension>::Of(pExt);
-		auto& pExtTypeEntry = (typename TAreaAffection::type)::EntryOf<TExtension>(pExt);
+		auto& pExtTypeEntry = typename TAreaAffection::type::template EntryOf<std::remove_pointer_t<decltype(pTypeExt)>>(pTypeExt);
 
 		if (!pExtTypeEntry.IsEnabled) return;
 		auto typeIter = pExtTypeEntry.Types.begin();
@@ -146,10 +195,10 @@ namespace AreaAffection
 }
 
 template<typename TExtension>
-inline void SensorTypeClass::Initialize(typename TExtension::base_type* pParent) { AreaAffection::Initialize<SensorClass>(pParent); }
+inline void SensorTypeClass::Initialize(typename TExtension::base_type* pParent) { AreaAffection::Initialize<SensorClass, TExtension>(pParent); }
 
 template<typename TExtension>
-inline void CloakTypeClass::Initialize(typename TExtension::base_type* pParent) { AreaAffection::Initialize<SensorClass>(pParent); }
+inline void CloakTypeClass::Initialize(typename TExtension::base_type* pParent) { AreaAffection::Initialize<CloakClass, TExtension>(pParent); }
 
 template<typename TExtension>
-inline void ElectronicWarfareTypeClass::Initialize(typename TExtension::base_type* pParent) { AreaAffection::Initialize<SensorClass>(pParent); }
+inline void ElectronicWarfareTypeClass::Initialize(typename TExtension::base_type* pParent) { AreaAffection::Initialize<ElectronicWarfareClass, TExtension>(pParent); }

@@ -7,6 +7,7 @@
 #include <Utilities/EnumFunctions.h>
 #include <Misc/FlyingStrings.h>
 
+#include <Common/AreaAffection.Body.hpp>
 #include <Common/AreaAffection.Post.hpp>
 
 BulletExt::ExtContainer BulletExt::ExtMap;
@@ -193,8 +194,7 @@ void BulletExt::ExtData::Serialize(T& Stm)
 		.Process(this->LaserTrails)
 		.Process(this->SnappedToTarget)
 		.Process(this->DamageNumberOffset)
-		.Process(this->Sensor)
-		.Process(this->Cloak)
+		.Process(*this->AreaAffection)
 		;
 
 	this->Trajectory = PhobosTrajectory::ProcessFromStream(Stm, this->Trajectory);

@@ -15,9 +15,13 @@
 
 #include <New/Type/ElectronicWarfareTypeClass.hpp>
 
-class ElectronicWarfareClass : public AreaAffection::Instance<ElectronicWarfareTypeClass, AreaAffection::DataEntry<ElectronicWarfareClass>>
+class ElectronicWarfareClass : public AreaAffection::Instance<ElectronicWarfareClass, ElectronicWarfareTypeClass, AreaAffection::DataEntry<ElectronicWarfareClass>>
 {
 public:
+	using typed_instance = AreaAffection::Instance<ElectronicWarfareClass, ElectronicWarfareTypeClass, AreaAffection::DataEntry<ElectronicWarfareClass>>;
+
+	static std::list<ElectronicWarfareClass*> Array;
+
 	void In(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 	void Out(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 

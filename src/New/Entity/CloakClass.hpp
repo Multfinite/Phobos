@@ -15,9 +15,13 @@
 
 #include <New/Type/CloakTypeClass.hpp>
 
-class CloakClass : public AreaAffection::Instance<CloakTypeClass, AreaAffection::DataEntry<CloakClass>>
+class CloakClass : public AreaAffection::Instance<CloakClass, CloakTypeClass, AreaAffection::DataEntry<CloakClass>>
 {
 public:
+	using typed_instance = AreaAffection::Instance<CloakClass, CloakTypeClass, AreaAffection::DataEntry<CloakClass>>;
+
+	static std::list<CloakClass*> Array;
+
 	void In(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 	void Out(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 

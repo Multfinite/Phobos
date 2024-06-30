@@ -8,11 +8,10 @@ namespace AreaAffection
 {
 	template<typename TInstance>
 	void Logic<TInstance>::InOut(const data_entry& entry, short radius, int radiusSq
-		, CellExt::ExtData* pCurrentExt
-		, CellExt::ExtData* pPreviousExt
-	)
-	{
-		for (auto& pItem : entry.Items)
+		, __CellExt_ExtData* pCurrentExt
+		, __CellExt_ExtData* pPreviousExt
+	) {
+		for (auto& pItem : entry.SortedItems)
 		{
 			if (pItem->RadiusSq < radiusSq)
 				break; // std::set is sorted
@@ -23,9 +22,9 @@ namespace AreaAffection
 	}
 
 	template<typename TInstance>
-	void Logic<TInstance>::In(const data_entry& entry, short radius, int radiusSq, CellExt::ExtData* pExt)
+	void Logic<TInstance>::In(const data_entry& entry, short radius, int radiusSq, __CellExt_ExtData* pExt)
 	{
-		for (auto& pItem : entry.Items)
+		for (auto& pItem : entry.SortedItems)
 		{
 			if (pItem->RadiusSq < radiusSq)
 				break; // std::set is sorted
@@ -35,9 +34,9 @@ namespace AreaAffection
 	}
 
 	template<typename TInstance>
-	void Logic<TInstance>::Out(const data_entry& entry, short radius, int radiusSq, CellExt::ExtData* pExt)
+	void Logic<TInstance>::Out(const data_entry& entry, short radius, int radiusSq, __CellExt_ExtData* pExt)
 	{
-		for (auto& pItem : entry.Items)
+		for (auto& pItem : entry.SortedItems)
 		{
 			if (pItem->RadiusSq < radiusSq)
 				break; // std::set is sorted
@@ -55,7 +54,7 @@ namespace AreaAffection
 			{
 				pInst->Out(*CellExt::ExtMap.Find(pCell), radius, radiusSq);
 			});
-		instance::Array.remove(pInst);
+		pInst->remove_from_array();
 	}
 
 	template<typename TInstance>
@@ -77,7 +76,7 @@ namespace AreaAffection
 		std::for_each(entry.Items.begin(), entry.Items.end(), [](data_entry::instance_ptr& item)
 		{
 			item->ClearedByEntry = true;
-			instance::Array.remove(item.get());
+			item->remove_from_array();
 		});
 	}
 
@@ -103,8 +102,8 @@ namespace AreaAffection
 
 	template<typename ...TInstance>
 		requires (IsInstance<TInstance> && ...)
-	void In(int radius, int radiusSq
-		, CellExt::ExtData* pExt
+	void In(short radius, int radiusSq
+		, __CellExt_ExtData* pExt
 		, typename TInstance::data_entry&... entries
 	) {
 		([&]
@@ -119,8 +118,8 @@ namespace AreaAffection
 
 	template<typename ...TInstance>
 		requires (IsInstance<TInstance> && ...)
-	void Out(int radius, int radiusSq
-		, CellExt::ExtData* pExt
+	void Out(short radius, int radiusSq
+		, __CellExt_ExtData* pExt
 		, typename TInstance::data_entry&... entries
 	) {
 		([&]
@@ -135,8 +134,8 @@ namespace AreaAffection
 
 	template<typename ...TDataEntries>
 		requires (IsDataEntry<TDataEntries> && ...)
-	void InOut(int radius, int radiusSq
-		, CellExt::ExtData* pCurrent, CellExt::ExtData* pPrevious
+	void InOut(short radius, int radiusSq
+		, __CellExt_ExtData* pCurrent, __CellExt_ExtData* pPrevious
 		, typename TDataEntries&... entries
 	) {
 		([&]
@@ -149,8 +148,8 @@ namespace AreaAffection
 		}(), ...);
 	}
 
-	template<typename TType, typename TDataEntry>
-	Instance<TType, TDataEntry>::~Instance()
+	template<typename TDerived, typename TType, typename TDataEntry>
+	Instance<TDerived, TType, TDataEntry>::~Instance()
 	{		
 		if (ClearedByEntry) return;
 		AreaAffection::Logic<std::remove_pointer_t<decltype(this)>>::Instance.ClearInstance(this);

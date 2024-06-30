@@ -22,5 +22,5 @@ inline void __fastcall AI()
 		for (auto* pInstance : TAI::Array)
 			//	if (pInstance->IsInLogic)
 			pInstance->AI();
-	}(), ...TAI);
+	}(), ...);
 }

@@ -12,6 +12,8 @@
 #include <New/Entity/CloakClass.hpp>
 #include <New/Entity/ElectronicWarfareClass.hpp>
 
+decltype(AreaAffection::IInstance::Array) AreaAffection::IInstance::Array;
+
 void AreaAffection::CellEntry::Register(SensorClass* pSensor)
 {
 	if (std::find(Sensors.cbegin(), Sensors.cend(), pSensor) != Sensors.cend())
@@ -123,3 +125,46 @@ void AreaAffection::PerCellProcess(
 	);
 }
 
+template<typename ...TDataEntries>
+	requires (AreaAffection::IsDataEntry<TDataEntries> && ...)
+inline void __PerCellProcess(
+	BulletClass* pThis, BulletExt::ExtData* pExt
+	, BulletTypeClass* pType, BulletTypeExt::ExtData* pTypeExt
+	, typename TDataEntries& ...entries
+)
+{
+	short radius; int radiusSquared;
+	AreaAffection::MaxRanges(radius, radiusSquared, entries...);
+
+	auto lastMapCoords = pThis->LastMapCoords;
+	auto currentMapCoords = pThis->GetMapCoords();
+
+	auto cellHandler = [&](int radiusSq,
+		CellClass* pCurrent, CellExt::ExtData* pCurrentExt,
+		CellClass* pPrevious, CellExt::ExtData* pPreviousExt)
+	{
+		// TODO: make default sensors and cloak as separate classes for area affection.
+		/* default sensors logic */
+		/*
+		if (pType->SensorsSight > 0)
+		{
+			// See 0x4DE780 and 0x4DE940
+			pPrevious->Sensors_RemOfHouse(pThis->GetOwningHouseIndex());
+			pCurrent->Sensors_AddOfHouse(pThis->GetOwningHouseIndex());
+		}
+		*/
+
+		AreaAffection::InOut(radius, radiusSq, pCurrentExt, pPreviousExt, entries...);
+	};
+}
+
+void AreaAffection::PerCellProcess(
+	BulletClass* pThis, BulletExt::ExtData* pExt
+	, BulletTypeClass* pType, BulletTypeExt::ExtData* pTypeExt
+) {
+	__PerCellProcess(pThis, pExt, pType, pTypeExt
+		, pExt->AreaAffection->Sensor
+		, pExt->AreaAffection->Cloak
+		, pExt->AreaAffection->EW
+	);
+}
