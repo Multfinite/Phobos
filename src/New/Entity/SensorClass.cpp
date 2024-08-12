@@ -9,8 +9,7 @@
 #include <Common/AreaAffection.Body.hpp>
 #include <Common/AreaAffection.Post.hpp>
 
-decltype(AreaAffection::Logic<SensorClass::typed_instance>::Instance) AreaAffection::Logic<SensorClass::typed_instance>::Instance;
-decltype(AreaAffection::Logic<SensorClass>::Instance) AreaAffection::Logic<SensorClass>::Instance;
+decltype(SensorClass::logic::Instance) SensorClass::logic::Instance;
 decltype(SensorClass::Array) SensorClass::Array;
 
 void SensorClass::In(__CellExt_ExtData& cellExt, short radius, int radiusSq)

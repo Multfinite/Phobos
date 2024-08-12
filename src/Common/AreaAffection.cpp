@@ -16,26 +16,30 @@ decltype(AreaAffection::IInstance::Array) AreaAffection::IInstance::Array;
 
 void AreaAffection::CellEntry::Register(SensorClass* pSensor)
 {
-	if (std::find(Sensors.cbegin(), Sensors.cend(), pSensor) != Sensors.cend())
+	if (std::find(Items.cbegin(), Items.cend(), pSensor) != Items.cend())
 		return;
-	Sensors.push_back(pSensor);
-	for (auto& pCloakType : pSensor->Type->Senses)
+	Items.push_back(pSensor);
+	for (auto& pCloakType : pSensor->Type->Scan)
 	{
-		auto& sensesMap = SensedBy[pCloakType];
+		auto& sensesMap = ScannedBy[pCloakType];
 		auto& senses = sensesMap[pSensor->GetOwningHouse()];
 		senses.Register(pSensor);
 	}
+
+	ScanCacheDirty = true;
 }
 void AreaAffection::CellEntry::Unregister(SensorClass* pSensor)
 {
-	if (Sensors.remove(pSensor) == 0)
+	if (Items.remove(pSensor) == 0)
 		return;
-	for (auto& pCloakType : pSensor->Type->Senses)
+	for (auto& pCloakType : pSensor->Type->Scan)
 	{
-		auto& sensesMap = SensedBy[pCloakType];
+		auto& sensesMap = ScannedBy[pCloakType];
 		for (auto& kvp : sensesMap)
 			kvp.second.Unregister(pSensor);
 	}
+
+	ScanCacheDirty = true;
 }
 
 void AreaAffection::CellEntry::Register(CloakClass* pCloak)
@@ -62,24 +66,42 @@ void AreaAffection::CellEntry::Unregister(ElectronicWarfareClass* pEW)
 		return;
 }
 
-std::shared_ptr<DetectResult> AreaAffection::CellEntry::DetectBy(CloakTypeClass* pCloakType, HouseClass* pSubject)
+std::shared_ptr<Senses::ScanResult> AreaAffection::CellEntry::ScanBy(CloakTypeClass* pCloakType, HouseClass* pSubject)
 {
-	auto r = std::make_shared<DetectResult>(pSubject, pCloakType);
+	if(!ScanCacheDirty)
+	{
+		auto it = ScanCache.find({ pCloakType, pSubject });
+		if (it != ScanCache.end())
+			return it->second;
+	}
+	else
+	{
+		ScanCacheDirty = false;
+		ScanCache.clear();
+	}
 
-	auto iter = SensedBy.find(pCloakType);
-	if (iter == SensedBy.end())
+	auto r = std::make_shared<Senses::ScanResult>(pSubject, pCloakType);
+
+	auto iter = ScannedBy.find(pCloakType);
+	if (iter == ScannedBy.end())
 		return r;
 	for (auto& pair : iter->second)
 	{
+		auto const& senses = pair.second;
 		bool const isMe = pSubject == pair.first;
 		bool const isAlly = pSubject->IsAlliedWith(pair.first);
-		if (!isMe && !isAlly)
-			continue;
-
-		auto const& senses = pair.second;
-		senses.Air.Detect(r->Air.Sensors, r->Air.Decloakers, !isMe);
-		senses.Ground.Detect(r->Ground.Sensors, r->Ground.Decloakers, !isMe);
-		senses.Subterannean.Detect(r->Subterannean.Sensors, r->Subterannean.Decloakers, !isMe);
+		for (auto p : {
+			  std::pair<decltype(senses.Air) const&, decltype(r->Air)&>(senses.Air, r->Air)
+			, std::pair<decltype(senses.Air) const&, decltype(r->Air)&>(senses.Ground, r->Ground)
+			, std::pair<decltype(senses.Air) const&, decltype(r->Air)&>(senses.Subterannean, r->Subterannean)
+		})
+			p.first.Scan(!isMe, !isMe && !isAlly
+				, p.second.Items
+				, p.second.Detectors, p.second.Selectables
+				, p.second.Decloakers
+				, p.second.Trackers
+				, p.second.Displayers
+			);
 	}
 	return r;
 }
@@ -87,7 +109,7 @@ std::shared_ptr<DetectResult> AreaAffection::CellEntry::DetectBy(CloakTypeClass*
 
 template<typename ...TDataEntries>
 	requires (AreaAffection::IsDataEntry<TDataEntries> && ...)
-inline void __PerCellProcess(
+inline void FootClass__PerCellProcess(
 	FootClass* pThis, TechnoExt::ExtData* pExt
 	, TechnoTypeClass* pType, TechnoTypeExt::ExtData* pTypeExt
 	, typename TDataEntries& ...entries
@@ -114,25 +136,13 @@ inline void __PerCellProcess(
 	};
 }
 
-void AreaAffection::PerCellProcess(
-	FootClass* pThis, TechnoExt::ExtData* pExt
-	, TechnoTypeClass* pType, TechnoTypeExt::ExtData* pTypeExt
-) {
-	__PerCellProcess(pThis, pExt, pType, pTypeExt
-		, pExt->AreaAffection->Sensor
-		, pExt->AreaAffection->Cloak
-		, pExt->AreaAffection->EW
-	);
-}
-
 template<typename ...TDataEntries>
 	requires (AreaAffection::IsDataEntry<TDataEntries> && ...)
-inline void __PerCellProcess(
+inline void BulletClass__PerCellProcess(
 	BulletClass* pThis, BulletExt::ExtData* pExt
 	, BulletTypeClass* pType, BulletTypeExt::ExtData* pTypeExt
 	, typename TDataEntries& ...entries
-)
-{
+) {
 	short radius; int radiusSquared;
 	AreaAffection::MaxRanges(radius, radiusSquared, entries...);
 
@@ -159,12 +169,35 @@ inline void __PerCellProcess(
 }
 
 void AreaAffection::PerCellProcess(
-	BulletClass* pThis, BulletExt::ExtData* pExt
-	, BulletTypeClass* pType, BulletTypeExt::ExtData* pTypeExt
+	FootClass* pThis, TechnoExt::ExtData* pExt
+	, TechnoTypeClass* pType, TechnoTypeExt::ExtData* pTypeExt
 ) {
-	__PerCellProcess(pThis, pExt, pType, pTypeExt
+	FootClass__PerCellProcess(pThis, pExt, pType, pTypeExt
 		, pExt->AreaAffection->Sensor
 		, pExt->AreaAffection->Cloak
 		, pExt->AreaAffection->EW
 	);
+}
+
+void AreaAffection::PerCellProcess(
+	BulletClass* pThis, BulletExt::ExtData* pExt
+	, BulletTypeClass* pType, BulletTypeExt::ExtData* pTypeExt
+) {
+	BulletClass__PerCellProcess(pThis, pExt, pType, pTypeExt
+		, pExt->AreaAffection->Sensor
+		, pExt->AreaAffection->Cloak
+		, pExt->AreaAffection->EW
+	);
+}
+
+void AreaAffection::InitializeOnCell(IInstance* pInst, CellClass* cell)
+{
+	CellExt::ForEachCell(cell->MapCoords, pInst->Radius.Get(), pInst->RadiusSq.Get(), [&pInst](
+		  int radius
+		, int radiusSq
+		, CellClass* pCell
+		, CellExt::ExtData* pExt
+	) {
+		pInst->In(*pExt, radius, radiusSq);
+	});
 }

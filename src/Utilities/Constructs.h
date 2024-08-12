@@ -45,6 +45,7 @@
 #include <cstring>
 #include <memory>
 #include <vector>
+#include <map>
 
 #include <Phobos.h>
 #include <Phobos.CRT.h>
@@ -186,6 +187,55 @@ public:
 			this->Buffer = _strdup(pBuffer);
 			this->Tokenize();
 		}
+	}
+};
+
+// I see that PhobosMap has just 2 methods save/load. I just implement it here. Reference guarantee that access is O(1).
+// Guys, why we are using self-written implementation when is common (safe and generic) already exists?
+// Spent time to implement new feature instead of this!!!!!!!
+// --Multfinite
+template <class _Kty, class _Ty, class _Hasher = std::hash<_Kty>, class _Keyeq = std::equal_to<_Kty>,
+	class _Alloc = std::allocator<std::pair<const _Kty, _Ty>>>
+class ValueableMap : public std::unordered_map<_Kty, _Ty, _Hasher, _Keyeq, _Alloc>
+{
+public:
+	using map = std::unordered_map<_Kty, _Ty, _Hasher, _Keyeq, _Alloc>;
+
+	bool load(PhobosStreamReader& Stm, bool RegisterForChange)
+	{
+		this->clear();
+
+		size_t size = 0;
+		auto ret = Stm.Load(size);
+
+		if (ret && size)
+		{
+			for (size_t i = 0; i < size; ++i)
+			{
+				typename map::value_type pair;
+				if (!Savegame::ReadPhobosStream(Stm, pair.first, RegisterForChange)
+					|| !Savegame::ReadPhobosStream(Stm, pair.second, RegisterForChange))
+				{
+					return false;
+				}
+				(*this)[std::move(pair.first)] = std::move(pair.second);
+			}
+		}
+
+		return ret;
+	}
+
+	bool save(PhobosStreamWriter& Stm) const
+	{
+		Stm.Save(this->size());
+
+		for (typename map::value_type const& item : (*this))
+		{
+			Savegame::WritePhobosStream(Stm, item.first);
+			Savegame::WritePhobosStream(Stm, item.second);
+		}
+
+		return true;
 	}
 };
 

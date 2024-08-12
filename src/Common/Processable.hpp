@@ -1,26 +1,26 @@
 #pragma once
 
 #include <concepts>
+#include <functional>
 
-/* I notice you that AI() is the same with Process() */
-
-template<typename T>
-concept HasAI = requires(T x)
+enum class ProcessStage : uint8_t
 {
-	T::Array; T::Array.empty(); T::Array.begin(); T::Array.end();
-	//x.IsInLogic;
-	x.AI();
+	  Pre = 0
+	, Post = 1
 };
-template<typename T>
-concept HasProcess = HasAI<T>;
 
-template<typename ...TAI> requires (HasAI<TAI> && ...)
-inline void __fastcall AI()
-{
-	([]
-	{
-		for (auto* pInstance : TAI::Array)
-			//	if (pInstance->IsInLogic)
-			pInstance->AI();
-	}(), ...);
-}
+using task = std::function<void()>;
+using task_ptr = std::shared_ptr<task>;
+
+/*!
+* @brief Enqueue a long-term task into AI/Process cycle.
+*/
+void Enqueue(ProcessStage stage, task_ptr const& task);
+/*!
+* @brief Enqueue a one-time task into AI/Process cycle.
+*/
+void EnqueueOnce(ProcessStage stage, task_ptr const& task);
+/*!
+* @brief Remove a task into AI/Process cycle.
+*/
+void Dequeue(ProcessStage stage, task_ptr const& task);

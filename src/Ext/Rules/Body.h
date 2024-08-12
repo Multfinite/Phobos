@@ -123,6 +123,7 @@ public:
 		Valueable<int> AttachmentUndergroundLayerMaxHeight;
 
 		Valueable<bool> SharedSensors;
+		Valueable<bool> SharedCloak;
 
 		ExtData(RulesClass* OwnerObject) : Extension<RulesClass>(OwnerObject)
 			, Storage_TiberiumIndex { -1 }
@@ -207,6 +208,7 @@ public:
 			, AttachmentUndergroundLayerMaxHeight { -256 }
 
 			, SharedSensors { false }
+			, SharedCloak { false }
 		{ }
 
 		virtual ~ExtData() = default;

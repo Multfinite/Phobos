@@ -430,7 +430,7 @@ inline std::map<std::string, CloakSoundMode, detail::CaseInsensitiveComparator> 
 	};
 };
 
-enum class SensorShareMode : unsigned char
+enum class EffectShareMode : unsigned char
 {
 	Default,
 	Shared,
@@ -438,14 +438,35 @@ enum class SensorShareMode : unsigned char
 };
 
 template<>
-inline std::map<std::string, SensorShareMode, detail::CaseInsensitiveComparator> GetEnumMapping<SensorShareMode>()
+inline std::map<std::string, EffectShareMode, detail::CaseInsensitiveComparator> GetEnumMapping<EffectShareMode>()
 {
 	return
 	{
-		  { "Default", SensorShareMode::Default }
-		, { "Shared", SensorShareMode::Shared }
-		, { "Private", SensorShareMode::Private }
+		  { "Default", EffectShareMode::Default }
+		, { "Shared", EffectShareMode::Shared }
+		, { "Private", EffectShareMode::Private }
 	};
+};
+
+enum class CloakType : unsigned char
+{
+	/*!
+	* @brief Visually do nothing but may be required for some internal effects.
+	* @brief "Cloak" mean not only visual effect but any effect covering unit.
+	*/
+	  Virtual
+	/*!
+	* @brief Invisibility.
+	*/
+	, Stealth
+	/*!
+	* @brief Classical spy's disguise. Look as enemy! and not only...
+	*/
+	, Disguise
+	/*!
+	* @brief Any form of terrain hiding. Be tree, be tant, be grass, etc...
+	*/
+	, Camouflage
 };
 
 template<>

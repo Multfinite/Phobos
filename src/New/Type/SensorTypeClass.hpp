@@ -9,6 +9,10 @@
 #include <Ext/Rules/Body.h>
 #include <TechnoClass.h>
 #include <BulletClass.h>
+#include <SideClass.h>
+#include <HouseTypeClass.h>
+
+#include <Utilities/Constructs.h>
 
 class CloakTypeClass;
 
@@ -47,46 +51,83 @@ public:
 
 	struct LayerFlags
 	{
+		/*!
+		* @brief Prefix of key in INI file
+		*/
 		std::string Prefix;
-		// will used against this layer
-		Valueable<bool> Detect;
-		// Show lines like mind reader or TS sensor array
+		/*!
+		* @brief Is this detecting (not decloaking) object. It means you can see it.
+		*/
+		Valueable<bool> Scan;
+		/*!
+		* @brief Show lines like mind reader or TS sensor array
+		*/
 		Valueable<bool> Track;
+		/*!
+		* @brief Decloak sensed object?
+		*/
 		Valueable<bool> Decloak;
-		// At Radar
+		/*!
+		* @brief Is target should be displayed on radar?
+		*/
 		Valueable<bool> Display;
+		/*!
+		* @brief It will be fired at sensed object
+		*/
+		NullableIdx<WeaponTypeClass*> Weapon;
+		/*!
+		* @brief It will be shown on sensed object
+		*/
+		NullableIdx<AnimTypeClass*> Animation;
 
 		LayerFlags(const std::string& prefix, bool detect, bool track, bool decloak, bool display) :
-			Prefix(prefix), Detect(detect), Track(track), Decloak(decloak), Display(display)
+			Prefix(prefix), Scan(detect), Track(track), Decloak(decloak), Display(display)
 		{}
 
 		virtual void LoadFromINI(CCINIClass* pINI, const char* pSection);
 		virtual bool Load(PhobosStreamReader& stm, bool registerForChange);
 		virtual bool Save(PhobosStreamWriter& stm) const;
 
+		inline bool HasEffect() const { return Scan || Track || Decloak || Display || Weapon || Animation; }
+
 	private:
 		template <typename T>
 		bool Serialize(T& stm);
 	};
 
-	ValueableVector<CloakTypeClass*> Senses;
-	Valueable<SensorShareMode> Mode;
+	ValueableVector<CloakTypeClass*> Scan;
+	Valueable<EffectShareMode> Sharing;
+	/*!
+	* @brief Controls how cloak vs sensor conflict will be solved.
+	* @brief If enabled then object became sensed if any cloak types from `Senses` present.
+	* @brief If disabled then object became sensed if all cloaks presented in `Senses` list.
+	*/
+	Valueable<bool> IsStrong;
+	Valueable<bool> Selectable;
+
+	Valueable<int> Delay, Duration, CellIncrement;
 
 	LayerFlags Air, Ground, Subterannean;
 
+	Valueable<bool> ForceShadows, InMovement;
+
 	Valueable<bool> Warn;
-	Nullable<WeaponTypeClass*> Weapon;
+	NullableIdx<VocClass*> Warn_Eva;
+	ValueableMap<SideClass*, VocClass*> Warn_Eva_Sides;
+	ValueableMap<HouseTypeClass*, VocClass*> Warn_Eva_Countries;
+
 	//NullableIdx<VoxClass> Warn_Eva;
 
+	VoxClass* GetWarn(SideClass* side, HouseTypeClass* country) const;
 public:
 	SensorTypeClass(const char* const pTitle) : Enumerable<SensorTypeClass>(pTitle)
-		, Senses { }
-		, Mode { SensorShareMode::Default }
+		, Scan { }
+		, Sharing { EffectShareMode::Default }
+		, IsStrong { true }, Selectable { false }
 		, Air { "Air", true, false, false, false }
 		, Ground { "Ground", true, false, false, false }
 		, Subterannean { "Subterannean", false, false, false, false }
 		, Warn { false }
-		, Weapon { }
 	{ };
 
 	virtual ~SensorTypeClass() override = default;
@@ -97,13 +138,13 @@ public:
 
 	inline bool IsShared() const
 	{
-		switch (Mode.Get())
+		switch (Sharing.Get())
 		{
-		case SensorShareMode::Shared:
+		case EffectShareMode::Shared:
 			return true;
-		case SensorShareMode::Private:
+		case EffectShareMode::Private:
 			return false;
-		case SensorShareMode::Default:
+		case EffectShareMode::Default:
 		default:
 			return RulesExt::Global()->SharedSensors;
 		}

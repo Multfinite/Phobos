@@ -9,8 +9,7 @@
 #include <Common/AreaAffection.Body.hpp>
 #include <Common/AreaAffection.Post.hpp>
 
-decltype(AreaAffection::Logic<ElectronicWarfareClass::typed_instance>::Instance) AreaAffection::Logic<ElectronicWarfareClass::typed_instance>::Instance;
-decltype(AreaAffection::Logic<ElectronicWarfareClass>::Instance) AreaAffection::Logic<ElectronicWarfareClass>::Instance;
+decltype(ElectronicWarfareClass::logic::Instance) ElectronicWarfareClass::logic::Instance;
 decltype(ElectronicWarfareClass::Array) ElectronicWarfareClass::Array;
 
 void ElectronicWarfareClass::In(__CellExt_ExtData& cellExt, short radius, int radiusSq)

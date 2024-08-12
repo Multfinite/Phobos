@@ -45,7 +45,6 @@ public:
 			pObject = pObject->NextObject;
 		}
 	}
-
 private:
 	template <typename T>
 	bool Serialize(T& Stm)

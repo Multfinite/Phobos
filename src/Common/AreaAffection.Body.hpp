@@ -11,6 +11,8 @@ namespace AreaAffection
 		, __CellExt_ExtData* pCurrentExt
 		, __CellExt_ExtData* pPreviousExt
 	) {
+		bool sameCell = pCurrentExt == pPreviousExt;
+
 		for (auto& pItem : entry.SortedItems)
 		{
 			if (pItem->RadiusSq < radiusSq)
@@ -146,12 +148,5 @@ namespace AreaAffection
 				AreaAffection::Logic<t>::Instance.InOut(entries, radius, radiusSq, pCurrent, pPrevious);
 			}
 		}(), ...);
-	}
-
-	template<typename TDerived, typename TType, typename TDataEntry>
-	Instance<TDerived, TType, TDataEntry>::~Instance()
-	{		
-		if (ClearedByEntry) return;
-		AreaAffection::Logic<std::remove_pointer_t<decltype(this)>>::Instance.ClearInstance(this);
 	}
 }

@@ -1071,12 +1071,12 @@ namespace detail
 	}
 
 	template <>
-	inline bool read<SensorShareMode>(SensorShareMode& value, INI_EX& parser, const char* pSection, const char* pKey)
+	inline bool read<EffectShareMode>(EffectShareMode& value, INI_EX& parser, const char* pSection, const char* pKey)
 	{
 		if (parser.ReadString(pSection, pKey))
 		{
 			bool success;
-			value = ParseEnum<SensorShareMode>(parser.value(), success);
+			value = ParseEnum<EffectShareMode>(parser.value(), success);
 			if (!success)
 				Debug::INIParseFailed(pSection, pKey, parser.value(), "Expected a sensor share mode, use default value.");
 			return success;

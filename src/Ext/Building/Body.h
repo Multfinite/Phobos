@@ -53,6 +53,8 @@ public:
 		void ApplyPoweredKillSpawns();
 		bool HasSuperWeapon(int index, bool withUpgrades) const;
 
+		void CloakingAI(bool a2);
+
 		void UpdatePrimaryFactoryAI();
 		virtual ~ExtData() = default;
 

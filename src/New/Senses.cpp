@@ -4,68 +4,120 @@
 #include <New/Entity/CloakClass.hpp>
 #include <New/Entity/ElectronicWarfareClass.hpp>
 
-DetectResult::DetectResult(HouseClass* pSubject, CloakTypeClass* pCloakType) :
+Senses::ScanResult::ScanResult(HouseClass* pSubject, CloakTypeClass* pCloakType) :
 	Subject(pSubject), CloakType(pCloakType)
 { }
 
-void Senses::SensorGroup::Add(SensorClass* pSensor, SensorTypeClass::LayerFlags& flags)
+template<typename T, typename ...TContainers>
+inline void remove(T _Val, TContainers&... containers)
 {
-	Sensors.push_back(pSensor);
-	if (pSensor->Type->IsShared())
-		SharedSensors.push_back(pSensor);
-	if (flags.Decloak)
-		Decloakers.push_back(pSensor);
+	([&]{
+		containers.remove(_Val);
+	}(), ...)
+}
+template<typename ...TContainers>
+inline void clear(TContainers&... containers)
+{
+	([&]
+	{
+		containers.clear();
+	}(), ...)
 }
 
-void Senses::SensorGroup::Remove(SensorClass* pSensor)
+void Senses::SensorLayerCache::Add(SensorClass* pSensor, SensorTypeClass::LayerFlags& flags)
 {
-	Sensors.remove(pSensor);
-	SharedSensors.remove(pSensor);
-	Decloakers.remove(pSensor);
-}
-
-void Senses::SensorGroup::Clear()
-{
-	Sensors.clear();
-	SharedSensors.clear();
-	Decloakers.clear();
-}
-
-void Senses::SensorGroup::Detect(
-	std::list<SensorClass*>& sensors,
-	std::list<SensorClass*>& decloakers,
-	bool isSharer) const
-{
-	std::list<SensorClass*> const& srcSensors = isSharer ? SharedSensors : Sensors;
-	sensors.insert(sensors.end(), srcSensors.begin(), srcSensors.end());
-	decloakers.insert(decloakers.end(), Decloakers.begin(), Decloakers.end());
-}
-
-void Senses::Clear()
-{
-	Sensors.clear();
-	Air.Clear();
-	Ground.Clear();
-	Subterannean.Clear();
-}
-
-void Senses::Register(SensorClass* pSensor)
-{
-	if (std::find(Sensors.begin(), Sensors.end(), pSensor) != Sensors.end())
+	if (std::find(Items.cbegin(), Items.cend(), pSensor) == Items.cend())
 		return;
-	Sensors.push_back(pSensor);
-	if (pSensor->Type->Air.Detect)
-		Air.Add(pSensor, pSensor->Type->Air);
-	if (pSensor->Type->Ground.Detect)
-		Ground.Add(pSensor, pSensor->Type->Ground);
-	if (pSensor->Type->Subterannean.Detect)
-		Subterannean.Add(pSensor, pSensor->Type->Subterannean);
+
+	Items.push_back(pSensor);
+	if (pSensor->Type->Selectable)
+		++Selectables;
+
+	auto pairs =
+	{
+		  std::pair<bool, decltype(Detectors)&>(flags.Scan, Detectors)
+		, std::pair<bool, decltype(Detectors)&>(flags.Track, Trackers)
+		, std::pair<bool, decltype(Detectors)&>(flags.Display, Displayers)
+	};
+	for (auto& p : pairs)
+		if (p.first)
+			p.second.push_back(pSensor);
 }
 
-void Senses::Unregister(SensorClass* pSensor)
+void Senses::SensorLayerCache::Remove(SensorClass* pSensor)
 {
-	Sensors.remove(pSensor);
-	Air.Remove(pSensor);
-	Ground.Remove(pSensor);
-	Subterannean.Remove(pSensor);
+	if (!Items.remove(pSensor)) return;
+
+	if(pSensor->Type->Selectable)
+		--Selectables;
+
+	remove(pSensor
+		, Decloakers
+		, Detectors
+		, Trackers
+		, Displayers
+	);
+}
+
+void Senses::SensorLayerCache::Clear()
+{
+	Selectables = 0;
+
+	clear(
+		  Decloakers
+		, Detectors
+		, Trackers
+		, Displayers
+	);
+}
+
+void Senses::SensorLayerCache::Scan(bool isShared, bool onlyDecloakers
+			, std::list<SensorClass*>& items
+			, std::list<SensorClass*>& detectors, int& selectables
+			, std::list<SensorClass*>& decloakers
+			, std::list<SensorClass*>& trackers
+			, std::list<SensorClass*>& displayers
+) const {
+	decloakers.insert(decloakers.end(), Decloakers.begin(), Decloakers.end());
+	if (onlyDecloakers) return;
+
+	std::list<SensorClass*> const& detectorsSrc = Detectors.select(isShared);
+	std::list<SensorClass*> const& trackersSrc = Trackers.select(isShared);
+	std::list<SensorClass*> const& displayersSrc = Displayers.select(isShared);
+
+	selectables += Selectables;
+
+	detectors.insert(detectors.end(), detectorsSrc.begin(), detectorsSrc.end());
+	trackers.insert(trackers.end(), trackersSrc.begin(), trackersSrc.end());
+	displayers.insert(displayers.end(), displayersSrc.begin(), displayersSrc.end());
+}
+
+void Senses::Scan::Clear()
+{
+	Items.clear();
+	for (auto* sg : { &Air, &Ground, &Subterannean })
+		sg->Clear();
+}
+
+void Senses::Scan::Register(SensorClass* pSensor)
+{
+	if (std::find(Items.begin(), Items.end(), pSensor) != Items.end())
+		return;
+	Items.push_back(pSensor);
+
+	auto pairs = {
+		  std::pair<SensorTypeClass::LayerFlags&, SensorLayerCache&>(pSensor->Type->Air, Air)
+		, std::pair<SensorTypeClass::LayerFlags&, SensorLayerCache&>(pSensor->Type->Ground, Ground)
+		, std::pair<SensorTypeClass::LayerFlags&, SensorLayerCache&>(pSensor->Type->Subterannean, Subterannean)
+	};
+	for (auto& p : pairs)
+		if (p.first.HasEffect())
+			p.second.Add(pSensor, p.first);
+}
+
+void Senses::Scan::Unregister(SensorClass* pSensor)
+{
+	if (Items.remove(pSensor))
+		for (auto* sg : { &Air, &Ground, &Subterannean })
+			sg->Remove(pSensor);
 }

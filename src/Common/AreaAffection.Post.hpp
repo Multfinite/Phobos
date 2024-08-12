@@ -46,9 +46,9 @@ namespace AreaAffection
 	*/
 	struct InstanceEntry
 	{
-		SensorClass::data_entry Sensor;
-		CloakClass::data_entry Cloak;
-		ElectronicWarfareClass::data_entry EW;
+		data_entry_of_t<SensorClass> Sensor;
+		data_entry_of_t<CloakClass> Cloak;
+		data_entry_of_t<ElectronicWarfareClass> EW;
 
 		InstanceEntry(AbstractClass* ownerObject) :
 			Sensor(ownerObject), Cloak(ownerObject), EW(ownerObject)
@@ -94,12 +94,15 @@ namespace AreaAffection
 	{
 		// Current presented objects which works centered on this cell
 
-		std::list<SensorClass*> Sensors;
+		std::list<SensorClass*> Items;
 		std::list<CloakClass*> Cloaks;
 		std::list<ElectronicWarfareClass*> EWs;
 
-		// [Senses of CloakType][Senses of House]
-		std::map<CloakTypeClass*, std::map<HouseClass*, Senses>> SensedBy;
+		// [Scan for CloakTypeClass][Scan by House]
+		ValueableMap<CloakTypeClass*, ValueableMap<HouseClass*, Senses::Scan>> ScannedBy;
+
+		// [Illusion by CloakType][Illusion for House]
+		ValueableMap<CloakType*, ValueableMap<HouseClass*, Senses::Illusion>> IllusionBy;
 
 		void Register(SensorClass* pSensor);
 		void Register(CloakClass* pCloak);
@@ -109,8 +112,32 @@ namespace AreaAffection
 		void Unregister(CloakClass* pCloak);
 		void Unregister(ElectronicWarfareClass* pEW);
 
-		std::shared_ptr<DetectResult> DetectBy(
+		struct DetectResultKey
+		{
+			CloakTypeClass* CloakType;
+			HouseClass* Subject;
+		};
+
+		struct DetectResultKeyHasher
+		{
+			std::size_t operator()(const AreaAffection::CellEntry::DetectResultKey& t) const
+			{
+				std::size_t ret = 0; hash_combine(ret, t.CloakType, t.Subject); return ret;
+			}
+		};
+
+		bool ScanCacheDirty = false;
+		ValueableMap<DetectResultKey, std::shared_ptr<Senses::ScanResult>, DetectResultKeyHasher> ScanCache;
+
+		std::shared_ptr<Senses::ScanResult> ScanBy(
 			CloakTypeClass* pCloakType,
+			HouseClass* pSubject
+		);
+
+		bool IllusoryCacheDirty = false;
+		ValueableMap<HouseClass*, Senses::IllusionResult> IllusoryCache;
+
+		std::shared_ptr<Senses::IllusionResult> IllusoryOf(
 			HouseClass* pSubject
 		);
 	};
@@ -175,8 +202,7 @@ namespace AreaAffection
 	}
 
 	template<typename TAreaAffection, typename TExtension>
-	inline void Initialize(typename TExtension::base_type* pParent)
-	{
+	inline void Initialize(typename TExtension::base_type* pParent) {
 		auto* pExt = TExtension::ExtMap.Find(pParent);
 		auto* pType = pParent->GetTechnoType();
 		auto* pTypeExt = pExt->TypeExtData;
@@ -192,13 +218,68 @@ namespace AreaAffection
 			++typeIter; ++radiusIter;
 		}
 	};
+
+	template<typename TAreaAffection, typename TExtension, typename TPrefixLamba, typename TBodyLambda>
+	inline void Initialize(typename TExtension::base_type* pParent
+		, TPrefixLamba&& pl, TBodyLambda&& bl
+	) {
+		auto* pExt = TExtension::ExtMap.Find(pParent);
+		auto* pType = pParent->GetTechnoType();
+		auto* pTypeExt = pExt->TypeExtData;
+		auto& pExtEntry = AreaAffection::Entry<TAreaAffection, TExtension>::Of(pExt);
+		auto& pExtTypeEntry = typename TAreaAffection::type::template EntryOf<std::remove_pointer_t<decltype(pTypeExt)>>(pTypeExt);
+
+		if (!pExtTypeEntry.IsEnabled) return;
+		auto typeIter = pExtTypeEntry.Types.begin();
+		auto radiusIter = pExtTypeEntry.Radiuses.begin();
+		pl(pParent, pExt, pType, pTypeExt, pExtEntry, pExtTypeEntry);
+		while (typeIter != pExtTypeEntry.Types.end())
+		{
+			TAreaAffection* pInst = pExtEntry.Instantiate(*typeIter, nullptr, *radiusIter);
+			bl(pParent, pExt, pType, pTypeExt, pExtEntry, pExtTypeEntry
+				pInst, *typeIter, *radiusIter
+			);
+			++typeIter; ++radiusIter;
+		}
+	};
 }
 
 template<typename TExtension>
 inline void SensorTypeClass::Initialize(typename TExtension::base_type* pParent) { AreaAffection::Initialize<SensorClass, TExtension>(pParent); }
 
 template<typename TExtension>
-inline void CloakTypeClass::Initialize(typename TExtension::base_type* pParent) { AreaAffection::Initialize<CloakClass, TExtension>(pParent); }
+inline void CloakTypeClass::Initialize(typename TExtension::base_type* pParent)
+{
+	using TAreaAffection = CloakClass;
+
+	decltype(TAreaAffection::type::data_entry::Self)::iterator selfIter;
+
+	AreaAffection::Initialize<TAreaAffection, TExtension>(pParent,
+	[&](
+		  typename TExtension::base_type* pParent
+		, typename TExtension::ExtData* pExt
+		, TechnoTypeExt::base_type* pType
+		, TechnoTypeExt::ExtData* pTypeExt
+		, TAreaAffection::data_entry& pExtEntry
+		, TAreaAffection::type::data_entry& pExtTypeEntry
+	) {
+		selfIter = pExtTypeEntry.Self.begin();
+	},
+	[&](
+		  typename TExtension::base_type* pParent
+		, typename TExtension::ExtData* pExt
+		, TechnoTypeExt::base_type* pType
+		, TechnoTypeExt::ExtData* pTypeExt
+		, TAreaAffection::data_entry& pExtEntry
+		, TAreaAffection::type::data_entry& pExtTypeEntry
+		, TAreaAffection* pInst
+		, TAreaAffection::type* pTypeAA
+		, short radius
+	) {
+		pInst->Self = *selfIter;
+		++selfIter;
+	});
+}
 
 template<typename TExtension>
 inline void ElectronicWarfareTypeClass::Initialize(typename TExtension::base_type* pParent) { AreaAffection::Initialize<ElectronicWarfareClass, TExtension>(pParent); }

@@ -55,7 +55,7 @@ void SensorTypeClass::LayerFlags::LoadFromINI(CCINIClass* pINI, const char* pSec
 {
 	INI_EX exINI(pINI);
 
-	Detect.Read(exINI, pSection, (Prefix + ".Detect").c_str());
+	Scan.Read(exINI, pSection, (Prefix + ".Detect").c_str());
 	Track.Read(exINI, pSection, (Prefix + ".Track").c_str());
 	Decloak.Read(exINI, pSection, (Prefix + ".Decloak").c_str());
 	Display.Read(exINI, pSection, (Prefix + ".Display").c_str());
@@ -68,7 +68,7 @@ bool SensorTypeClass::LayerFlags::Serialize(T& stm)
 {
 	return stm
 		.Process(this->Prefix)
-		.Process(this->Detect)
+		.Process(this->Scan)
 		.Process(this->Track)
 		.Process(this->Decloak)
 		.Process(this->Display)

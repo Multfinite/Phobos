@@ -21,6 +21,7 @@ public:
 		bool IsEnabled = false;
 
 		NullableVector<CloakTypeClass*> Types;
+		NullableVector<boolean> Self;
 		NullableVector<int> Radiuses;
 		NullableVector<AffectedHouse> Targets;
 
@@ -46,11 +47,15 @@ public:
 	inline static data_entry& EntryOf(typename TExtension::ExtData* pExt);
 
 public:
+	Valueable<CloakType> Type;
+	Valueable<EffectShareMode> Sharing;
 	Valueable<bool> Shadow;
 	Valueable<bool> Warn;
 	//NullableIdx<VoxClass> Warn_Eva;
 
 	CloakTypeClass(const char* const pTitle) : Enumerable<CloakTypeClass>(pTitle)
+		, Type(CloakType::Virtual)
+		, Sharing(EffectShareMode::Default)
 		, Warn { false }
 		//, Warn_Eva { }
 		, Shadow { false }
@@ -61,6 +66,20 @@ public:
 	virtual void LoadFromINI(CCINIClass* pINI) override;
 	virtual void LoadFromStream(PhobosStreamReader& Stm) override;
 	virtual void SaveToStream(PhobosStreamWriter& Stm) override;
+
+	inline bool IsShared() const
+	{
+		switch (Sharing.Get())
+		{
+		case EffectShareMode::Shared:
+			return true;
+		case EffectShareMode::Private:
+			return false;
+		case EffectShareMode::Default:
+		default:
+			return RulesExt::Global()->SharedCloak;
+		}
+	}
 
 	template<typename TExtension>
 	inline static void Initialize(typename TExtension::base_type* pParent);

@@ -24,9 +24,12 @@ namespace AreaAffection
 	template<typename TAreaAffection> struct Logic;
 	struct InstanceEntry;
 	struct CellEntry;
+	struct IInstance;
+
+	void InitializeOnCell(IInstance* pInst, CellClass* cell);
 
 	template<typename T>
-	concept IsDataEntry = requires(T x, T * ptr, AbstractClass * abs
+	concept IsDataEntry = requires(T x, T * ptr, AbstractClass* abs
 		, typename T::instance * pInst, short radius, typename T::instance::type * pType
 		, HouseClass * pOwner
 	) {
@@ -35,10 +38,39 @@ namespace AreaAffection
 		typename T::instance::type;
 		x.Items; // ValueableSet (based on std::set) which is sorted in descending order
 		x.Items.empty(); x.Items.begin(); x.Items.end();
-		pInst = x.Instantiate(pType, pOwner, radius);
 		abs = x.Parent;
 		x = T(abs);
 		pInst = x.GetMostRanged();
+	};
+
+	template<typename T>
+	concept IsInstance = requires(T x
+		, AbstractClass * abs, HouseClass * house
+		, short radius, int radiusSq
+		, CellClass * affectedCell
+		, __CellExt_ExtData & cell
+		, typename T::data_entry * de
+		, T * ptr, bool b, CoordStruct coords, HouseClass * pOwner
+		, typename T::type * pType
+		, bool bool__
+	) {
+		T::Array; T::Array.empty(); T::Array.begin(); T::Array.end();
+		b = x.ClearedByEntry;
+		x.remove_from_array();
+
+		typename T::type;
+
+		x.Parent = abs;
+		x.Owner = house;
+		x.Type = pType;
+		x.Radius = radius;
+		x.RadiusSq = radiusSq;
+
+		coords = x.GetCenterCoords();
+		pOwner = x.GetOwningHouse();
+
+		x.In(cell, radius, radiusSq);
+		x.Out(cell, radius, radiusSq);
 	};
 
 	/*!
@@ -53,12 +85,18 @@ namespace AreaAffection
 		using instance_ptr = std::unique_ptr<instance>;
 		using data_entry = DataEntry<instance>;
 
+		static_assert(IsInstance<TInstance>, "Not area affection!");
+
 		/*!
 		* @brief Owning instance
 		* @brief Currently supported: TechnoClass, BulletClass (projectile), CellClass
 		*/
 		Valueable<AbstractClass*> Parent;
 
+		/*!
+		* @brief Instances, owned by this.
+		* @brief This means, that this should invoke In() and Out() functions.
+		*/
 		std::list<instance_ptr> Items;
 		/*!
 		* @brief Sorting is necessary for process functions.
@@ -77,11 +115,37 @@ namespace AreaAffection
 			return *SortedItems.begin(); // std::set is sorted
 		}
 
+		virtual void __on_instantiate(instance* pInst)
+		{
+			SortedItems.insert(pInst);
+		}
+
+		virtual void __on_deinstantiate(instance* pInst)
+		{
+			SortedItems.erase(pInst);
+		}
+
 		instance* Instantiate(typename instance::type* pType, HouseClass* pHouse, short radius)
 		{
 			instance_ptr& inst = Items.emplace_back(std::make_unique<instance>(pType, Parent, pHouse, radius));
-			SortedItems.insert(inst.get());
+
+			__on_instantiate(inst.get());
+
+			if (auto* cell = abstract_cast<CellClass*>(Parent))
+				InitializeOnCell(inst.get(), cell);
 			return inst.get();
+		}
+
+		bool Deinstantiate(instance* pInst)
+		{
+			auto it = std::find_if(Items.begin(), Items.end(), [&pInst](instance_ptr const& x) { return x.get() == pInst; });
+			if (it == Items.end())
+				return false;
+
+			__on_deinstantiate(pInst);
+
+			Items.erase(it);
+			return true;
 		}
 
 		bool Load(PhobosStreamReader& stm, bool registerForChange)
@@ -105,34 +169,6 @@ namespace AreaAffection
 		}
 	};
 
-	template<typename T>
-	concept IsInstance = requires(T x
-		, AbstractClass * abs, HouseClass * house
-		, short radius, int radiusSq
-		, __CellExt_ExtData& cell
-		, typename T::data_entry * de
-		, T * ptr, bool b, CoordStruct coords, HouseClass * pOwner
-		, typename T::type * pType
-	) {
-		T::Array; T::Array.empty(); T::Array.begin(); T::Array.end();
-		b = x.ClearedByEntry;
-
-		typename T::data_entry;
-		typename T::type;
-
-		x.Parent = abs;
-		x.Owner = house;
-		x.Type = pType;
-		x.Radius = radius;
-		x.RadiusSq = radiusSq;
-
-		coords = x.GetCenterCoords();
-		pOwner = x.GetOwningHouse();
-
-		x.In(cell, radius, radiusSq);
-		x.Out(cell, radius, radiusSq);
-	};
-
 	/*!
 	* @author Multfinite
 	* @brief Interface (with generic implementation lol) for any area affection instance.
@@ -154,6 +190,12 @@ namespace AreaAffection
 		static std::list<IInstance*> Array;
 
 		/*!
+		* @brief This flag used for desturction.
+		* @brief Data entry can be destoryed or by data entry (with all owned instance) or individually.
+		*/
+		bool ClearedByEntry = false;
+
+		/*!
 		 * @brief This area affection instance source of center coordinates and behavior.
 		 * @brief On common it should be TechnoClass, BulletClass, CellClass.
 		 */
@@ -168,6 +210,12 @@ namespace AreaAffection
 		 * @brief Non-typed pointer to area affection type.
 		 */
 		virtual void* get_underlying_type() const = 0;
+
+		/*!
+		* @brief MUST remove this from all associated static arrays.
+		* @brief Should be redefined for each new type with internal Array.
+		*/
+		virtual void remove_from_array() { Array.remove(this); }
 
 		/*!
 		 * @brief Radius in cells.
@@ -190,11 +238,13 @@ namespace AreaAffection
 
 		/*!
 		 * @brief Affects given cell. This allowed to generate cache.
+		 * @brief IT SHOULD NOT CHANGE `AffectedCell` OR INTERACT WITH IT.
 		 * @note To understand what happens here see `VanillaSensorClass`
 		 */
 		virtual void In(__CellExt_ExtData& cell, short radius, int radiusSq) = 0;
 		/*!
 		 * @brief Unaffects given cell. This should remove generated cache of `IInstance::In`.
+		 * @brief IT SHOULD NOT CHANGE `AffectedCell` OR INTERACT WITH IT.
 		 */
 		virtual void Out(__CellExt_ExtData& cell, short radius, int radiusSq) = 0;
 
@@ -226,51 +276,14 @@ namespace AreaAffection
 		}
 	};
 
-	/*!
-	* @author Multfinite
-	* @brief Generic implementation of IInstance with specific area affection type.
-	*/
-	template<typename TDerived, typename TType, typename TDataEntry>
-	struct Instance : public IInstance
+	template<typename TAreaAffection>
+	struct data_entry_of
 	{
-		using type = TType;
-		using derived_type = TDerived;
-		using data_entry = TDataEntry;
-		using self = Instance<derived_type, type, data_entry>;		
-
-		Valueable<type*> Type;
-
-		void* get_underlying_type() const override { return const_cast<type*>(Type.Get()); }
-
-		bool Load(PhobosStreamReader& Stm, bool RegisterForChange) override
-		{
-			return IInstance::Load(Stm, RegisterForChange) && Serialize(Stm);
-		}
-		bool Save(PhobosStreamWriter& Stm) const override
-		{
-			auto pThis = const_cast<self*>(this);
-			return static_cast<IInstance*>(pThis)->Save(Stm) && pThis->Serialize(Stm);
-		}
-
-		friend struct AreaAffection::Logic<self>;
-		bool ClearedByEntry = false;
-	protected:
-		Instance(type* type, AbstractClass* parent, HouseClass* owner, short radius) :
-			IInstance(parent, owner, radius), Type(type)
-		{
-			derived_type::Array.push_back(reinterpret_cast<derived_type*>(this));
-		}
-		void remove_from_array() { derived_type::Array.remove(reinterpret_cast<derived_type*>(this)); }
-		~Instance();
-	private:
-		template<typename T>
-		bool Serialize(T& Stm)
-		{
-			return Stm
-				.Process(this->Type)
-				.Success();
-		}
+		using type = DataEntry<TAreaAffection>;
 	};
+
+	template<typename TAreaAffection>
+	using data_entry_of_t = typename data_entry_of<TAreaAffection>::type;
 
 	/*!
 	* @brief Use it if parent is known
@@ -278,7 +291,8 @@ namespace AreaAffection
 	template<typename TAreaAffection, typename TExtension>
 	struct Entry
 	{
-		inline static DataEntry<TAreaAffection>& Of(typename TExtension::ExtData* pExt);
+		using type = data_entry_of_t<TAreaAffection>;
+		inline static type& Of(typename TExtension::ExtData* pExt);
 	};
 
 	/*!
@@ -299,7 +313,7 @@ namespace AreaAffection
 		using instance = TAreaAffection;
 		static_assert(IsInstance<instance>, "TAreaAffection must qualify to IsInstance concept.");
 
-		using data_entry = typename instance::data_entry;
+		using data_entry = data_entry_of_t<instance>;
 		static_assert(IsDataEntry<data_entry>, "TAreaAffection::data_entry must qualify to IsDataEntry concept.");
 
 		static Logic<instance> Instance;
@@ -342,5 +356,5 @@ namespace AreaAffection
 	void InOut(short radius, int radiusSq
 		, __CellExt_ExtData* pCurrent, __CellExt_ExtData* pPrevious
 		, typename TDataEntries&... entries
-	);	
+	);
 }

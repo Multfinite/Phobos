@@ -163,6 +163,7 @@ void RulesExt::ExtData::LoadBeforeTypeData(RulesClass* pThis, CCINIClass* pINI)
 	this->AttachmentUndergroundLayerMaxHeight.Read(exINI, GameStrings::General, "AttachmentUndergroundLayerMaxHeight");
 
 	this->SharedSensors.Read(exINI, GameStrings::General, "SharedSensors");
+	this->SharedCloak.Read(exINI, GameStrings::General, "SharedCloak");
 
 	// Section AITargetTypes
 	int itemsCount = pINI->GetKeyCount(sectionAITargetTypes);

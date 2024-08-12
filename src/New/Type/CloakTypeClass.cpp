@@ -9,7 +9,9 @@ void CloakTypeClass::DataEntry::LoadFromINI(CCINIClass* pINI, const char* pSecti
 	INI_EX exINI(pINI);
 
 	Types.Read(exINI, pSection, "Cloak.Types");
+	Self.Read(exINI, pSection, "Cloak.Self");
 	Radiuses.Read(exINI, pSection, "Cloak.Radiuses");
+	Targets.Read(exINI, pSection, "Cloak.Targets");
 
 	Warn.Read(exINI, pSection, "Cloak.Warn");
 

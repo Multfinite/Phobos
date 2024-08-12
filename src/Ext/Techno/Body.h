@@ -76,6 +76,34 @@ public:
 		std::shared_ptr<AttachmentClass> FindAttachmentForTypeByID(TechnoTypeExt::ExtData* pTypeExt, int entryId);
 		void RemoveAttachmentFromPerTypeLists(AttachmentClass* pWhat);
 
+		/* use it instead of TechnoClass versions --Multfinite */
+
+		bool IsCloakable() /* const*/;
+		bool IsCloakedExternally() /* const */;
+		bool IsReadyToCloak() /* const */;		
+		void RetargetingCloak();
+
+		void CloakingAI(bool a2);
+
+		/*  */
+
+		/*!
+		* @brief Is detected by subject and see this.
+		*/
+		bool IsDetectedBy(HouseClass* subject, bool* selectable = nullptr);
+		/*!
+		* @brief Is decloaked?
+		*/
+		bool IsDecloaked();
+		/*!
+		* @brief Is displayed at radar by subject?
+		*/
+		bool IsDisplayedBy(HouseClass* subject);
+		/*!
+		* @brief Is tracked by subject (like psy array or sensor array)
+		*/
+		bool IsTrackedBy(HouseClass* subject);
+
 		virtual ~ExtData() override;
 
 		virtual void InvalidatePointer(void* ptr, bool bRemoved) override
@@ -185,5 +213,18 @@ public:
 	static Point2D GetBuildingSelectBracketPosition(TechnoClass* pThis, BuildingSelectBracketPosition bracketPosition);
 	static void ProcessDigitalDisplays(TechnoClass* pThis);
 	static void GetValuesForDisplay(TechnoClass* pThis, DisplayInfoType infoType, int& value, int& maxValue);
+
+	// Cloak & sensors helpers
+
+	/*!
+	* @brief Is this cloaked by external spurce (cloak generator, etc)
+	*/
+	static bool IsCloakedExternally(TechnoClass* pThis, CellClass* cell);
+	static bool IsCloakedExternally(
+		  TechnoClass* pThis
+		, TechnoExt::ExtData* pExt
+		, CellClass* cell
+		, __CellExt_ExtData* cellExt
+	);
 };
 using TechnoExt_ExtData = TechnoExt::ExtData;

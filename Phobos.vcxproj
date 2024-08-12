@@ -19,7 +19,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Common\AreaAffection.cpp" />
-    <ClCompile Include="src\Misc\Hooks.Logics.cpp" />
+    <ClCompile Include="src\Ext\Building\Body.Cloak.cpp" />
+    <ClCompile Include="src\Ext\Techno\Body.Cloak.cpp" />
+    <ClCompile Include="src\Ext\Techno\Body.Sensor.cpp" />
     <ClCompile Include="src\New\Entity\ElectronicWarfareClass.cpp" />
     <ClCompile Include="src\New\Senses.cpp" />
     <ClCompile Include="src\New\Type\ElectronicWarfareTypeClass.cpp" />
