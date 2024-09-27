@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ShowAllFiles>true</ShowAllFiles>
@@ -28,6 +28,7 @@
     <ClCompile Include="src\Commands\ToggleDesignatorRange.cpp" />
     <ClCompile Include="src\Commands\ToggleDigitalDisplay.cpp" />
     <ClCompile Include="src\Commands\SaveVariablesToFile.cpp" />
+    <ClCompile Include="src\Core\extensions.cpp" />
     <ClCompile Include="src\Ext\Anim\Body.cpp" />
     <ClCompile Include="src\Ext\Anim\Hooks.cpp" />
     <ClCompile Include="src\Ext\Anim\Hooks.AnimCreateUnit.cpp" />
@@ -177,6 +178,8 @@
     <ClCompile Include="YRpp\StaticInits.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\core.formatting.hpp" />
+    <ClInclude Include="src\Core\extensions.hpp" />
     <ClInclude Include="src\Commands\FrameByFrame.h" />
     <ClInclude Include="src\Commands\FrameStep.h" />
     <ClInclude Include="src\Commands\NextIdleHarvester.h" />
@@ -188,6 +191,79 @@
     <ClInclude Include="src\Commands\ToggleDesignatorRange.h" />
     <ClInclude Include="src\Commands\ToggleDigitalDisplay.h" />
     <ClInclude Include="src\Commands\SaveVariablesToFile.h" />
+    <ClInclude Include="src\Core\core.hpp" />
+    <ClInclude Include="src\Core\extension.abstract.hpp" />
+    <ClInclude Include="src\Core\extension.abstract_type.hpp" />
+    <ClInclude Include="src\Core\extension.aircraft.hpp" />
+    <ClInclude Include="src\Core\extension.aircraft_type.hpp" />
+    <ClInclude Include="src\Core\extension.airstrike.hpp" />
+    <ClInclude Include="src\Core\extension.alpha_shape.hpp" />
+    <ClInclude Include="src\Core\extension.anim.hpp" />
+    <ClInclude Include="src\Core\extension.anim_type.hpp" />
+    <ClInclude Include="src\Core\extension.ai_trigger_type.hpp" />
+    <ClInclude Include="src\Core\extension.bomb.hpp" />
+    <ClInclude Include="src\Core\extension.building.hpp" />
+    <ClInclude Include="src\Core\extension.building_light.hpp" />
+    <ClInclude Include="src\Core\extension.building_type.hpp" />
+    <ClInclude Include="src\Core\extension.bullet.hpp" />
+    <ClInclude Include="src\Core\extension.bullet_type.hpp" />
+    <ClInclude Include="src\Core\extension.capture_manager.hpp" />
+    <ClInclude Include="src\Core\extension.cell.hpp" />
+    <ClInclude Include="src\Core\extension.disk_laser.hpp" />
+    <ClInclude Include="src\Core\extension.em_pulse.hpp" />
+    <ClInclude Include="src\Core\extension.factory.hpp" />
+    <ClInclude Include="src\Core\extension.foot.hpp" />
+    <ClInclude Include="src\Core\extension.house.hpp" />
+    <ClInclude Include="src\Core\extension.house_type.hpp" />
+    <ClInclude Include="src\Core\core.extensions.hpp" />
+    <ClInclude Include="src\Core\extension.infantry.hpp" />
+    <ClInclude Include="src\Core\extension.infantry_type.hpp" />
+    <ClInclude Include="src\Core\extension.isometric_tile_type.hpp" />
+    <ClInclude Include="src\Core\extension.light_source.hpp" />
+    <ClInclude Include="src\Core\extension.mission.hpp" />
+    <ClInclude Include="src\Core\extension.neuron.hpp" />
+    <ClInclude Include="src\Core\extension.object.hpp" />
+    <ClInclude Include="src\Core\extension.object_type.hpp" />
+    <ClInclude Include="src\Core\extension.overlay.hpp" />
+    <ClInclude Include="src\Core\extension.overlay_type.hpp" />
+    <ClInclude Include="src\Core\extension.parasite.hpp" />
+    <ClInclude Include="src\Core\extension.particle.hpp" />
+    <ClInclude Include="src\Core\extension.particle_system.hpp" />
+    <ClInclude Include="src\Core\extension.particle_system_type.hpp" />
+    <ClInclude Include="src\Core\extension.particle_type.hpp" />
+    <ClInclude Include="src\Core\extension.radio.hpp" />
+    <ClInclude Include="src\Core\extension.rad_site.hpp" />
+    <ClInclude Include="src\Core\extension.script.hpp" />
+    <ClInclude Include="src\Core\extension.script_type.hpp" />
+    <ClInclude Include="src\Core\extension.side.hpp" />
+    <ClInclude Include="src\Core\extension.slave_manager.hpp" />
+    <ClInclude Include="src\Core\extension.smudge.hpp" />
+    <ClInclude Include="src\Core\extension.smudge_type.hpp" />
+    <ClInclude Include="src\Core\extension.spawn_manager.hpp" />
+    <ClInclude Include="src\Core\extension.super.hpp" />
+    <ClInclude Include="src\Core\extension.super_weapon_type.hpp" />
+    <ClInclude Include="src\Core\extension.tactical.hpp" />
+    <ClInclude Include="src\Core\extension.tag_type.hpp" />
+    <ClInclude Include="src\Core\extension.task_force.hpp" />
+    <ClInclude Include="src\Core\extension.team_type.hpp" />
+    <ClInclude Include="src\Core\extension.techno.hpp" />
+    <ClInclude Include="src\Core\extension.techno_type.hpp" />
+    <ClInclude Include="src\Core\extension.temporal.hpp" />
+    <ClInclude Include="src\Core\extension.terrain.hpp" />
+    <ClInclude Include="src\Core\extension.terrain_type.hpp" />
+    <ClInclude Include="src\Core\extension.tiberium.hpp" />
+    <ClInclude Include="src\Core\extension.trigger.hpp" />
+    <ClInclude Include="src\Core\extension.t_action.hpp" />
+    <ClInclude Include="src\Core\extension.t_event.hpp" />
+    <ClInclude Include="src\Core\extension.unit.hpp" />
+    <ClInclude Include="src\Core\extension.unit_type.hpp" />
+    <ClInclude Include="src\Core\extension.veinhole_monster.hpp" />
+    <ClInclude Include="src\Core\extension.voxel_anim.hpp" />
+    <ClInclude Include="src\Core\extension.voxel_anim_type.hpp" />
+    <ClInclude Include="src\Core\extension.warhead_type.hpp" />
+    <ClInclude Include="src\Core\extension.wave.hpp" />
+    <ClInclude Include="src\Core\extension.waypoint_path.hpp" />
+    <ClInclude Include="src\Core\extension.weapon_type.hpp" />
     <ClInclude Include="src\Ext\Bullet\Trajectories\BombardTrajectory.h" />
     <ClInclude Include="src\Ext\Bullet\Trajectories\PhobosTrajectory.h" />
     <ClInclude Include="src\Ext\Bullet\Trajectories\StraightTrajectory.h" />
@@ -275,7 +351,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{3FAF7126-F38C-4D1E-9973-C21A37870F60}</ProjectGuid>
     <RootNamespace>Phobos</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <ProjectName>Phobos</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
