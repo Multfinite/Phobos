@@ -7,12 +7,10 @@
 namespace AreaAffection
 {
 	template<typename TInstance>
-	void Logic<TInstance>::InOut(const data_entry& entry, short radius, int radiusSq
+	void Logic<TInstance>::InOut(data_entry_t const& entry, short radius, int radiusSq
 		, __CellExt_ExtData* pCurrentExt
 		, __CellExt_ExtData* pPreviousExt
 	) {
-		bool sameCell = pCurrentExt == pPreviousExt;
-
 		for (auto& pItem : entry.SortedItems)
 		{
 			if (pItem->RadiusSq < radiusSq)
@@ -24,7 +22,7 @@ namespace AreaAffection
 	}
 
 	template<typename TInstance>
-	void Logic<TInstance>::In(const data_entry& entry, short radius, int radiusSq, __CellExt_ExtData* pExt)
+	void Logic<TInstance>::In(data_entry_t const& entry, short radius, int radiusSq, __CellExt_ExtData* pExt)
 	{
 		for (auto& pItem : entry.SortedItems)
 		{
@@ -36,7 +34,7 @@ namespace AreaAffection
 	}
 
 	template<typename TInstance>
-	void Logic<TInstance>::Out(const data_entry& entry, short radius, int radiusSq, __CellExt_ExtData* pExt)
+	void Logic<TInstance>::Out(data_entry_t const& entry, short radius, int radiusSq, __CellExt_ExtData* pExt)
 	{
 		for (auto& pItem : entry.SortedItems)
 		{
@@ -52,7 +50,7 @@ namespace AreaAffection
 	{
 		CellExt::IterateRadius(CellClass::Coord2Cell(pInst->GetCenterCoords())
 			, pInst->Radius.Get(), pInst->RadiusSq.Get()
-			, [&pInst](CellClass* pCell, short radius, int radiusSq)
+			, [&pInst](CellClass* pCell, short radius, int radiusSq) constexpr
 			{
 				pInst->Out(*CellExt::ExtMap.Find(pCell), radius, radiusSq);
 			});
@@ -60,7 +58,7 @@ namespace AreaAffection
 	}
 
 	template<typename TInstance>
-	void Logic<TInstance>::ClearEntry(const data_entry& entry)
+	void Logic<TInstance>::ClearEntry(data_entry_t const& entry)
 	{
 		CellStruct position;
 		if (auto* pCell = abstract_cast<CellClass*>(entry.Parent))
@@ -70,12 +68,12 @@ namespace AreaAffection
 		auto* mostRanged = entry.GetMostRanged();
 
 		CellExt::ForEachCell(position, mostRanged->Radius.Get(), mostRanged->RadiusSq.Get()
-		, [this, &entry](short radius, int radiusSq, CellClass* pCell, CellExt::ExtData* pCellExt)
+		, [this, &entry](short radius, int radiusSq, CellClass* pCell, CellExt::ExtData* pCellExt) constexpr
 		{
 			Out(entry, radius, radiusSq, pCellExt);
 		});
 
-		std::for_each(entry.Items.begin(), entry.Items.end(), [](data_entry::instance_ptr& item)
+		std::for_each(entry.Items.begin(), entry.Items.end(), [](data_entry::instance_ptr& item) constexpr
 		{
 			item->ClearedByEntry = true;
 			item->remove_from_array();
@@ -102,11 +100,11 @@ namespace AreaAffection
 		}(), ...);
 	}
 
-	template<typename ...TInstance>
-		requires (IsInstance<TInstance> && ...)
+	template<typename ...TDataEntries>
+		requires (IsDataEntry<TDataEntries> && ...)
 	void In(short radius, int radiusSq
 		, __CellExt_ExtData* pExt
-		, typename TInstance::data_entry&... entries
+		, typename TDataEntries&... entries
 	) {
 		([&]
 		{
@@ -118,11 +116,11 @@ namespace AreaAffection
 		}(), ...);
 	}
 
-	template<typename ...TInstance>
-		requires (IsInstance<TInstance> && ...)
+	template<typename ...TDataEntries>
+		requires (IsDataEntry<TDataEntries> && ...)
 	void Out(short radius, int radiusSq
 		, __CellExt_ExtData* pExt
-		, typename TInstance::data_entry&... entries
+		, typename TDataEntries&... entries
 	) {
 		([&]
 		{

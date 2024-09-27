@@ -6,18 +6,15 @@
 #include <Ext/Cell/Body.hpp>
 #include <Common/AreaAffection.Post.hpp>
 
-bool TechnoExt::ExtData::IsDetectedBy(HouseClass* subject, bool* selectable = nullptr)
+bool TechnoExt::ExtData::IsDetectedBy(HouseClass* subject, bool* selectable)
 {
 	auto* pThis = OwnerObject();
 	auto cell = pThis->GetCell();
 	auto* cellExt = CellExt::ExtMap.Find(cell);
 
-	auto& cloakEntry = AreaAffection::Entry<CloakClass, std::remove_pointer_t<decltype(this)>>::Of(this);
+	auto& cloakEntry = entry<CloakClass>::of<TechnoExt>(*this);
 
-	auto original = [&]() -> bool
-	{
-		return cell->Sensors_InclHouse(subject->ArrayIndex);
-	};
+	auto original = [&]() constexpr noexcept -> bool { return cell->Sensors_InclHouse(subject->ArrayIndex);	};
 
 	bool isSensed = false;
 	for (auto& instance : cloakEntry.Items)

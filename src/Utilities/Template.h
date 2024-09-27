@@ -70,7 +70,7 @@ public:
 		return *this;
 	}
 
-	operator const T& () const noexcept
+	constexpr operator const T& () const noexcept
 	{
 		return this->Get();
 	}
@@ -81,32 +81,32 @@ public:
 	//	return this->GetEx();
 	//}
 
-	T operator -> () const
+	constexpr T operator -> () const
 	{
 		return this->Get();
 	}
 
-	T* operator & () noexcept
+	constexpr T* operator & () noexcept
 	{
 		return this->GetEx();
 	}
 
-	bool operator ! () const
+	constexpr bool operator ! () const noexcept
 	{
 		return this->Get() == 0;
 	}
 
-	const T& Get() const noexcept
+	constexpr const T& Get() const noexcept
 	{
 		return this->Value;
 	}
 
-	T* GetEx() noexcept
+	constexpr T* GetEx() noexcept
 	{
 		return &this->Value;
 	}
 
-	const T* GetEx() const noexcept
+	constexpr const T* GetEx() const noexcept
 	{
 		return &this->Value;
 	}
@@ -120,25 +120,25 @@ public:
 };
 
 template <typename T, typename = std::enable_if_t<std::is_enum<T>::value>>
-inline bool operator == (const Valueable<T>& val, const T& other)
+inline constexpr bool operator == (const Valueable<T>& val, const T& other)
 {
 	return val.Get() == other;
 }
 
 template <typename T, typename = std::enable_if_t<std::is_enum<T>::value>>
-inline bool operator == (const T& other, const Valueable<T>& val)
+inline constexpr bool operator == (const T& other, const Valueable<T>& val)
 {
 	return val.Get() == other;
 }
 
 template <typename T, typename = std::enable_if_t<std::is_enum<T>::value>>
-inline bool operator != (const Valueable<T>& val, const T& other)
+inline constexpr bool operator != (const Valueable<T>& val, const T& other)
 {
 	return !(val == other);
 }
 
 template <typename T, typename = std::enable_if_t<std::is_enum<T>::value>>
-inline bool operator != (const T& other, const Valueable<T>& val)
+inline constexpr bool operator != (const T& other, const Valueable<T>& val)
 {
 	return !(val == other);
 }

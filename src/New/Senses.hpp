@@ -9,6 +9,10 @@
 #include <New/Type/CloakTypeClass.hpp>
 #include <New/Type/ElectronicWarfareTypeClass.hpp>
 
+#include <New/Entity/SensorClass.hpp>
+#include <New/Entity/CloakClass.hpp>
+#include <New/Entity/ElectronicWarfareClass.hpp>
+
 namespace Senses
 {
 	template<typename T>
@@ -24,10 +28,15 @@ namespace Senses
 			if (_Val->Type->IsShared())
 				Shared.push_back(_Val);
 		}
-		inline void remove(T* _Val)
+		inline bool remove(T* _Val)
 		{
-			if (All.remove(_Val) && _Val->Type->IsShared())
-				Shared.remove(_Val);
+			if(All.remove(_Val))
+			{
+				if (_Val->Type->IsShared())
+					Shared.remove(_Val);
+				return true;
+			}
+			return false;
 		}
 		inline void clear()
 		{
@@ -112,7 +121,7 @@ namespace Senses
 		HouseClass* Subject;
 
 		// Cloak type to test
-		CloakTypeClass* CloakType;
+		class CloakTypeClass* CloakType;
 
 		ScanLayerCache Air, Ground, Subterannean;
 
@@ -136,12 +145,12 @@ namespace Senses
 			throw std::exception(__FUNCSIG__); // handle this
 		}
 
-		ScanResult(HouseClass* pSubject, CloakTypeClass* pCloakType);
+		ScanResult(HouseClass* pSubject, class CloakTypeClass* pCloakType);
 	};
 
 	struct Illusion
 	{
-		std::map<CloakTypeClass*, SharedGroup<CloakClass>> GroupedByType;
+		std::map<class CloakTypeClass*, SharedGroup<CloakClass>> GroupedByType;
 	};
 
 	struct IllusionLayerCache
@@ -149,17 +158,39 @@ namespace Senses
 		SharedGroup<CloakClass> Items;
 		std::map<CloakType, std::list<CloakClass*>> GroupedByType;
 
-		inline bool IsStealthed() const { return !GroupedByType[CloakType::Stealth].empty(); }
-		inline bool IsDisguised() const { return !GroupedByType[CloakType::Disguise].empty(); }
-		inline bool IsCamouflaged() const { return !GroupedByType[CloakType::Camouflage].empty(); }
-		inline bool IsVirtual() const { return !GroupedByType[CloakType::Virtual].empty(); }
+		inline bool IsStealthed() noexcept { return !GroupedByType[CloakType::Stealth].empty(); }
+		inline bool IsDisguised() noexcept { return !GroupedByType[CloakType::Disguise].empty(); }
+		inline bool IsCamouflaged() noexcept  { return !GroupedByType[CloakType::Camouflage].empty(); }
+		inline bool IsVirtual() noexcept  { return !GroupedByType[CloakType::Virtual].empty(); }
 
-		inline bool IsAffected() const
+		inline bool IsAffected() noexcept
 		{
 			return IsVirtual()
 				|| IsStealthed()
 				|| IsCamouflaged()
 				|| IsDisguised();
+		}
+
+		inline void add(CloakClass& instance)
+		{
+			Items.push_back(&instance);
+			GroupedByType[instance.Type->Type].push_back(&instance);
+		}
+
+		inline bool remove(CloakClass& instance)
+		{
+			if (Items.remove(&instance))
+			{
+				GroupedByType[instance.Type->Type].remove(&instance);
+				return true;
+			}
+			return false;
+		}
+
+		inline void reset()
+		{
+			Items.clear();
+			GroupedByType.clear();
 		}
 	};
 
@@ -191,7 +222,35 @@ namespace Senses
 			throw std::exception(__FUNCSIG__); // handle this
 		}
 
-		IllusionResult(HouseClass* pSubject);
+		inline void add(CloakClass& instance)
+		{
+			Items.push_back(&instance);
+			for (auto& kvp : {
+				std::make_pair(&Air, &instance.Type->Air)
+			  , std::make_pair(&Ground, &instance.Type->Ground)
+			  , std::make_pair(&Subterannean, &instance.Type->Subterannean)
+			})
+				if(kvp.second->IsEnabled)
+					kvp.first->add(instance);
+		}
+
+		inline bool remove(CloakClass& instance)
+		{
+			if (Items.remove(&instance))
+			{
+				for(auto* l : { &Air, &Ground, &Subterannean })
+					l->remove(instance);
+				return true;
+			}
+			return false;
+		}
+
+		inline void reset()
+		{
+			Items.clear();
+			for (auto* l : { &Air, &Ground, &Subterannean })
+				l->reset();
+		}
 	};
 }
 

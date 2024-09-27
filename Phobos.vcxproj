@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Common\AreaAffection.cpp" />
+    <ClCompile Include="src\Common\AreaAffection.Impl.cpp" />
     <ClCompile Include="src\Ext\Building\Body.Cloak.cpp" />
     <ClCompile Include="src\Ext\Techno\Body.Cloak.cpp" />
     <ClCompile Include="src\Ext\Techno\Body.Sensor.cpp" />
@@ -197,13 +198,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common\AreaAffection.Body.hpp" />
+    <ClInclude Include="src\Common\AreaAffection.Decl.hpp" />
     <ClInclude Include="src\Common\AreaAffection.Post.hpp" />
     <ClInclude Include="src\Common\AreaAffection.hpp" />
-    <ClInclude Include="src\Common\Entry.Post.hpp" />
-    <ClInclude Include="src\Common\Entry.Pre.hpp" />
+    <ClInclude Include="src\Common\Entry.Impl.hpp" />
+    <ClInclude Include="src\Common\Entry.hpp" />
     <ClInclude Include="src\Common\Lifetime.hpp" />
     <ClInclude Include="src\Common\Processable.hpp" />
-    <ClInclude Include="src\Ext\traits.hpp" />
+    <ClInclude Include="src\Ext\Traits.Bullet.hpp" />
+    <ClInclude Include="src\Ext\Traits.Cell.hpp" />
+    <ClInclude Include="src\Ext\Traits.Techno.hpp" />
+    <ClInclude Include="src\Traits.hpp" />
     <ClInclude Include="src\New\Entity\ElectronicWarfareClass.hpp" />
     <ClInclude Include="src\New\Senses.hpp" />
     <ClInclude Include="src\New\Type\ElectronicWarfareTypeClass.hpp" />
@@ -255,6 +260,7 @@
     <ClInclude Include="src\New\Entity\AttachmentClass.h" />
     <ClInclude Include="src\Utilities\Anchor.h" />
     <ClInclude Include="src\Common\Common.hpp" />
+    <ClInclude Include="src\Utilities\Collaborable.hpp" />
     <ClInclude Include="src\Utilities\Misc.hpp" />
     <ClInclude Include="src\Utilities\Enumerable.h" />
     <ClInclude Include="src\Ext\Aircraft\Body.h" />
@@ -336,7 +342,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
     <XPDeprecationWarning>false</XPDeprecationWarning>
   </PropertyGroup>
@@ -486,7 +492,7 @@
       <AssemblerListingLocation>$(IntDir)\%(RelativeDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)\%(RelativeDir)</ObjectFileName>
       <CallingConvention>StdCall</CallingConvention>
-      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/constexpr:depth512 /constexpr:backtrace10 /constexpr:steps100000 %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4100;4201;4530;4731;4740;4458;4819;5103;5105;26495</DisableSpecificWarnings>
       <EnableModules>true</EnableModules>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

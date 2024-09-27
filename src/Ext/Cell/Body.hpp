@@ -94,12 +94,12 @@ public:
 			}
 	}
 
-	// TODO: 1 implement chaching of CellStruct per each Radius level
+	// TODO: 1 implement caching of CellStruct per each Radius level
 	// TODO: 2 in some cases we can try to use threads if have enoguh cell count (need investigation)
 	template<typename THandler> requires ItemHandler<THandler, CellStruct, short, int>
 	inline static void GenerateRadius(short radius, int radiusSquared, const THandler& handler)
 	{
-		constexpr auto where = CellStruct::Empty;
+		auto const where = CellStruct::Empty;
 		radius = radius < 0 ? -radius : radius;
 		for (short x = -radius; x <= radius; x++)
 			for (short y = -radius; y <= radius; y++)
@@ -147,7 +147,7 @@ public:
 		>
 	inline static void ForEachCell(CellStruct mapCoords, short radius, int radiusSquared, const THandler& handler)
 	{
-		CellExt::GenerateRadius(radius, [&](CellStruct r, short radius, int radiusSq)
+		CellExt::GenerateRadius(radius, radius * radius, [&](CellStruct r, short radius, int radiusSq)
 		{
 			auto position = mapCoords + r;	
 			CellClass* pCell = MapClass::Instance->GetCellAt(position);	

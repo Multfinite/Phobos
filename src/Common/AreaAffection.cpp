@@ -12,7 +12,7 @@
 #include <New/Entity/CloakClass.hpp>
 #include <New/Entity/ElectronicWarfareClass.hpp>
 
-decltype(AreaAffection::IInstance::Array) AreaAffection::IInstance::Array;
+decltype(AreaAffection::Instance::Array) AreaAffection::Instance::Array;
 
 void AreaAffection::CellEntry::Register(SensorClass* pSensor)
 {
@@ -90,7 +90,7 @@ std::shared_ptr<Senses::ScanResult> AreaAffection::CellEntry::ScanBy(CloakTypeCl
 		auto const& senses = pair.second;
 		bool const isMe = pSubject == pair.first;
 		bool const isAlly = pSubject->IsAlliedWith(pair.first);
-		for (auto p : {
+		for (auto& p : {
 			  std::pair<decltype(senses.Air) const&, decltype(r->Air)&>(senses.Air, r->Air)
 			, std::pair<decltype(senses.Air) const&, decltype(r->Air)&>(senses.Ground, r->Ground)
 			, std::pair<decltype(senses.Air) const&, decltype(r->Air)&>(senses.Subterannean, r->Subterannean)
@@ -106,6 +106,15 @@ std::shared_ptr<Senses::ScanResult> AreaAffection::CellEntry::ScanBy(CloakTypeCl
 	return r;
 }
 
+std::shared_ptr<Senses::IllusionResult> AreaAffection::CellEntry::IllusoryOf(
+	HouseClass* pSubject
+) {
+	auto r = std::make_shared<Senses::IllusionResult>();
+	r->Subject = pSubject;
+	for(CloakClass* cloak : Cloaks)
+		r->add(*cloak);
+	return r;
+}
 
 template<typename ...TDataEntries>
 	requires (AreaAffection::IsDataEntry<TDataEntries> && ...)
@@ -190,10 +199,10 @@ void AreaAffection::PerCellProcess(
 	);
 }
 
-void AreaAffection::InitializeOnCell(IInstance* pInst, CellClass* cell)
+void AreaAffection::InitializeOnCell(Instance* pInst, CellClass* cell)
 {
 	CellExt::ForEachCell(cell->MapCoords, pInst->Radius.Get(), pInst->RadiusSq.Get(), [&pInst](
-		  int radius
+		  short radius
 		, int radiusSq
 		, CellClass* pCell
 		, CellExt::ExtData* pExt

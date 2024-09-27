@@ -23,9 +23,9 @@ DEFINE_HOOK(0x466556, BulletClass_Init, 0x6)
 
 		Initialize<BulletExt
 			, SensorTypeClass
+			, CloakTypeClass
 			, ElectronicWarfareTypeClass
-			, CloakTypeClass>
-			(pThis);
+		>(pThis);
 	}
 
 	return 0;

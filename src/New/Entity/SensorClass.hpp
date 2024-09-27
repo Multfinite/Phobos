@@ -16,12 +16,11 @@
 #include <New/Type/CloakTypeClass.hpp>
 #include <New/Type/SensorTypeClass.hpp>
 
-class SensorClass : public AreaAffection::IInstance
+class SensorClass : public AreaAffection::Instance
 {
 public:
 	using self = SensorClass;
 	using type = SensorTypeClass;
-	using logic = AreaAffection::Logic<self>;
 
 	friend struct AreaAffection::Logic<self>;
 
@@ -31,17 +30,17 @@ public:
 
 	bool Load(PhobosStreamReader& Stm, bool RegisterForChange) override
 	{
-		return IInstance::Load(Stm, RegisterForChange) && Serialize(Stm);
+		return Instance::Load(Stm, RegisterForChange) && Serialize(Stm);
 	}
 	bool Save(PhobosStreamWriter& Stm) const override
 	{
 		auto pThis = const_cast<self*>(this);
-		return static_cast<IInstance*>(pThis)->Save(Stm) && pThis->Serialize(Stm);
+		return static_cast<Instance*>(pThis)->Save(Stm) && pThis->Serialize(Stm);
 	}
-	void remove_from_array() override
+	void remove_from_array() noexcept override
 	{
 		Array.remove(this);
-		IInstance::remove_from_array();
+		Instance::remove_from_array();
 	}
 private:
 	template<typename T>
@@ -59,27 +58,19 @@ public:
 	void In(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 	void Out(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 
-	SensorClass(SensorTypeClass* type, AbstractClass* parent, HouseClass* owner, short radius) : IInstance(parent, owner, radius)
-		, Type(type)
-	{
-		Array.push_back(this);
-	}
-	~SensorClass()
-	{
-		if (ClearedByEntry) return;
-		logic::Instance.ClearInstance(this);
-	}
+	SensorClass(SensorTypeClass* type, class AbstractClass* parent, HouseClass* owner, short radius);
+	~SensorClass();
 };
 
-struct SensorClassDataEntry : public AreaAffection::DataEntry<SensorClass> {};
-
-namespace AreaAffection
+template<> struct data_entry<SensorClass> : public AreaAffection::__data_entry<SensorClass>
 {
-	template<> struct data_entry_of<SensorClass>
-	{
-		using type = SensorClassDataEntry;
-	};
-}
+	data_entry(class AbstractClass* pParent) : AreaAffection::__data_entry<SensorClass>(pParent) { }
+};
+
+template<> struct data_entry_of<SensorClass>
+{
+	using type = data_entry<SensorClass>;
+};
 
 static_assert(AreaAffection::IsInstance<SensorClass>, "It is not an Area Affection!");
-static_assert(AreaAffection::IsDataEntry<SensorClassDataEntry>, "It is not an Area Affection data entry!")
+static_assert(AreaAffection::IsDataEntry<data_entry<SensorClass>>, "It is not an Area Affection data entry!");

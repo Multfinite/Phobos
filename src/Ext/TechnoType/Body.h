@@ -200,12 +200,12 @@ public:
 		Valueable<bool> Prone_SecondaryInStand;
 		Valueable<bool> Prone_Sprint;
 
+		data_entry<SensorTypeClass> Sensor;
+		data_entry<CloakTypeClass> Cloak;
+		data_entry<ElectronicWarfareTypeClass> EW;
+
 		Valueable<CloakSoundMode> Cloak_In_SoundMode;
 		Valueable<CloakSoundMode> Cloak_Out_SoundMode;
-
-		SensorTypeClass::DataEntry Sensor;
-		CloakTypeClass::DataEntry Cloak;
-		ElectronicWarfareTypeClass::DataEntry EW;
 
 		Valueable<TechnoTypeClass*> Convert_Deploy;
 		

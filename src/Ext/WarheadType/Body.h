@@ -118,9 +118,9 @@ public:
 		Valueable<bool> InflictLocomotor;
 		Valueable<bool> RemoveInflictedLocomotor;
 
-		SensorTypeClass::DataEntry Sensor;
-		CloakTypeClass::DataEntry Cloak;
-		ElectronicWarfareTypeClass::DataEntry EW;
+		data_entry_of<SensorTypeClass>::type Sensor;
+		data_entry_of < CloakTypeClass>::type Cloak;
+		data_entry_of < ElectronicWarfareTypeClass>::type EW;
 
 		// Ares tags
 		// http://ares-developers.github.io/Ares-docs/new/warheads/general.html

@@ -9,7 +9,7 @@
 #include <Common/AreaAffection.Body.hpp>
 #include <Common/AreaAffection.Post.hpp>
 
-decltype(ElectronicWarfareClass::logic::Instance) ElectronicWarfareClass::logic::Instance;
+decltype(AreaAffection::Logic<ElectronicWarfareClass>::Instance) AreaAffection::Logic<ElectronicWarfareClass>::Instance;
 decltype(ElectronicWarfareClass::Array) ElectronicWarfareClass::Array;
 
 void ElectronicWarfareClass::In(__CellExt_ExtData& cellExt, short radius, int radiusSq)
@@ -19,4 +19,15 @@ void ElectronicWarfareClass::In(__CellExt_ExtData& cellExt, short radius, int ra
 void ElectronicWarfareClass::Out(__CellExt_ExtData& cellExt, short radius, int radiusSq)
 {
 	cellExt.AreaAffectionCache->Unregister(this);
+}
+
+ElectronicWarfareClass::ElectronicWarfareClass(ElectronicWarfareTypeClass* type, AbstractClass* parent, HouseClass* owner, short radius) : Instance(parent, owner, radius)
+, Type(type)
+{
+	Array.push_back(this);
+}
+ElectronicWarfareClass::~ElectronicWarfareClass()
+{
+	if (ClearedByEntry) return;
+	AreaAffection::Logic<ElectronicWarfareClass>::Instance.ClearInstance(this);
 }

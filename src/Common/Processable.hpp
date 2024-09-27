@@ -1,6 +1,7 @@
 #pragma once
 
 #include <concepts>
+#include <memory>
 #include <functional>
 
 enum class ProcessStage : uint8_t

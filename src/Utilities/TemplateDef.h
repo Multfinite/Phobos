@@ -1721,3 +1721,48 @@ bool Damageable<T>::Save(PhobosStreamWriter& Stm) const
 		&& Savegame::WritePhobosStream(Stm, this->ConditionYellow)
 		&& Savegame::WritePhobosStream(Stm, this->ConditionRed);
 }
+
+// Parser spec
+
+template<>
+inline bool Parser<AffectedHouse>::TryParse(const char* pValue, OutType* outValue)
+{
+	auto parsed = AffectedHouse::None;
+
+	std::string str = pValue;
+	char* context = nullptr;
+	for (auto cur = strtok_s(str.data(), Phobos::readDelims, &context); cur; cur = strtok_s(nullptr, Phobos::readDelims, &context))
+	{
+		if (!_strcmpi(cur, "owner") || !_strcmpi(cur, "self"))
+		{
+			parsed |= AffectedHouse::Owner;
+		}
+		else if (!_strcmpi(cur, "allies") || !_strcmpi(cur, "ally"))
+		{
+			parsed |= AffectedHouse::Allies;
+		}
+		else if (!_strcmpi(cur, "enemies") || !_strcmpi(cur, "enemy"))
+		{
+			parsed |= AffectedHouse::Enemies;
+		}
+		else if (!_strcmpi(cur, "team"))
+		{
+			parsed |= AffectedHouse::Team;
+		}
+		else if (!_strcmpi(cur, "others"))
+		{
+			parsed |= AffectedHouse::NotOwner;
+		}
+		else if (!_strcmpi(cur, "all"))
+		{
+			parsed |= AffectedHouse::All;
+		}
+		else if (_strcmpi(cur, "none"))
+		{
+			return false;
+		}
+	}
+
+	*outValue = parsed;
+	return true;
+}

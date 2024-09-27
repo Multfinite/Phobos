@@ -10,38 +10,13 @@
 #include <TechnoClass.h>
 #include <BulletClass.h>
 
-class ElectronicWarfareClass;
-class ElectronicWarfareTypeClass final : public Enumerable<ElectronicWarfareTypeClass>
+#include <Common/Entry.hpp>
+
+class ElectronicWarfareTypeClass : public Enumerable<ElectronicWarfareTypeClass>
 {
 public:
 	using parent_type = AbstractTypeClass;
-	struct DataEntry
-	{
-		AbstractTypeClass* OwnerType;
-		bool IsEnabled = false;
 
-		NullableVector<ElectronicWarfareTypeClass*> Types;
-		NullableVector<int> Radiuses;
-		NullableVector<AffectedHouse> Targets;
-
-		//DataEntry() = default;
-		DataEntry(AbstractTypeClass* pOwnerType) : OwnerType(pOwnerType) { }
-
-		virtual void LoadFromINI(CCINIClass* pINI, const char* pSection);
-		virtual bool Load(PhobosStreamReader& stm, bool registerForChange);
-		virtual bool Save(PhobosStreamWriter& stm) const;
-
-	private:
-		template <typename T>
-		bool Serialize(T& stm);
-	};
-
-	using data_entry = ElectronicWarfareTypeClass::DataEntry;
-	friend struct data_entry;
-
-	inline static data_entry* EntryOf(AbstractTypeClass* pAbsType);
-	template<typename TExtension>
-	inline static data_entry& EntryOf(typename TExtension::ExtData* pExt);
 public:
 	ElectronicWarfareTypeClass(const char* const pTitle) : Enumerable<ElectronicWarfareTypeClass>(pTitle)
 	{ };
@@ -58,3 +33,30 @@ private:
 	template <typename T>
 	void Serialize(T& Stm);
 };
+
+template<> struct data_entry<ElectronicWarfareTypeClass>
+{
+	AbstractTypeClass* OwnerType;
+	bool IsEnabled = false;
+
+	ValueableVector<ElectronicWarfareTypeClass*> Types;
+	ValueableVector<AffectedHouse> Targets;
+	ValueableVector<int> Radiuses;
+	ValueableVector<int> Durations;
+	ValueableVector<int> Lifetime;
+	ValueableVector<bool> Indiscriminate;
+	ValueableVector<bool> AsPassenger;
+	ValueableVector<bool> AsOccupant;
+
+	//data_entry() = default;
+	data_entry(AbstractTypeClass* pOwnerType) : OwnerType(pOwnerType) { }
+
+	virtual void LoadFromINI(CCINIClass* pINI, const char* pSection);
+	virtual bool Load(PhobosStreamReader& stm, bool registerForChange);
+	virtual bool Save(PhobosStreamWriter& stm) const;
+
+private:
+	template <typename T>
+	bool Serialize(T& stm);
+};
+template<> struct data_entry_of<ElectronicWarfareTypeClass> { using type = data_entry<ElectronicWarfareTypeClass>; };

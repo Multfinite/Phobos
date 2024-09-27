@@ -33,6 +33,13 @@
 #include <New/Type/LaserTrailTypeClass.h>
 #include <New/Type/DigitalDisplayTypeClass.h>
 
+#include <New/Type/SensorTypeClass.hpp>
+#include <New/Entity/SensorClass.hpp>
+#include <New/Type/CloakTypeClass.hpp>
+#include <New/Entity/CloakClass.hpp>
+#include <New/Type/ElectronicWarfareTypeClass.hpp>
+#include <New/Entity/ElectronicWarfareClass.hpp>
+
 #include <utility>
 
 #pragma region Implementation details
@@ -191,40 +198,46 @@ private:
 // Add more class names as you like
 using PhobosTypeRegistry = TypeRegistry<
 	// Ext classes
-	AircraftExt,
-	AnimTypeExt,
-	AnimExt,
-	BuildingExt,
-	BuildingTypeExt,
-	BulletExt,
-	BulletTypeExt,
-	HouseExt,
-	OverlayTypeExt,
-	ParticleSystemTypeExt,
-	RadSiteExt,
-	RulesExt,
-	ScenarioExt,
-	ScriptExt,
-	SideExt,
-	SWTypeExt,
-	TActionExt,
-	TeamExt,
-	TechnoExt,
-	TechnoTypeExt,
-	TerrainTypeExt,
-	TiberiumExt,
-	VoxelAnimExt,
-	VoxelAnimTypeExt,
-	WarheadTypeExt,
-	WeaponTypeExt,
+	  AircraftExt
+	, AnimTypeExt
+	, AnimExt
+	, BuildingExt
+	, BuildingTypeExt
+	, BulletExt
+	, BulletTypeExt
+	, HouseExt
+	, OverlayTypeExt
+	, ParticleSystemTypeExt
+	, RadSiteExt
+	, RulesExt
+	, ScenarioExt
+	, ScriptExt
+	, SideExt
+	, SWTypeExt
+	, TActionExt
+	, TeamExt
+	, TechnoExt
+	, TechnoTypeExt
+	, TerrainTypeExt
+	, TiberiumExt
+	, VoxelAnimExt
+	, VoxelAnimTypeExt
+	, WarheadTypeExt
+	, WeaponTypeExt
 	// New classes
-	ShieldTypeClass,
-	LaserTrailTypeClass,
-	RadTypeClass,
-	ShieldClass,
-	DigitalDisplayTypeClass,
-	AttachmentClass,
-	AttachmentTypeClass
+	, ShieldTypeClass
+	, LaserTrailTypeClass
+	, RadTypeClass
+	, ShieldClass
+	, DigitalDisplayTypeClass
+	, AttachmentClass
+	, AttachmentTypeClass
+	, SensorClass
+	, SensorTypeClass
+	, CloakClass
+	, CloakTypeClass
+	, ElectronicWarfareClass
+	, ElectronicWarfareTypeClass
 	// other classes
 >;
 

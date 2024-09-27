@@ -15,12 +15,11 @@
 
 #include <New/Type/CloakTypeClass.hpp>
 
-class CloakClass : public AreaAffection::IInstance
+class CloakClass : public AreaAffection::Instance
 {
 public:
 	using self = CloakClass;
 	using type = CloakTypeClass;
-	using logic = AreaAffection::Logic<self>;
 
 	friend struct AreaAffection::Logic<self>;
 
@@ -30,17 +29,17 @@ public:
 
 	bool Load(PhobosStreamReader& Stm, bool RegisterForChange) override
 	{
-		return IInstance::Load(Stm, RegisterForChange) && Serialize(Stm);
+		return Instance::Load(Stm, RegisterForChange) && Serialize(Stm);
 	}
 	bool Save(PhobosStreamWriter& Stm) const override
 	{
 		auto pThis = const_cast<self*>(this);
-		return static_cast<IInstance*>(pThis)->Save(Stm) && pThis->Serialize(Stm);
+		return static_cast<Instance*>(pThis)->Save(Stm) && pThis->Serialize(Stm);
 	}
-	void remove_from_array() override
+	void remove_from_array() noexcept override
 	{
 		Array.remove(this);
-		IInstance::remove_from_array();
+		Instance::remove_from_array();
 	}
 private:
 	template<typename T>
@@ -58,35 +57,21 @@ public:
 	void In(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 	void Out(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 
-	CloakClass(CloakTypeClass* type, AbstractClass* parent, HouseClass* owner, short radius) : IInstance(parent, owner, radius)
-		, Type(type)
-	{
-		Array.push_back(this);
-	}
-	~CloakClass()
-	{
-		if (ClearedByEntry) return;
-		logic::Instance.ClearInstance(this);
-	}
+	CloakClass(CloakTypeClass* type, AbstractClass* parent, HouseClass* owner, short radius);
+	~CloakClass();
 };
 
-struct CloakClassDataEntry : public AreaAffection::DataEntry<CloakClass>
+template<> struct data_entry<CloakClass> : public AreaAffection::__data_entry<CloakClass>
 {
 	ValueableMap<CloakType, std::list<CloakClass*>> ByCloakType;
 
-	void __on_instantiate(instance* pInst) override;
-	void __on_deinstantiate(instance* pInst) override;
-
-	CloakClassDataEntry(AbstractClass* pParent) : AreaAffection::DataEntry<CloakClass>(pParent) { }
+	data_entry(class AbstractClass* pParent) : AreaAffection::__data_entry<CloakClass>(pParent) { }
 };
 
-namespace AreaAffection
+template<> struct data_entry_of<CloakClass>
 {
-	template<> struct data_entry_of<CloakClass>
-	{
-		using type = CloakClassDataEntry;
-	};
-}
+	using type = data_entry<CloakClass>;
+};
 
 static_assert(AreaAffection::IsInstance<CloakClass>, "It is not a Area Affection!");
-ert(AreaAffection::IsDataEntry<CloakClassDataEntry>, "It is not an Area Affection data entry!")
+static_assert(AreaAffection::IsDataEntry<data_entry<CloakClass>>, "It is not an Area Affection data entry!");

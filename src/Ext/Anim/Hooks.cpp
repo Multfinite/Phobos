@@ -226,12 +226,12 @@ DEFINE_HOOK(0x424CB0, AnimClass_InWhichLayer_AttachedObjectLayer, 0x6)
 
 		if (pTypeExt->Layer_UseObjectLayer.isset())
 		{
-			Layer layer = pThis->Type->Layer;
+			Layer Layer = pThis->Type->Layer;
 
 			if (pTypeExt->Layer_UseObjectLayer.Get())
-				layer = pThis->OwnerObject->InWhichLayer();
+				Layer = pThis->OwnerObject->InWhichLayer();
 
-			R->EAX(layer);
+			R->EAX(Layer);
 			return ReturnValue;
 		}
 	}

@@ -48,9 +48,12 @@ public:
 		Valueable<bool> Arcing_AllowElevationInaccuracy;
 		Nullable<WeaponTypeClass*> ReturnWeapon;
 
-		SensorTypeClass::DataEntry Sensor;
-		CloakTypeClass::DataEntry Cloak;
-		ElectronicWarfareTypeClass::DataEntry EW;
+		data_entry<SensorTypeClass> Sensor;
+		data_entry<CloakTypeClass> Cloak;
+		data_entry<ElectronicWarfareTypeClass> EW;
+
+		Valueable<CloakSoundMode> Cloak_In_SoundMode;
+		Valueable<CloakSoundMode> Cloak_Out_SoundMode;
 
 		// Ares 0.7
 		Nullable<Leptons> BallisticScatter_Min;

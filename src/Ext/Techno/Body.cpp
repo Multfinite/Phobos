@@ -254,7 +254,7 @@ std::shared_ptr<AttachmentClass> TechnoExt::ExtData::FindAttachmentForTypeByID(T
 void TechnoExt::ExtData::RemoveAttachmentFromPerTypeLists(AttachmentClass* pWhat)
 {
 	for (auto& vector : ChildAttachmentsPerType)
-		std::remove_if(vector.second.begin(), vector.second.end(), [&pWhat](const AttachmentClassPtr& item) -> bool
+		std::remove_if(vector.second.begin(), vector.second.end(), [&pWhat](AttachmentClassPtr const& item) -> bool
 		{
 			return item.get() == pWhat && item;
 		});

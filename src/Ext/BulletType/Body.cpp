@@ -57,6 +57,9 @@ void BulletTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	this->Cloak.LoadFromINI(pINI, pSection);
 	this->EW.LoadFromINI(pINI, pSection);
 
+	this->Cloak_In_SoundMode.Read(exINI, pSection, "Cloak.In.SoundMode");
+	this->Cloak_Out_SoundMode.Read(exINI, pSection, "Cloak.Out.SoundMode");
+
 	// Ares 0.7
 	this->BallisticScatter_Min.Read(exINI, pSection, "BallisticScatter.Min");
 	this->BallisticScatter_Max.Read(exINI, pSection, "BallisticScatter.Max");
@@ -130,6 +133,10 @@ void BulletTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->Arcing_AllowElevationInaccuracy)
 		.Process(this->ReturnWeapon)
 		.Process(this->Sensor)
+		.Process(this->Cloak)
+		.Process(this->EW)
+		.Process(this->Cloak_In_SoundMode)
+		.Process(this->Cloak_Out_SoundMode)
 		;
 
 	this->TrajectoryType = PhobosTrajectoryType::ProcessFromStream(Stm, this->TrajectoryType);

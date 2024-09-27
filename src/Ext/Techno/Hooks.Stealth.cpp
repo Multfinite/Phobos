@@ -101,7 +101,7 @@ DEFINE_HOOK(0x6F4EB0, TechnoClass__RetargetingCloak, 0x5)
 
 DEFINE_HOOK(0x70C5A0, TechnoClass__Is_Cloakable, 0x6)
 {
-	auto retn = [&R](bool r) -> uint32_t
+	auto retn = [&R](bool r) constexpr noexcept-> uint32_t
 	{
 		R->AL(r);
 		return  0x70C5AB; // retn
@@ -114,7 +114,7 @@ DEFINE_HOOK(0x70C5A0, TechnoClass__Is_Cloakable, 0x6)
 
 DEFINE_HOOK(0x70D420, TechnoClass__IsSensedOnCellByPlayer, 0x5)
 {
-	auto retn = [&R](bool r) -> uint32_t
+	auto retn = [&R](bool r) constexpr noexcept -> uint32_t
 	{
 		R->AL(r);
 		return  0x70D455; // retn
@@ -127,7 +127,7 @@ DEFINE_HOOK(0x70D420, TechnoClass__IsSensedOnCellByPlayer, 0x5)
 
 DEFINE_HOOK(0x70D460, TechnoClass__IsSensedOnCellBy, 0x8)
 {
-	auto retn = [&R](bool r) -> uint32_t
+	auto retn = [&R](bool r) constexpr noexcept -> uint32_t
 	{
 		R->AL(r);
 		return  0x70D490; // retn 4
@@ -141,7 +141,7 @@ DEFINE_HOOK(0x70D460, TechnoClass__IsSensedOnCellBy, 0x8)
 
 DEFINE_HOOK(0x6FBDC0, TechnoClass__Is_Ready_To_Cloak, 0x5)
 {
-	auto retn = [&R](bool r) -> uint32_t
+	auto retn = [&R](bool r) constexpr noexcept -> uint32_t
 	{
 		R->EAX(r);
 		return  0x6FBEAB; // retn

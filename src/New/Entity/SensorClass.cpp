@@ -9,7 +9,7 @@
 #include <Common/AreaAffection.Body.hpp>
 #include <Common/AreaAffection.Post.hpp>
 
-decltype(SensorClass::logic::Instance) SensorClass::logic::Instance;
+decltype(AreaAffection::Logic<SensorClass>::Instance) AreaAffection::Logic<SensorClass>::Instance;
 decltype(SensorClass::Array) SensorClass::Array;
 
 void SensorClass::In(__CellExt_ExtData& cellExt, short radius, int radiusSq)
@@ -19,4 +19,15 @@ void SensorClass::In(__CellExt_ExtData& cellExt, short radius, int radiusSq)
 void SensorClass::Out(__CellExt_ExtData& cellExt, short radius, int radiusSq)
 {
 	cellExt.AreaAffectionCache->Unregister(this);
+}
+
+SensorClass::SensorClass(SensorTypeClass* type, class AbstractClass* parent, HouseClass* owner, short radius) : Instance(parent, owner, radius)
+, Type(type)
+{
+	Array.push_back(this);
+}
+SensorClass::~SensorClass()
+{
+	if (ClearedByEntry) return;
+	AreaAffection::Logic<SensorClass>::Instance.ClearInstance(this);
 }

@@ -7,10 +7,15 @@
 #include <WarheadTypeClass.h>
 
 #include <Ext/Cell/Body.hpp>
+#include <Ext/Traits.Cell.hpp>
+
 #include <Ext/Techno/Body.h>
 #include <Ext/TechnoType/Body.h>
+#include <Ext/Traits.Techno.hpp>
+
 #include <Ext/Bullet/Body.h>
 #include <Ext/BulletType/Body.h>
+#include <Ext/Traits.Bullet.hpp>
 
 #include <New/Entity/SensorClass.hpp>
 #include <New/Entity/CloakClass.hpp>
@@ -18,7 +23,8 @@
 #include <New/Senses.hpp>
 
 #include <Common/AreaAffection.hpp>
-#include <Common/Entry.Post.hpp>
+
+#include "Entry.Impl.hpp"
 
 namespace AreaAffection
 {
@@ -46,11 +52,11 @@ namespace AreaAffection
 	*/
 	struct InstanceEntry
 	{
-		data_entry_of_t<SensorClass> Sensor;
-		data_entry_of_t<CloakClass> Cloak;
-		data_entry_of_t<ElectronicWarfareClass> EW;
+		data_entry<SensorClass> Sensor;
+		data_entry<CloakClass> Cloak;
+		data_entry<ElectronicWarfareClass> EW;
 
-		InstanceEntry(AbstractClass* ownerObject) :
+		InstanceEntry(class AbstractClass* ownerObject) :
 			Sensor(ownerObject), Cloak(ownerObject), EW(ownerObject)
 		{ }
 
@@ -62,19 +68,19 @@ namespace AreaAffection
 				, EW
 			);
 		}
-
-		bool Load(PhobosStreamReader& Stm, bool RegisterForChange)
+		
+		inline bool Load(PhobosStreamReader& Stm, bool RegisterForChange)
 		{
 			return Serialize(Stm);
 		}
-		bool Save(PhobosStreamWriter& Stm) const 
+		inline bool Save(PhobosStreamWriter& Stm) const 
 		{
 			using this_ptr = std::remove_const_t<std::remove_pointer_t<decltype(this)>>*;
 			return const_cast<this_ptr>(this)->Serialize(Stm);
 		}
 	private:
 		template<typename T>
-		bool Serialize(T& Stm)
+		inline bool Serialize(T& Stm)
 		{
 			return Stm
 				.Process(this->Sensor)
@@ -116,13 +122,16 @@ namespace AreaAffection
 		{
 			CloakTypeClass* CloakType;
 			HouseClass* Subject;
+
+			constexpr bool operator==(DetectResultKey const& o) const noexcept { return CloakType == o.CloakType && Subject == o.Subject; }
+			constexpr bool operator!=(DetectResultKey const& o) const noexcept { return !(*this == o); }
 		};
 
 		struct DetectResultKeyHasher
 		{
 			std::size_t operator()(const AreaAffection::CellEntry::DetectResultKey& t) const
 			{
-				std::size_t ret = 0; hash_combine(ret, t.CloakType, t.Subject); return ret;
+				std::size_t ret = 0; hash_combine(ret, reinterpret_cast<std::uintptr_t>(t.CloakType), reinterpret_cast<std::uintptr_t>(t.Subject)); return ret;
 			}
 		};
 
@@ -141,80 +150,85 @@ namespace AreaAffection
 			HouseClass* pSubject
 		);
 	};
-
+}
 	/* Place all your specialization for generalized logic here. --Multfinite */
 
+template<> struct entry<SensorClass>
+{
+	using type = data_entry<SensorClass>;
+
 	template<typename TExtension>
-	struct Entry<SensorClass, TExtension>
+	inline static constexpr type& of(typename TExtension::ExtData& ext) noexcept { return ext.AreaAffection->Sensor; }
+
+	inline static type* of(AbstractClass& abs) noexcept
 	{
-		inline static DataEntry<SensorClass>& Of(typename TExtension::ExtData* pExt)
-		{
-			return pExt->AreaAffection->Sensor;
-		}
-	};
-	template<> inline DataEntry<SensorClass>* EntryOf(AbstractClass* pAbs)
-	{
-		if (auto* pExt = TechnoExt::ExtMap.Find(abstract_cast<TechnoClass*>(pAbs)))
+		if (auto* pExt = TechnoExt::ExtMap.Find(abstract_cast<TechnoClass*>(&abs)))
 			return &pExt->AreaAffection->Sensor;
-		if (auto* pExt = BulletExt::ExtMap.Find(abstract_cast<BulletClass*>(pAbs)))
+		if (auto* pExt = BulletExt::ExtMap.Find(abstract_cast<BulletClass*>(&abs)))
 			return &pExt->AreaAffection->Sensor;
-		if (auto* pExt = CellExt::ExtMap.Find(abstract_cast<CellClass*>(pAbs)))
+		if (auto* pExt = CellExt::ExtMap.Find(abstract_cast<CellClass*>(&abs)))
 			return &pExt->AreaAffection->Sensor;
 		return nullptr;
 	}
+};
+
+template<> struct entry<CloakClass>
+{
+	using type = data_entry<CloakClass>;
 
 	template<typename TExtension>
-	struct Entry<CloakClass, TExtension>
+	inline static constexpr type& of(typename TExtension::ExtData& ext) noexcept { return ext.AreaAffection->Cloak; }
+
+	inline static type* of(AbstractClass& abs) noexcept
 	{
-		inline static DataEntry<CloakClass>& Of(typename TExtension::ExtData* pExt)
-		{
-			return pExt->AreaAffection->Cloak;
-		}
-	};
-	template<> inline DataEntry<CloakClass>* EntryOf(AbstractClass* pAbs)
-	{
-		if (auto* pExt = TechnoExt::ExtMap.Find(abstract_cast<TechnoClass*>(pAbs)))
+		if (auto* pExt = TechnoExt::ExtMap.Find(abstract_cast<TechnoClass*>(&abs)))
 			return &pExt->AreaAffection->Cloak;
-		if (auto* pExt = BulletExt::ExtMap.Find(abstract_cast<BulletClass*>(pAbs)))
+		if (auto* pExt = BulletExt::ExtMap.Find(abstract_cast<BulletClass*>(&abs)))
 			return &pExt->AreaAffection->Cloak;
-		if (auto* pExt = CellExt::ExtMap.Find(abstract_cast<CellClass*>(pAbs)))
+		if (auto* pExt = CellExt::ExtMap.Find(abstract_cast<CellClass*>(&abs)))
 			return &pExt->AreaAffection->Cloak;
 		return nullptr;
 	}
+};
+
+template<> struct entry<ElectronicWarfareClass>
+{
+	using type = data_entry<ElectronicWarfareClass>;
 
 	template<typename TExtension>
-	struct Entry<ElectronicWarfareClass, TExtension>
+	inline static constexpr type& of(typename TExtension::ExtData& ext) noexcept { return ext.AreaAffection->EW; }
+
+	inline static type* of(AbstractClass& abs) noexcept
 	{
-		inline static DataEntry<ElectronicWarfareClass>& Of(typename TExtension::ExtData* pExt)
-		{
-			return pExt->AreaAffection->EW;
-		}
-	};
-	template<> inline DataEntry<ElectronicWarfareClass>* EntryOf(AbstractClass* pAbs)
-	{
-		if (auto* pExt = TechnoExt::ExtMap.Find(abstract_cast<TechnoClass*>(pAbs)))
+		if (auto* pExt = TechnoExt::ExtMap.Find(abstract_cast<TechnoClass*>(&abs)))
 			return &pExt->AreaAffection->EW;
-		if (auto* pExt = BulletExt::ExtMap.Find(abstract_cast<BulletClass*>(pAbs)))
+		if (auto* pExt = BulletExt::ExtMap.Find(abstract_cast<BulletClass*>(&abs)))
 			return &pExt->AreaAffection->EW;
-		if (auto* pExt = CellExt::ExtMap.Find(abstract_cast<CellClass*>(pAbs)))
+		if (auto* pExt = CellExt::ExtMap.Find(abstract_cast<CellClass*>(&abs)))
 			return &pExt->AreaAffection->EW;
 		return nullptr;
 	}
+};
 
+namespace AreaAffection
+{
 	template<typename TAreaAffection, typename TExtension>
-	inline void Initialize(typename TExtension::base_type* pParent) {
+	inline void Initialize(typename TExtension::base_type* pParent)
+	{
+		using extension_type = typename extension_traits<TExtension>::type;
+
 		auto* pExt = TExtension::ExtMap.Find(pParent);
 		auto* pType = pParent->GetTechnoType();
 		auto* pTypeExt = pExt->TypeExtData;
-		auto& pExtEntry = AreaAffection::Entry<TAreaAffection, TExtension>::Of(pExt);
-		auto& pExtTypeEntry = typename TAreaAffection::type::template EntryOf<std::remove_pointer_t<decltype(pTypeExt)>>(pTypeExt);
+		data_entry<TAreaAffection>& pExtEntry = entry<TAreaAffection>::of<TExtension>(*pExt);
+		auto& pExtTypeEntry = entry<typename TAreaAffection::type>::of<extension_type>(*pTypeExt);
 
 		if (!pExtTypeEntry.IsEnabled) return;
 		auto typeIter = pExtTypeEntry.Types.begin();
 		auto radiusIter = pExtTypeEntry.Radiuses.begin();
 		while (typeIter != pExtTypeEntry.Types.end())
 		{
-			TAreaAffection* pInst = pExtEntry.Instantiate(*typeIter, nullptr, *radiusIter);
+			TAreaAffection* pInst = Instantiate(pExtEntry, *typeIter, (HouseClass*) nullptr, (short) *radiusIter);
 			++typeIter; ++radiusIter;
 		}
 	};
@@ -223,21 +237,23 @@ namespace AreaAffection
 	inline void Initialize(typename TExtension::base_type* pParent
 		, TPrefixLamba&& pl, TBodyLambda&& bl
 	) {
+		using extension_type = typename extension_traits<TExtension>::type;
+
 		auto* pExt = TExtension::ExtMap.Find(pParent);
 		auto* pType = pParent->GetTechnoType();
 		auto* pTypeExt = pExt->TypeExtData;
-		auto& pExtEntry = AreaAffection::Entry<TAreaAffection, TExtension>::Of(pExt);
-		auto& pExtTypeEntry = typename TAreaAffection::type::template EntryOf<std::remove_pointer_t<decltype(pTypeExt)>>(pTypeExt);
+		auto& pExtEntry = entry<TAreaAffection>::of<TExtension>(*pExt);
+		auto& pExtTypeEntry = entry<typename TAreaAffection::type>::of<extension_type>(*pTypeExt);
 
 		if (!pExtTypeEntry.IsEnabled) return;
 		auto typeIter = pExtTypeEntry.Types.begin();
 		auto radiusIter = pExtTypeEntry.Radiuses.begin();
 		pl(pParent, pExt, pType, pTypeExt, pExtEntry, pExtTypeEntry);
 		while (typeIter != pExtTypeEntry.Types.end())
-		{
-			TAreaAffection* pInst = pExtEntry.Instantiate(*typeIter, nullptr, *radiusIter);
+		{			
+			TAreaAffection* pInst = Instantiate(pExtEntry, *typeIter, (HouseClass*) nullptr, (short) *radiusIter);
 			bl(pParent, pExt, pType, pTypeExt, pExtEntry, pExtTypeEntry
-				pInst, *typeIter, *radiusIter
+				, pInst, *typeIter, *radiusIter
 			);
 			++typeIter; ++radiusIter;
 		}
@@ -251,34 +267,24 @@ template<typename TExtension>
 inline void CloakTypeClass::Initialize(typename TExtension::base_type* pParent)
 {
 	using TAreaAffection = CloakClass;
+	using extension_type = typename extension_traits<TExtension>::type;
 
-	decltype(TAreaAffection::type::data_entry::Self)::iterator selfIter;
+	auto* pExt = TExtension::ExtMap.Find(pParent);
+	auto* pType = pParent->GetTechnoType();
+	auto* pTypeExt = pExt->TypeExtData;
+	auto& pExtEntry = entry<TAreaAffection>::of<TExtension>(*pExt);
+	auto& pExtTypeEntry = entry<typename TAreaAffection::type>::of<extension_type>(*pTypeExt);
 
-	AreaAffection::Initialize<TAreaAffection, TExtension>(pParent,
-	[&](
-		  typename TExtension::base_type* pParent
-		, typename TExtension::ExtData* pExt
-		, TechnoTypeExt::base_type* pType
-		, TechnoTypeExt::ExtData* pTypeExt
-		, TAreaAffection::data_entry& pExtEntry
-		, TAreaAffection::type::data_entry& pExtTypeEntry
-	) {
-		selfIter = pExtTypeEntry.Self.begin();
-	},
-	[&](
-		  typename TExtension::base_type* pParent
-		, typename TExtension::ExtData* pExt
-		, TechnoTypeExt::base_type* pType
-		, TechnoTypeExt::ExtData* pTypeExt
-		, TAreaAffection::data_entry& pExtEntry
-		, TAreaAffection::type::data_entry& pExtTypeEntry
-		, TAreaAffection* pInst
-		, TAreaAffection::type* pTypeAA
-		, short radius
-	) {
+	if (!pExtTypeEntry.IsEnabled) return;
+	auto typeIter = pExtTypeEntry.Types.begin();
+	auto radiusIter = pExtTypeEntry.Radiuses.begin();
+	auto selfIter = pExtTypeEntry.Self.begin();
+	while (typeIter != pExtTypeEntry.Types.end())
+	{
+		TAreaAffection* pInst = Instantiate(pExtEntry, *typeIter, (HouseClass*) nullptr, (short)*radiusIter);
 		pInst->Self = *selfIter;
-		++selfIter;
-	});
+		++typeIter; ++radiusIter; ++selfIter;
+	}
 }
 
 template<typename TExtension>

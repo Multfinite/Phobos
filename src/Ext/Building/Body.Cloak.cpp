@@ -58,14 +58,14 @@ void BuildingExt::ExtData::CloakingAI(bool __unused)
 			b.CloakState = CloakState::Uncloaked;
 
 			if (b.NaturalParticleSystem) break;
-			if (*Unsorted::BuildingDefaultCoords == bType->NaturalParticleSystemLocation) break;
+			if (Unsorted::BuildingDefaultCoords.get() == bType->NaturalParticleSystemLocation) break;
 
 			b.NaturalParticleSystem = new ParticleSystemClass(
 				bType->NaturalParticleSystem
 				, b.Location + bType->NaturalParticleSystemLocation
 				, b.GetCell() /*MapClass::Instance->GetTargetCell(b.Location)*/
 				, nullptr
-				, *Unsorted::BuildingDefaultCoords
+				, Unsorted::BuildingDefaultCoords.get()
 				, nullptr
 			);
 		} break;

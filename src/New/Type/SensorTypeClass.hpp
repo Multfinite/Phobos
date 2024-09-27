@@ -14,47 +14,17 @@
 
 #include <Utilities/Constructs.h>
 
-class CloakTypeClass;
+#include "CloakTypeClass.hpp"
 
-class SensorClass;
-class SensorTypeClass final : public Enumerable<SensorTypeClass>
+#include <Common/Entry.hpp>
+
+class SensorTypeClass : public Enumerable<SensorTypeClass>
 {
 public:
 	using parent_type = AbstractTypeClass;
-	struct DataEntry
-	{
-		parent_type* OwnerType;
-		bool IsEnabled = false;
-
-		NullableVector<SensorTypeClass*> Types;
-		NullableVector<int> Radiuses;
-		NullableVector<int> Durations;
-		NullableVector<int> Lifetimes;
-
-		//DataEntry() = default;
-		DataEntry(AbstractTypeClass* pOwnerType) : OwnerType(pOwnerType) { }
-
-		virtual void LoadFromINI(CCINIClass* pINI, const char* pSection);
-		virtual bool Load(PhobosStreamReader& stm, bool registerForChange);
-		virtual bool Save(PhobosStreamWriter& stm) const;
-
-	private:
-		template <typename T>
-		bool Serialize(T& stm);
-	};
-	using data_entry = SensorTypeClass::DataEntry;
-	friend struct data_entry;
-
-	inline static data_entry* EntryOf(AbstractTypeClass* pAbsType);
-	template<typename TExtension>
-	inline static data_entry& EntryOf(typename TExtension::ExtData* pExt);
 
 	struct LayerFlags
 	{
-		/*!
-		* @brief Prefix of key in INI file
-		*/
-		std::string Prefix;
 		/*!
 		* @brief Is this detecting (not decloaking) object. It means you can see it.
 		*/
@@ -80,61 +50,51 @@ public:
 		*/
 		NullableIdx<AnimTypeClass*> Animation;
 
-		LayerFlags(const std::string& prefix, bool detect, bool track, bool decloak, bool display) :
-			Prefix(prefix), Scan(detect), Track(track), Decloak(decloak), Display(display)
+		LayerFlags(bool detect, bool track, bool decloak, bool display) :
+			Scan(detect), Track(track), Decloak(decloak), Display(display)
 		{}
 
-		virtual void LoadFromINI(CCINIClass* pINI, const char* pSection);
-		virtual bool Load(PhobosStreamReader& stm, bool registerForChange);
-		virtual bool Save(PhobosStreamWriter& stm) const;
+		virtual void Read(INI_EX& parser, const char* pSection, const char* pPrefix);
+		virtual bool Load(PhobosStreamReader& stm, bool registerForChange) { return Serialize(stm); }
+		virtual bool Save(PhobosStreamWriter& stm) const { return const_cast<SensorTypeClass::LayerFlags*>(this)->Serialize(stm); }
 
 		inline bool HasEffect() const { return Scan || Track || Decloak || Display || Weapon || Animation; }
 
 	private:
 		template <typename T>
-		bool Serialize(T& stm);
+		inline bool Serialize(T& stm);
 	};
 
-	ValueableVector<CloakTypeClass*> Scan;
-	Valueable<EffectShareMode> Sharing;
+	ValueableVector<CloakTypeClass*> AllowedToScan, ForbiddenToScan;
+	Valueable<EffectShareMode> Sharing { EffectShareMode::Default };
 	/*!
 	* @brief Controls how cloak vs sensor conflict will be solved.
 	* @brief If enabled then object became sensed if any cloak types from `Senses` present.
 	* @brief If disabled then object became sensed if all cloaks presented in `Senses` list.
 	*/
-	Valueable<bool> IsStrong;
-	Valueable<bool> Selectable;
+	Valueable<bool> IsStrong { true };
+	Valueable<bool> Selectable { false };
 
-	Valueable<int> Delay, Duration, CellIncrement;
+	Valueable<int> Delay { 0 }, Duration { 0 }, CellIncrement { 0 };
 
-	LayerFlags Air, Ground, Subterannean;
+	LayerFlags
+		Air { true, false, false, false }
+	  , Ground { true, false, false, false }
+	  , Subterannean { false, false, false, false };
 
-	Valueable<bool> ForceShadows, InMovement;
+	Valueable<bool> ForceShadows { false }, InMovement { true };
+	Nullable<AnimTypeClass*> Animation;
 
-	Valueable<bool> Warn;
-	NullableIdx<VocClass*> Warn_Eva;
-	ValueableMap<SideClass*, VocClass*> Warn_Eva_Sides;
-	ValueableMap<HouseTypeClass*, VocClass*> Warn_Eva_Countries;
-
-	//NullableIdx<VoxClass> Warn_Eva;
-
-	VoxClass* GetWarn(SideClass* side, HouseTypeClass* country) const;
+	Valueable<bool> Warn { false };
+	CollaborableIdx<VocClass*> WarnEva;
 public:
-	SensorTypeClass(const char* const pTitle) : Enumerable<SensorTypeClass>(pTitle)
-		, Scan { }
-		, Sharing { EffectShareMode::Default }
-		, IsStrong { true }, Selectable { false }
-		, Air { "Air", true, false, false, false }
-		, Ground { "Ground", true, false, false, false }
-		, Subterannean { "Subterannean", false, false, false, false }
-		, Warn { false }
-	{ };
+	SensorTypeClass(const char* const pTitle) : Enumerable<SensorTypeClass>(pTitle) { };
 
 	virtual ~SensorTypeClass() override = default;
 
 	virtual void LoadFromINI(CCINIClass* pINI) override;
-	virtual void LoadFromStream(PhobosStreamReader& Stm) override;
-	virtual void SaveToStream(PhobosStreamWriter& Stm) override;
+	virtual void LoadFromStream(PhobosStreamReader& Stm) override { Serialize(Stm); }
+	virtual void SaveToStream(PhobosStreamWriter& Stm) override { Serialize(Stm); }
 
 	inline bool IsShared() const
 	{
@@ -155,6 +115,29 @@ public:
 
 private:
 	template <typename T>
-	void Serialize(T& Stm);
+	inline void Serialize(T& Stm);
 };
 
+template<> struct data_entry<SensorTypeClass>
+{
+	AbstractTypeClass* OwnerType;
+	bool IsEnabled = false;
+
+	ValueableVector<SensorTypeClass*> Types;
+	ValueableVector<int> Radiuses;
+	ValueableVector<int> Durations;
+	ValueableVector<int> Lifetimes;
+
+	//data_entry() = default;
+	data_entry(AbstractTypeClass* pOwnerType) : OwnerType(pOwnerType) { }
+
+	virtual void Read(INI_EX& parser, const char* pSection, const char* pPrefix);
+	virtual bool Load(PhobosStreamReader& stm, bool registerForChange) { return Serialize(stm); }
+	virtual bool Save(PhobosStreamWriter& stm) const { return const_cast<data_entry<SensorTypeClass>*>(this)->Serialize(stm); }
+
+private:
+	template <typename T>
+	inline bool Serialize(T& stm);
+};
+
+template<> struct data_entry_of<SensorTypeClass> { using type = data_entry<SensorTypeClass>; };

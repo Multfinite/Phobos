@@ -695,6 +695,8 @@ void TechnoTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->Prone_Sprint)
 
 		.Process(this->Sensor)
+		.Process(this->Cloak)
+		.Process(this->EW)
 		.Process(this->Cloak_In_SoundMode)
 		.Process(this->Cloak_Out_SoundMode)
 

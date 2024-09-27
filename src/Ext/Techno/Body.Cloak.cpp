@@ -16,7 +16,7 @@ bool TechnoExt::IsCloakedExternally(
 	, CellClass* cell
 	, __CellExt_ExtData* cellExt
 ) {
-	auto& deCloak = AreaAffection::Entry<CloakClass, std::remove_pointer_t<decltype(pExt)>>::Of(pExt);
+	auto& deCloak = entry<CloakClass>::of<TechnoExt>(*pExt);
 
 	auto original = [&]() -> bool
 	{
@@ -30,7 +30,8 @@ bool TechnoExt::IsCloakedExternally(
 		try
 		{
 			auto& g = r->GroupOf(pThis);
-			isCloaked = isCloaked || g.IsStealthed();
+			if(isCloaked = isCloaked || g.IsStealthed())
+				break;
 		}
 		catch (const std::exception& ex)
 		{
@@ -71,7 +72,7 @@ bool TechnoExt::ExtData::IsReadyToCloak()
 	auto pTypeExt = this->TypeExtData;
 	auto pType = pTypeExt->OwnerObject();
 
-	auto endCheck = [&]() -> bool
+	auto endCheck = [&]() constexpr noexcept -> bool
 	{
 		return (
 			pThis->LocomotorSource
@@ -238,7 +239,7 @@ void TechnoExt::ExtData::CloakingAI(bool a2)
 			case(CloakState::Uncloaking):
 			{
 				t.Mark(MarkType::Change);
-				auto visualType = t.VisualCharacter(true, false);
+				auto visualType = t.VisualCharacter(true, nullptr);
 
 				switch (visualType)
 				{

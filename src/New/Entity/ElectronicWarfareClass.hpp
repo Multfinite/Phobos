@@ -15,12 +15,11 @@
 
 #include <New/Type/ElectronicWarfareTypeClass.hpp>
 
-class ElectronicWarfareClass : public AreaAffection::IInstance
+class ElectronicWarfareClass : public AreaAffection::Instance
 {
 public:
 	using self = ElectronicWarfareClass;
 	using type = ElectronicWarfareTypeClass;
-	using logic = AreaAffection::Logic<self>;
 
 	friend struct AreaAffection::Logic<self>;
 
@@ -30,17 +29,17 @@ public:
 
 	bool Load(PhobosStreamReader& Stm, bool RegisterForChange) override
 	{
-		return IInstance::Load(Stm, RegisterForChange) && Serialize(Stm);
+		return Instance::Load(Stm, RegisterForChange) && Serialize(Stm);
 	}
 	bool Save(PhobosStreamWriter& Stm) const override
 	{
 		auto pThis = const_cast<self*>(this);
-		return static_cast<IInstance*>(pThis)->Save(Stm) && pThis->Serialize(Stm);
+		return static_cast<Instance*>(pThis)->Save(Stm) && pThis->Serialize(Stm);
 	}
-	void remove_from_array() override
+	void remove_from_array() noexcept override
 	{
 		Array.remove(this);
-		IInstance::remove_from_array();
+		Instance::remove_from_array();
 	}
 private:
 	template<typename T>
@@ -58,30 +57,15 @@ public:
 	void In(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 	void Out(__CellExt_ExtData& cell, short radius, int radiusSq) override;
 
-	ElectronicWarfareClass(ElectronicWarfareTypeClass* type, AbstractClass* parent, HouseClass* owner, short radius) : IInstance(parent, owner, radius)
-		, Type(type)
-	{
-		Array.push_back(this);
-	}
-	~ElectronicWarfareClass()
-	{
-		if (ClearedByEntry) return;
-		logic::Instance.ClearInstance(this);
-	}
+	ElectronicWarfareClass(ElectronicWarfareTypeClass* type, AbstractClass* parent, HouseClass* owner, short radius);
+	~ElectronicWarfareClass();
 };
 
-struct ElectronicWarfareClassDataEntry : public AreaAffection::DataEntry<ElectronicWarfareClass>
+template<> struct data_entry<ElectronicWarfareClass> : public AreaAffection::__data_entry<ElectronicWarfareClass>
 {
-	using base_type = AreaAffection::DataEntry<ElectronicWarfareClass>;
+	data_entry(class AbstractClass* pParent) : AreaAffection::__data_entry<ElectronicWarfareClass>(pParent) { }
 };
-
-namespace AreaAffection
-{
-	template<> struct data_entry_of<ElectronicWarfareClass>
-	{
-		using type = ElectronicWarfareClassDataEntry;
-	};
-}
+template<> struct data_entry_of<ElectronicWarfareClass> { using type = data_entry<ElectronicWarfareClass>; };
 
 static_assert(AreaAffection::IsInstance<ElectronicWarfareClass>, "It is not a Area Affection!");
-static_assert(AreaAffection::IsDataEntry<ElectronicWarfareClassDataEntry>, "It is not an Area Affection data entry!")
+static_assert(AreaAffection::IsDataEntry<data_entry<ElectronicWarfareClass>>, "It is not an Area Affection data entry!");

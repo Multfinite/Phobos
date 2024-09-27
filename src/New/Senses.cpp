@@ -13,7 +13,7 @@ inline void remove(T _Val, TContainers&... containers)
 {
 	([&]{
 		containers.remove(_Val);
-	}(), ...)
+	}(), ...);
 }
 template<typename ...TContainers>
 inline void clear(TContainers&... containers)
@@ -21,7 +21,7 @@ inline void clear(TContainers&... containers)
 	([&]
 	{
 		containers.clear();
-	}(), ...)
+	}(), ...);
 }
 
 void Senses::SensorLayerCache::Add(SensorClass* pSensor, SensorTypeClass::LayerFlags& flags)
