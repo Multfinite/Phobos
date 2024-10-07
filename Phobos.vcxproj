@@ -179,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\core.formatting.hpp" />
+    <ClInclude Include="src\Core\core.formatting.impl.hpp" />
     <ClInclude Include="src\Core\extensions.hpp" />
     <ClInclude Include="src\Commands\FrameByFrame.h" />
     <ClInclude Include="src\Commands\FrameStep.h" />
