@@ -1,0 +1,21 @@
+#pragma once
+
+#include <${x.Class}.h>
+
+#include "extension.${x.ParentClassExtensionFile}.hpp"
+
+template<> class Extension<${x.Class}> : public Extension<${x.ParentClass}>
+{
+	__EXTENSION_BODY(${x.Class}, Extension<${x.ParentClass}>::Offset)
+public:
+	using parent_type = Extension<${x.ParentClass}>;
+protected:
+	constexpr Extension(base_type& base) : parent_type(base) { }
+};
+
+template<> struct Proxy<${x.Class}> : public ${x.Class}
+{
+	__PROXY_BODY(${x.Class})
+	__PROXY_MEMORY_MANAGEMENT
+};
+
