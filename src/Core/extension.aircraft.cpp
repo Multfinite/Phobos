@@ -1,4 +1,4 @@
-#include "Body.h"
+#include "extension.aircraft.hpp"
 
 #include <BuildingClass.h>
 
@@ -8,17 +8,17 @@
 
 // TODO: Implement proper extended AircraftClass.
 
-void AircraftExt::FireWeapon(AircraftClass* pThis, AbstractClass* pTarget, int shotNumber = 0)
+void Proxy<AircraftClass>::FireWeapon(AbstractClass* pTarget, int shotNumber = 0)
 {
 	if (!pTarget)
 		return;
 
-	auto weaponIndex = TechnoExt::ExtMap.Find(pThis)->CurrentAircraftWeaponIndex;
+	auto weaponIndex = extension().CurrentAircraftWeaponIndex;
 
 	if (weaponIndex < 0)
-		weaponIndex = pThis->SelectWeapon(pTarget);
+		weaponIndex = SelectWeapon(pTarget);
 
-	auto const pWeapon = pThis->GetWeapon(weaponIndex)->WeaponType;
+	auto const pWeapon = GetWeapon(weaponIndex)->WeaponType;
 	auto const pWeaponExt = WeaponTypeExt::ExtMap.Find(pWeapon);
 
 	if (pWeapon->Burst > 0)
@@ -26,64 +26,61 @@ void AircraftExt::FireWeapon(AircraftClass* pThis, AbstractClass* pTarget, int s
 		for (int i = 0; i < pWeapon->Burst; i++)
 		{
 			if (pWeapon->Burst < 2 && pWeaponExt->Strafing_SimulateBurst)
-				pThis->CurrentBurstIndex = shotNumber;
+				CurrentBurstIndex = shotNumber;
 
-			pThis->Fire(pTarget, weaponIndex);
+			Fire(pTarget, weaponIndex);
 		}
 	}
 
-	if (pThis->Is_Strafe())
-		TechnoExt::ExtMap.Find(pThis)->Strafe_BombsDroppedThisRound++;
+	if (Is_Strafe())
+		extension().Strafe_BombsDroppedThisRound++;
 }
 
 // Spy plane, airstrike etc.
-bool AircraftExt::PlaceReinforcementAircraft(AircraftClass* pThis, CellStruct edgeCell)
+bool Proxy<AircraftClass>::PlaceReinforcementAircraft( CellStruct edgeCell)
 {
-	auto const pTypeExt = TechnoTypeExt::ExtMap.Find(pThis->GetTechnoType());
+	auto const pTypeExt = TechnoTypeExt::ExtMap.Find(GetTechnoType());
 	auto coords = CellClass::Cell2Coord(edgeCell);
 	coords.Z = 0;
 	AbstractClass* pTarget = nullptr;
 
 	if (pTypeExt->SpawnDistanceFromTarget.isset())
 	{
-		pTarget = pThis->Target ? pThis->Target : pThis->Destination;
+		pTarget = Target ? Target : Destination;
 
 		if (pTarget)
 			coords = GeneralUtils::CalculateCoordsFromDistance(CellClass::Cell2Coord(edgeCell), pTarget->GetCoords(), pTypeExt->SpawnDistanceFromTarget.Get());
 	}
 
 	++Unsorted::IKnowWhatImDoing;
-	bool result = pThis->Unlimbo(coords, DirType::North);
+	bool result = Unlimbo(coords, DirType::North);
 	--Unsorted::IKnowWhatImDoing;
 
-	pThis->SetHeight(pTypeExt->SpawnHeight.Get(pThis->Type->GetFlightLevel()));
+	SetHeight(pTypeExt->SpawnHeight.Get(Type->GetFlightLevel()));
 
 	if (pTarget)
-		pThis->PrimaryFacing.SetDesired(pThis->GetTargetDirection(pTarget));
+		PrimaryFacing.SetDesired(GetTargetDirection(pTarget));
 
 	return result;
 }
 
-DirType AircraftExt::GetLandingDir(AircraftClass* pThis, BuildingClass* pDock)
+DirType Proxy<AircraftClass>::GetLandingDir(BuildingClass* pDock)
 {
 	auto const poseDir = static_cast<DirType>(RulesClass::Instance->PoseDir);
 
-	if (!pThis)
-		return poseDir;
-
 	// If this is a spawnee, use the spawner's facing.
-	if (auto pOwner = pThis->SpawnOwner)
+	if (auto pOwner = SpawnOwner)
 		return pOwner->PrimaryFacing.Current().GetDir();
 
-	if (pDock || pThis->HasAnyLink())
+	if (pDock || HasAnyLink())
 	{
-		auto pLink = pThis->GetNthLink(0);
+		auto pLink = GetNthLink(0);
 
 		if (auto pBuilding = pDock ? pDock : abstract_cast<BuildingClass*>(pLink))
 		{
 			auto const pBuildingTypeExt = BuildingTypeExt::ExtMap.Find(pBuilding->Type);
 			int docks = pBuilding->Type->NumberOfDocks;
-			int linkIndex = pBuilding->FindLinkIndex(pThis);
+			int linkIndex = pBuilding->FindLinkIndex(this);
 
 			if (docks > 0 && linkIndex >= 0 && linkIndex < docks)
 			{
@@ -93,14 +90,14 @@ DirType AircraftExt::GetLandingDir(AircraftClass* pThis, BuildingClass* pDock)
 			else if (docks > 0 && !pBuildingTypeExt->AircraftDockingDirs[0].empty())
 				return pBuildingTypeExt->AircraftDockingDirs[0].get();
 		}
-		else if (!pThis->Type->AirportBound)
+		else if (!Type->AirportBound)
 			return pLink->PrimaryFacing.Current().GetDir();
 	}
 
-	int landingDir = TechnoTypeExt::ExtMap.Find(pThis->Type)->LandingDir.Get((int)poseDir);
+	int landingDir = TechnoTypeExt::ExtMap.Find(this->Type)->LandingDir.Get((int)poseDir);
 
-	if (!pThis->Type->AirportBound && landingDir < 0)
-		return pThis->PrimaryFacing.Current().GetDir();
+	if (!Type->AirportBound && landingDir < 0)
+		return PrimaryFacing.Current().GetDir();
 
 	return static_cast<DirType>(Math::clamp(landingDir, 0, 255));
 }
