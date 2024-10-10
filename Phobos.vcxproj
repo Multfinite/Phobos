@@ -18,6 +18,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\extension.aircraft.cpp" />
     <ClCompile Include="src\Ext\Techno\Hooks.Cloak.cpp" />
     <ClCompile Include="src\New\Entity\AttachEffectClass.cpp" />
     <ClCompile Include="src\New\Type\AttachEffectTypeClass.cpp" />
@@ -81,8 +82,7 @@
     <ClCompile Include="src\New\Type\Affiliated\InterceptorTypeClass.cpp" />
     <ClCompile Include="src\New\Type\Affiliated\PassengerDeletionTypeClass.cpp" />
     <ClCompile Include="src\New\Entity\LaserTrailClass.cpp" />
-    <ClCompile Include="src\Ext\Aircraft\Body.cpp" />
-    <ClCompile Include="src\Ext\Aircraft\Hooks.cpp" />
+    <ClCompile Include="src\Core\hooks.aircraft.cpp" />
     <ClCompile Include="src\Ext\AnimType\Body.cpp" />
     <ClCompile Include="src\Ext\Building\Body.cpp" />
     <ClCompile Include="src\Ext\Building\Hooks.cpp" />
@@ -183,6 +183,7 @@
     <ClCompile Include="YRpp\StaticInits.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\extension.team.hpp" />
     <ClInclude Include="src\Core\extensions.hpp" />
     <ClInclude Include="src\New\Entity\AttachEffectClass.h" />
     <ClInclude Include="src\New\Type\AttachEffectTypeClass.h" />
@@ -299,7 +300,6 @@
     <ClInclude Include="src\New\Entity\ShieldClass.h" />
     <ClInclude Include="src\Utilities\Anchor.h" />
     <ClInclude Include="src\Utilities\Enumerable.h" />
-    <ClInclude Include="src\Ext\Aircraft\Body.h" />
     <ClInclude Include="src\Ext\AnimType\Body.h" />
     <ClInclude Include="src\Ext\Building\Body.h" />
     <ClInclude Include="src\Ext\BulletType\Body.h" />

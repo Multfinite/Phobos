@@ -35,3 +35,36 @@ class Extension;
 template<typename TBase>
 struct Proxy;
 
+template<typename TBase>
+struct FormatterBase
+{
+	using base_type = typename TBase;
+	using extension_type = typename Extension<base_type>;
+	using base_type_ptr = base_type*;
+	using const_base_type_ptr = const base_type*;
+	using extension_type_ptr = extension_type*;
+
+	base_type* SavingObject;
+	IStream* SavingStream;
+protected:
+	constexpr FormatterBase() : SavingObject(nullptr), SavingStream(nullptr) { }
+};
+
+/*!
+* @author Multfinite (reworked Container Container.h)
+* @brief Common formatting interface basics for 
+* @brief 
+*/
+template<typename TBase>
+struct SelfContainedFormatterBase
+{
+
+};
+
+/*!
+* @author Multfinite
+* @brief Serialization, deserialization, parsing are detached from Extension<TBase> and Proxy<TBase>
+* @brief Formatter provides all these functions and metadata for it.
+*/
+template<typename TBase>
+struct Formatter;

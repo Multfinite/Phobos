@@ -16,7 +16,7 @@ public:
 	static constexpr size_t ExtPointerOffset = 0x18;
 	static constexpr bool ShouldConsiderInvalidatePointer = true;
 
-	class ExtData final : public Extension<TeamClass>
+	class ExtData final : public ExtensionOld<TeamClass>
 	{
 	public:
 		int WaitNoTargetAttempts;
@@ -33,7 +33,7 @@ public:
 		FootClass* TeamLeader;
 		std::vector<ScriptClass*> PreviousScriptList;
 
-		ExtData(TeamClass* OwnerObject) : Extension<TeamClass>(OwnerObject)
+		ExtData(TeamClass* OwnerObject) : ExtensionOld<TeamClass>(OwnerObject)
 			, WaitNoTargetAttempts { 0 }
 			, NextSuccessWeightAward { 0 }
 			, IdxSelectedObjectFromAIList { -1 }

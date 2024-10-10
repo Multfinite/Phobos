@@ -51,21 +51,21 @@ enum class InitState
  */
 
 template <typename T>
-class Extension
+class ExtensionOld
 {
 	T* AttachedToObject;
 	InitState Initialized;
 
 public:
 
-	Extension(T* const OwnerObject) : AttachedToObject { OwnerObject }, Initialized { InitState::Blank }
+	ExtensionOld(T* const OwnerObject) : AttachedToObject { OwnerObject }, Initialized { InitState::Blank }
 	{ }
 
-	Extension(const Extension& other) = delete;
+	ExtensionOld(const ExtensionOld& other) = delete;
 
-	void operator=(const Extension& RHS) = delete;
+	void operator=(const ExtensionOld& RHS) = delete;
 
-	virtual ~Extension() = default;
+	virtual ~ExtensionOld() = default;
 
 	// the object this Extension expands
 	T* const& OwnerObject() const

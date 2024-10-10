@@ -74,6 +74,7 @@
 		, "SuperClass": {}
 		, "TacticalClass": {}
 		, "TActionClass": {}
+    , "TeamClass":  {}
 		, "TemporalClass": {}
 		, "TEventClass": {}
 		, "TriggerClass": {}
