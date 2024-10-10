@@ -18,7 +18,7 @@ public:
 	static constexpr size_t ExtPointerOffset = 0x16098;
 	static constexpr bool ShouldConsiderInvalidatePointer = true;
 
-	class ExtData final : public Extension<HouseClass>
+	class ExtData final : public _Extension<HouseClass>
 	{
 	public:
 		std::map<BuildingTypeExt::ExtData*, int> PowerPlantEnhancers;
@@ -54,7 +54,7 @@ public:
 		int NumConYards_NonMFB;
 		int NumShipyards_NonMFB;
 
-		ExtData(HouseClass* OwnerObject) : Extension<HouseClass>(OwnerObject)
+		ExtData(HouseClass* OwnerObject) : _Extension<HouseClass>(OwnerObject)
 			, PowerPlantEnhancers {}
 			, OwnedLimboDeliveredBuildings {}
 			, LimboAircraft {}

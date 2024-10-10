@@ -43,14 +43,14 @@ void OverlayTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 
 void OverlayTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<OverlayTypeClass>::LoadFromStream(Stm);
+	_Extension<OverlayTypeClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 	this->Palette = GeneralUtils::BuildPalette(this->PaletteFile);
 }
 
 void OverlayTypeExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<OverlayTypeClass>::SaveToStream(Stm);
+	_Extension<OverlayTypeClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

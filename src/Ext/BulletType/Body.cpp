@@ -134,13 +134,13 @@ void BulletTypeExt::ExtData::Serialize(T& Stm)
 
 void BulletTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<BulletTypeClass>::LoadFromStream(Stm);
+	_Extension<BulletTypeClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 }
 
 void BulletTypeExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<BulletTypeClass>::SaveToStream(Stm);
+	_Extension<BulletTypeClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

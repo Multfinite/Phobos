@@ -17,7 +17,7 @@ public:
 	static constexpr DWORD Canary = 0xF00DF00D;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<BulletTypeClass>
+	class ExtData final : public _Extension<BulletTypeClass>
 	{
 	public:
 		// Valueable<int> Strength; //Use OwnerObject()->ObjectTypeClass::Strength
@@ -50,7 +50,7 @@ public:
 		Nullable<Leptons> BallisticScatter_Min;
 		Nullable<Leptons> BallisticScatter_Max;
 
-		ExtData(BulletTypeClass* OwnerObject) : Extension<BulletTypeClass>(OwnerObject)
+		ExtData(BulletTypeClass* OwnerObject) : _Extension<BulletTypeClass>(OwnerObject)
 			, Armor {}
 			, Interceptable { false }
 			, Interceptable_DeleteOnIntercept { false }

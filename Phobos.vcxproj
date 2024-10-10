@@ -18,6 +18,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\extensions.cpp" />
     <ClCompile Include="src\Ext\Techno\Hooks.Cloak.cpp" />
     <ClCompile Include="src\New\Entity\AttachEffectClass.cpp" />
     <ClCompile Include="src\New\Type\AttachEffectTypeClass.cpp" />
@@ -182,6 +183,81 @@
     <ClCompile Include="YRpp\StaticInits.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\core.extensions.hpp" />
+    <ClInclude Include="src\Core\core.hpp" />
+    <ClInclude Include="src\Core\extension.abstract.hpp" />
+    <ClInclude Include="src\Core\extension.abstract_type.hpp" />
+    <ClInclude Include="src\Core\extension.aircraft.hpp" />
+    <ClInclude Include="src\Core\extension.aircraft_type.hpp" />
+    <ClInclude Include="src\Core\extension.airstrike.hpp" />
+    <ClInclude Include="src\Core\extension.ai_trigger_type.hpp" />
+    <ClInclude Include="src\Core\extension.alpha_shape.hpp" />
+    <ClInclude Include="src\Core\extension.anim.hpp" />
+    <ClInclude Include="src\Core\extension.anim_type.hpp" />
+    <ClInclude Include="src\Core\extension.bomb.hpp" />
+    <ClInclude Include="src\Core\extension.building.hpp" />
+    <ClInclude Include="src\Core\extension.building_light.hpp" />
+    <ClInclude Include="src\Core\extension.building_type.hpp" />
+    <ClInclude Include="src\Core\extension.bullet.hpp" />
+    <ClInclude Include="src\Core\extension.bullet_type.hpp" />
+    <ClInclude Include="src\Core\extension.capture_manager.hpp" />
+    <ClInclude Include="src\Core\extension.cell.hpp" />
+    <ClInclude Include="src\Core\extension.disk_laser.hpp" />
+    <ClInclude Include="src\Core\extension.em_pulse.hpp" />
+    <ClInclude Include="src\Core\extension.factory.hpp" />
+    <ClInclude Include="src\Core\extension.foot.hpp" />
+    <ClInclude Include="src\Core\extension.house.hpp" />
+    <ClInclude Include="src\Core\extension.house_type.hpp" />
+    <ClInclude Include="src\Core\extension.infantry.hpp" />
+    <ClInclude Include="src\Core\extension.infantry_type.hpp" />
+    <ClInclude Include="src\Core\extension.isometric_tile_type.hpp" />
+    <ClInclude Include="src\Core\extension.light_source.hpp" />
+    <ClInclude Include="src\Core\extension.mission.hpp" />
+    <ClInclude Include="src\Core\extension.neuron.hpp" />
+    <ClInclude Include="src\Core\extension.object.hpp" />
+    <ClInclude Include="src\Core\extension.object_type.hpp" />
+    <ClInclude Include="src\Core\extension.overlay.hpp" />
+    <ClInclude Include="src\Core\extension.overlay_type.hpp" />
+    <ClInclude Include="src\Core\extension.parasite.hpp" />
+    <ClInclude Include="src\Core\extension.particle.hpp" />
+    <ClInclude Include="src\Core\extension.particle_system.hpp" />
+    <ClInclude Include="src\Core\extension.particle_system_type.hpp" />
+    <ClInclude Include="src\Core\extension.particle_type.hpp" />
+    <ClInclude Include="src\Core\extension.radio.hpp" />
+    <ClInclude Include="src\Core\extension.rad_site.hpp" />
+    <ClInclude Include="src\Core\extension.script.hpp" />
+    <ClInclude Include="src\Core\extension.script_type.hpp" />
+    <ClInclude Include="src\Core\extension.side.hpp" />
+    <ClInclude Include="src\Core\extension.slave_manager.hpp" />
+    <ClInclude Include="src\Core\extension.smudge.hpp" />
+    <ClInclude Include="src\Core\extension.smudge_type.hpp" />
+    <ClInclude Include="src\Core\extension.spawn_manager.hpp" />
+    <ClInclude Include="src\Core\extension.super.hpp" />
+    <ClInclude Include="src\Core\extension.super_weapon_type.hpp" />
+    <ClInclude Include="src\Core\extension.tactical.hpp" />
+    <ClInclude Include="src\Core\extension.tag_type.hpp" />
+    <ClInclude Include="src\Core\extension.task_force.hpp" />
+    <ClInclude Include="src\Core\extension.team.hpp" />
+    <ClInclude Include="src\Core\extension.team_type.hpp" />
+    <ClInclude Include="src\Core\extension.techno.hpp" />
+    <ClInclude Include="src\Core\extension.techno_type.hpp" />
+    <ClInclude Include="src\Core\extension.temporal.hpp" />
+    <ClInclude Include="src\Core\extension.terrain.hpp" />
+    <ClInclude Include="src\Core\extension.terrain_type.hpp" />
+    <ClInclude Include="src\Core\extension.tiberium.hpp" />
+    <ClInclude Include="src\Core\extension.trigger.hpp" />
+    <ClInclude Include="src\Core\extension.t_action.hpp" />
+    <ClInclude Include="src\Core\extension.t_event.hpp" />
+    <ClInclude Include="src\Core\extension.unit.hpp" />
+    <ClInclude Include="src\Core\extension.unit_type.hpp" />
+    <ClInclude Include="src\Core\extension.veinhole_monster.hpp" />
+    <ClInclude Include="src\Core\extension.voxel_anim.hpp" />
+    <ClInclude Include="src\Core\extension.voxel_anim_type.hpp" />
+    <ClInclude Include="src\Core\extension.warhead_type.hpp" />
+    <ClInclude Include="src\Core\extension.wave.hpp" />
+    <ClInclude Include="src\Core\extension.waypoint_path.hpp" />
+    <ClInclude Include="src\Core\extension.weapon_type.hpp" />
+    <ClInclude Include="src\Core\extensions.hpp" />
     <ClInclude Include="src\New\Entity\AttachEffectClass.h" />
     <ClInclude Include="src\New\Type\AttachEffectTypeClass.h" />
     <ClInclude Include="src\Commands\FrameByFrame.h" />
@@ -276,6 +352,10 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\version.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Core\extension.template.hpp__" />
+    <None Include="src\Core\hierarchy.json" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

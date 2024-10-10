@@ -20,13 +20,13 @@ public:
 	static constexpr DWORD Canary = 0xAAAAAACC;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<VoxelAnimClass>
+	class ExtData final : public _Extension<VoxelAnimClass>
 	{
 	public:
 
 		std::vector<LaserTrailClass> LaserTrails;
 
-		ExtData(VoxelAnimClass* OwnerObject) : Extension<VoxelAnimClass>(OwnerObject)
+		ExtData(VoxelAnimClass* OwnerObject) : _Extension<VoxelAnimClass>(OwnerObject)
 			, LaserTrails()
 		{ }
 

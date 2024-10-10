@@ -503,13 +503,13 @@ void TechnoExt::ExtData::Serialize(T& Stm)
 
 void TechnoExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<TechnoClass>::LoadFromStream(Stm);
+	_Extension<TechnoClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 }
 
 void TechnoExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<TechnoClass>::SaveToStream(Stm);
+	_Extension<TechnoClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

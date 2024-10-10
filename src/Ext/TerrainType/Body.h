@@ -14,7 +14,7 @@ public:
 	static constexpr DWORD Canary = 0xBEE78007;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<TerrainTypeClass>
+	class ExtData final : public _Extension<TerrainTypeClass>
 	{
 	public:
 		Valueable<int> SpawnsTiberium_Type;
@@ -34,7 +34,7 @@ public:
 		PhobosFixedString<32u> PaletteFile;
 		DynamicVectorClass<ColorScheme*>* Palette; // Intentionally not serialized - rebuilt from the palette file on load.
 
-		ExtData(TerrainTypeClass* OwnerObject) : Extension<TerrainTypeClass>(OwnerObject)
+		ExtData(TerrainTypeClass* OwnerObject) : _Extension<TerrainTypeClass>(OwnerObject)
 			, SpawnsTiberium_Type { 0 }
 			, SpawnsTiberium_Range { 1 }
 			, SpawnsTiberium_GrowthStage { { 3, 0 } }

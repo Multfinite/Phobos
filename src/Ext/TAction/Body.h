@@ -28,10 +28,10 @@ public:
 
 	static constexpr DWORD Canary = 0x91919191;
 
-	class ExtData final : public Extension<TActionClass>
+	class ExtData final : public _Extension<TActionClass>
 	{
 	public:
-		ExtData(TActionClass* const OwnerObject) : Extension<TActionClass>(OwnerObject)
+		ExtData(TActionClass* const OwnerObject) : _Extension<TActionClass>(OwnerObject)
 		{ }
 
 		virtual ~ExtData() = default;

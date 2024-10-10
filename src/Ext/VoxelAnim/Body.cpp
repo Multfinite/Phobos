@@ -36,13 +36,13 @@ void VoxelAnimExt::ExtData::Serialize(T& Stm)
 
 void VoxelAnimExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<VoxelAnimClass>::LoadFromStream(Stm);
+	_Extension<VoxelAnimClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 }
 
 void VoxelAnimExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<VoxelAnimClass>::SaveToStream(Stm);
+	_Extension<VoxelAnimClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

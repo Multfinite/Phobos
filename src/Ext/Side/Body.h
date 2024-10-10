@@ -13,7 +13,7 @@ public:
 	static constexpr DWORD Canary = 0x05B10501;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<SideClass>
+	class ExtData final : public _Extension<SideClass>
 	{
 	public:
 		Valueable<int> ArrayIndex;
@@ -37,7 +37,7 @@ public:
 		Nullable<float> ToolTip_Background_BlurSize;
 		Valueable<int> BriefingTheme;
 
-		ExtData(SideClass* OwnerObject) : Extension<SideClass>(OwnerObject)
+		ExtData(SideClass* OwnerObject) : _Extension<SideClass>(OwnerObject)
 			, ArrayIndex { -1 }
 			, Sidebar_GDIPositions { false }
 			, IngameScore_WinTheme { -2 }

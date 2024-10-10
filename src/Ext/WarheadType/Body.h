@@ -17,7 +17,7 @@ public:
 	static constexpr DWORD Canary = 0x22222222;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<WarheadTypeClass>
+	class ExtData final : public _Extension<WarheadTypeClass>
 	{
 	public:
 
@@ -171,7 +171,7 @@ public:
 		Valueable<double> Shield_SelfHealing_Rate_InMinutes;
 
 	public:
-		ExtData(WarheadTypeClass* OwnerObject) : Extension<WarheadTypeClass>(OwnerObject)
+		ExtData(WarheadTypeClass* OwnerObject) : _Extension<WarheadTypeClass>(OwnerObject)
 			, SpySat { false }
 			, BigGap { false }
 			, TransactMoney { 0 }

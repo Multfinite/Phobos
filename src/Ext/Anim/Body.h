@@ -16,7 +16,7 @@ public:
 	static constexpr size_t ExtPointerOffset = 0xD0;
 	static constexpr bool ShouldConsiderInvalidatePointer = false; // Sheer volume of animations in an average game makes a bespoke solution for pointer invalidation worthwhile.
 
-	class ExtData final : public Extension<AnimClass>
+	class ExtData final : public _Extension<AnimClass>
 	{
 	public:
 		DirType DeathUnitFacing;
@@ -28,7 +28,7 @@ public:
 		ParticleSystemClass* AttachedSystem;
 		BuildingClass* ParentBuilding; // Only set on building anims, used for tinting the anims etc. especially when not on same cell as building
 
-		ExtData(AnimClass* OwnerObject) : Extension<AnimClass>(OwnerObject)
+		ExtData(AnimClass* OwnerObject) : _Extension<AnimClass>(OwnerObject)
 			, DeathUnitFacing { 0 }
 			, DeathUnitTurretFacing {}
 			, FromDeathUnit { false }

@@ -25,7 +25,7 @@ public:
 
 	static constexpr DWORD Canary = 0x12341234;
 
-	class ExtData final : public Extension<RulesClass>
+	class ExtData final : public _Extension<RulesClass>
 	{
 	public:
 		std::vector<std::vector<TechnoTypeClass*>> AITargetTypesLists;
@@ -161,7 +161,7 @@ public:
 		ValueableVector<bool> RepairBaseNodes;
 		Valueable<bool> MCVRedeploysInCampaign;
 
-		ExtData(RulesClass* OwnerObject) : Extension<RulesClass>(OwnerObject)
+		ExtData(RulesClass* OwnerObject) : _Extension<RulesClass>(OwnerObject)
 			, Storage_TiberiumIndex { -1 }
 			, InfantryGainSelfHealCap {}
 			, UnitsGainSelfHealCap {}

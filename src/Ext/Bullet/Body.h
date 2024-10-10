@@ -16,7 +16,7 @@ public:
 	static constexpr DWORD Canary = 0x2A2A2A2A;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<BulletClass>
+	class ExtData final : public _Extension<BulletClass>
 	{
 	public:
 		BulletTypeExt::ExtData* TypeExtData;
@@ -31,7 +31,7 @@ public:
 
 		PhobosTrajectory* Trajectory; // TODO: why not unique_ptr
 
-		ExtData(BulletClass* OwnerObject) : Extension<BulletClass>(OwnerObject)
+		ExtData(BulletClass* OwnerObject) : _Extension<BulletClass>(OwnerObject)
 			, TypeExtData { nullptr }
 			, FirerHouse { nullptr }
 			, CurrentStrength { 0 }

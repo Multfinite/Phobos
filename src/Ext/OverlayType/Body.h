@@ -14,14 +14,14 @@ public:
 	static constexpr DWORD Canary = 0xADF48498;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<OverlayTypeClass>
+	class ExtData final : public _Extension<OverlayTypeClass>
 	{
 	public:
 		Valueable<int> ZAdjust;
 		PhobosFixedString<32u> PaletteFile;
 		DynamicVectorClass<ColorScheme*>* Palette; // Intentionally not serialized - rebuilt from the palette file on load.
 
-		ExtData(OverlayTypeClass* OwnerObject) : Extension<OverlayTypeClass>(OwnerObject)
+		ExtData(OverlayTypeClass* OwnerObject) : _Extension<OverlayTypeClass>(OwnerObject)
 			, ZAdjust { 0 }
 			, PaletteFile {}
 			, Palette {}

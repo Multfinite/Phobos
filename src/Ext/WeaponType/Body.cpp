@@ -161,14 +161,14 @@ void WeaponTypeExt::ExtData::Serialize(T& Stm)
 
 void WeaponTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<WeaponTypeClass>::LoadFromStream(Stm);
+	_Extension<WeaponTypeClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 
 }
 
 void WeaponTypeExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<WeaponTypeClass>::SaveToStream(Stm);
+	_Extension<WeaponTypeClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

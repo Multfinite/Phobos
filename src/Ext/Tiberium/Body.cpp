@@ -28,13 +28,13 @@ void TiberiumExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 
 void TiberiumExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<TiberiumClass>::LoadFromStream(Stm);
+	_Extension<TiberiumClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 }
 
 void TiberiumExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<TiberiumClass>::SaveToStream(Stm);
+	_Extension<TiberiumClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

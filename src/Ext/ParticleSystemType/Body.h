@@ -15,12 +15,12 @@ public:
 	static constexpr DWORD Canary = 0xF9984EFE;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<ParticleSystemTypeClass>
+	class ExtData final : public _Extension<ParticleSystemTypeClass>
 	{
 	public:
 		Valueable<bool> AdjustTargetCoordsOnRotation;
 
-		ExtData(ParticleSystemTypeClass* OwnerObject) : Extension<ParticleSystemTypeClass>(OwnerObject)
+		ExtData(ParticleSystemTypeClass* OwnerObject) : _Extension<ParticleSystemTypeClass>(OwnerObject)
 			, AdjustTargetCoordsOnRotation { true }
 		{ }
 

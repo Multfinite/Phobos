@@ -162,12 +162,12 @@ public:
 
 	static constexpr DWORD Canary = 0x3B3B3B3B;
 
-	class ExtData final : public Extension<ScriptClass>
+	class ExtData final : public _Extension<ScriptClass>
 	{
 	public:
 		// Nothing yet
 
-		ExtData(ScriptClass* OwnerObject) : Extension<ScriptClass>(OwnerObject)
+		ExtData(ScriptClass* OwnerObject) : _Extension<ScriptClass>(OwnerObject)
 			// Nothing yet
 		{
 		}

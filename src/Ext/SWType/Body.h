@@ -18,7 +18,7 @@ public:
 	static constexpr DWORD Canary = 0x11111111;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<SuperWeaponTypeClass>
+	class ExtData final : public _Extension<SuperWeaponTypeClass>
 	{
 	public:
 
@@ -72,7 +72,7 @@ public:
 		Valueable<bool> UseWeeds_StorageTimer;
 		Valueable<double> UseWeeds_ReadinessAnimationPercentage;
 
-		ExtData(SuperWeaponTypeClass* OwnerObject) : Extension<SuperWeaponTypeClass>(OwnerObject)
+		ExtData(SuperWeaponTypeClass* OwnerObject) : _Extension<SuperWeaponTypeClass>(OwnerObject)
 			, Money_Amount { 0 }
 			, SW_Inhibitors {}
 			, SW_AnyInhibitor { false }

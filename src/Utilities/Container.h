@@ -29,45 +29,45 @@ enum class InitState
 
  * ==========================
 
- * Extension<T> is the parent class for the data you want to link with this instance of T
+ * _Extension<T> is the parent class for the data you want to link with this instance of T
 	( for example, [Warhead]MindControl.Permanent= should be stored in WarheadClassExt::ExtData
-	which itself should be a derivate of Extension<WarheadTypeClass> )
+	which itself should be a derivate of _Extension<WarheadTypeClass> )
 
  * ==========================
 
-	Container<TX> is the storage for all the Extension<T> which share the same T,
-	where TX is the containing class of the relevant derivate of Extension<T>. // complex, huh?
+	Container<TX> is the storage for all the _Extension<T> which share the same T,
+	where TX is the containing class of the relevant derivate of _Extension<T>. // complex, huh?
 	( for example, there is Container<WarheadTypeExt>
 	which contains all the custom data for all WarheadTypeClass instances,
 	and WarheadTypeExt itself contains just statics like the Container itself )
 
 	Requires:
 	using base_type = T;
-	const DWORD Extension<T>::Canary = (any dword value easily identifiable in a byte stream)
-	class TX::ExtData : public Extension<T> { custom_data; }
+	const DWORD _Extension<T>::Canary = (any dword value easily identifiable in a byte stream)
+	class TX::ExtData : public _Extension<T> { custom_data; }
 
 	Complex? Yes. That's partially why you should be happy these are premade for you.
  *
  */
 
 template <typename T>
-class Extension
+class _Extension
 {
 	T* AttachedToObject;
 	InitState Initialized;
 
 public:
 
-	Extension(T* const OwnerObject) : AttachedToObject { OwnerObject }, Initialized { InitState::Blank }
+	_Extension(T* const OwnerObject) : AttachedToObject { OwnerObject }, Initialized { InitState::Blank }
 	{ }
 
-	Extension(const Extension& other) = delete;
+	_Extension(const _Extension& other) = delete;
 
-	void operator=(const Extension& RHS) = delete;
+	void operator=(const _Extension& RHS) = delete;
 
-	virtual ~Extension() = default;
+	virtual ~_Extension() = default;
 
-	// the object this Extension expands
+	// the object this _Extension expands
 	T* const& OwnerObject() const
 	{
 		return this->AttachedToObject;

@@ -15,12 +15,12 @@ public:
 	static constexpr DWORD Canary = 0xEAFEEAFE;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<ParticleTypeClass>
+	class ExtData final : public _Extension<ParticleTypeClass>
 	{
 	public:
 		Valueable<int> Gas_MaxDriftSpeed;
 
-		ExtData(ParticleTypeClass* OwnerObject) : Extension<ParticleTypeClass>(OwnerObject)
+		ExtData(ParticleTypeClass* OwnerObject) : _Extension<ParticleTypeClass>(OwnerObject)
 			, Gas_MaxDriftSpeed { 2 }
 		{ }
 

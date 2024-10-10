@@ -23,7 +23,7 @@ public:
 	static constexpr size_t ExtPointerOffset = 0x6FC;
 	static constexpr bool ShouldConsiderInvalidatePointer = true;
 
-	class ExtData final : public Extension<BuildingClass>
+	class ExtData final : public _Extension<BuildingClass>
 	{
 	public:
 		BuildingTypeExt::ExtData* TypeExtData;
@@ -38,7 +38,7 @@ public:
 		OptionalStruct<int, true> CurrentLaserWeaponIndex;
 		int PoweredUpToLevel; // Distinct from UpgradeLevel, and set to highest PowersUpToLevel out of applied upgrades regardless of how many are currently applied to this building.
 
-		ExtData(BuildingClass* OwnerObject) : Extension<BuildingClass>(OwnerObject)
+		ExtData(BuildingClass* OwnerObject) : _Extension<BuildingClass>(OwnerObject)
 			, TypeExtData { nullptr }
 			, TechnoExtData { nullptr }
 			, DeployedTechno { false }

@@ -17,7 +17,7 @@ public:
 	static constexpr DWORD Canary = 0x22222222;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<WeaponTypeClass>
+	class ExtData final : public _Extension<WeaponTypeClass>
 	{
 	public:
 
@@ -59,7 +59,7 @@ public:
 		Valueable<bool> AttachEffect_IgnoreFromSameSource;
 		Valueable<bool> KickOutPassengers;
 
-		ExtData(WeaponTypeClass* OwnerObject) : Extension<WeaponTypeClass>(OwnerObject)
+		ExtData(WeaponTypeClass* OwnerObject) : _Extension<WeaponTypeClass>(OwnerObject)
 			, DiskLaser_Radius { DiskLaserClass::Radius }
 			, RadType {}
 			, Bolt_Disable1 { false }

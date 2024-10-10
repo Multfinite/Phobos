@@ -23,7 +23,7 @@ public:
 
 	static constexpr DWORD Canary = 0xABCD1595;
 
-	class ExtData final : public Extension<ScenarioClass>
+	class ExtData final : public _Extension<ScenarioClass>
 	{
 	public:
 
@@ -36,7 +36,7 @@ public:
 		std::vector<TechnoExt::ExtData*> AutoDeathObjects;
 		std::vector<TechnoExt::ExtData*> TransportReloaders; // Objects that can reload ammo in limbo
 
-		ExtData(ScenarioClass* OwnerObject) : Extension<ScenarioClass>(OwnerObject)
+		ExtData(ScenarioClass* OwnerObject) : _Extension<ScenarioClass>(OwnerObject)
 			, ShowBriefing { false }
 			, BriefingTheme { -1 }
 			, Waypoints { }

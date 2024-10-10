@@ -15,12 +15,12 @@ public:
 	static constexpr DWORD Canary = 0xAABBCCDD;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<TiberiumClass>
+	class ExtData final : public _Extension<TiberiumClass>
 	{
 	public:
 		Nullable<ColorStruct> MinimapColor;
 
-		ExtData(TiberiumClass* OwnerObject) : Extension<TiberiumClass>(OwnerObject)
+		ExtData(TiberiumClass* OwnerObject) : _Extension<TiberiumClass>(OwnerObject)
 			, MinimapColor {}
 		{ }
 

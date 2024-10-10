@@ -160,13 +160,13 @@ void AnimTypeExt::ExtData::Serialize(T& Stm)
 
 void AnimTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<AnimTypeClass>::LoadFromStream(Stm);
+	_Extension<AnimTypeClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 }
 
 void AnimTypeExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<AnimTypeClass>::SaveToStream(Stm);
+	_Extension<AnimTypeClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

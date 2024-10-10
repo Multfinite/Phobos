@@ -15,7 +15,7 @@ public:
 	static constexpr DWORD Canary = 0x11111111;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<BuildingTypeClass>
+	class ExtData final : public _Extension<BuildingTypeClass>
 	{
 	public:
 		Valueable<AffectedHouse> PowersUp_Owner;
@@ -68,7 +68,7 @@ public:
 		ValueableVector<TechnoTypeClass*> FactoryPlant_AllowTypes;
 		ValueableVector<TechnoTypeClass*> FactoryPlant_DisallowTypes;
 
-		ExtData(BuildingTypeClass* OwnerObject) : Extension<BuildingTypeClass>(OwnerObject)
+		ExtData(BuildingTypeClass* OwnerObject) : _Extension<BuildingTypeClass>(OwnerObject)
 			, PowersUp_Owner { AffectedHouse::Owner }
 			, PowersUp_Buildings {}
 			, PowerPlantEnhancer_Buildings {}

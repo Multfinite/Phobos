@@ -20,7 +20,7 @@ public:
 	static constexpr DWORD Canary = 0x55555555;
 	static constexpr size_t ExtPointerOffset = 0x34C;
 
-	class ExtData final : public Extension<TechnoClass>
+	class ExtData final : public _Extension<TechnoClass>
 	{
 	public:
 		TechnoTypeExt::ExtData* TypeExtData;
@@ -56,7 +56,7 @@ public:
 		int LastWarpInDelay;                   // Last-warp in delay for this unit, used by HasCarryoverWarpInDelay.
 		bool IsBeingChronoSphered;             // Set to true on units currently being ChronoSphered, does not apply to Ares-ChronoSphere'd buildings or Chrono reinforcements.
 
-		ExtData(TechnoClass* OwnerObject) : Extension<TechnoClass>(OwnerObject)
+		ExtData(TechnoClass* OwnerObject) : _Extension<TechnoClass>(OwnerObject)
 			, TypeExtData { nullptr }
 			, Shield {}
 			, LaserTrails {}

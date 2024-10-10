@@ -18,7 +18,7 @@ public:
 	static constexpr DWORD Canary = 0xAAAEEEEE;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<VoxelAnimTypeClass>
+	class ExtData final : public _Extension<VoxelAnimTypeClass>
 	{
 	public:
 
@@ -29,7 +29,7 @@ public:
 		NullableVector<AnimTypeClass*> SplashAnims;
 		Valueable<bool> SplashAnims_PickRandom;
 
-		ExtData(VoxelAnimTypeClass* OwnerObject) : Extension<VoxelAnimTypeClass>(OwnerObject)
+		ExtData(VoxelAnimTypeClass* OwnerObject) : _Extension<VoxelAnimTypeClass>(OwnerObject)
 			, LaserTrail_Types()
 			, ExplodeOnWater { false }
 			, Warhead_Detonate { false }

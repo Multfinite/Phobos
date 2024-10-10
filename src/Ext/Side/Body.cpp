@@ -75,13 +75,13 @@ void SideExt::ExtData::Serialize(T& Stm)
 
 void SideExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<SideClass>::LoadFromStream(Stm);
+	_Extension<SideClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 }
 
 void SideExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<SideClass>::SaveToStream(Stm);
+	_Extension<SideClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

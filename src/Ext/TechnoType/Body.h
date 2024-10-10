@@ -23,7 +23,7 @@ public:
 	static constexpr DWORD Canary = 0x11111111;
 	static constexpr size_t ExtPointerOffset = 0xDF4;
 
-	class ExtData final : public Extension<TechnoTypeClass>
+	class ExtData final : public _Extension<TechnoTypeClass>
 	{
 	public:
 		Valueable<bool> HealthBar_Hide;
@@ -258,7 +258,7 @@ public:
 		std::vector<std::vector<CoordStruct>> DeployedWeaponBurstFLHs;
 		std::vector<std::vector<CoordStruct>> EliteDeployedWeaponBurstFLHs;
 
-		ExtData(TechnoTypeClass* OwnerObject) : Extension<TechnoTypeClass>(OwnerObject)
+		ExtData(TechnoTypeClass* OwnerObject) : _Extension<TechnoTypeClass>(OwnerObject)
 			, HealthBar_Hide { false }
 			, UIDescription {}
 			, LowSelectionPriority { false }

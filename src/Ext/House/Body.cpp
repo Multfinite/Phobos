@@ -662,13 +662,13 @@ void HouseExt::ExtData::Serialize(T& Stm)
 
 void HouseExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<HouseClass>::LoadFromStream(Stm);
+	_Extension<HouseClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 }
 
 void HouseExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<HouseClass>::SaveToStream(Stm);
+	_Extension<HouseClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

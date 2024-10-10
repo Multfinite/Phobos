@@ -14,7 +14,7 @@ public:
 	static constexpr DWORD Canary = 0xEEEEEEEE;
 	static constexpr size_t ExtPointerOffset = 0x18;
 
-	class ExtData final : public Extension<AnimTypeClass>
+	class ExtData final : public _Extension<AnimTypeClass>
 	{
 	public:
 		CustomPalette Palette;
@@ -51,7 +51,7 @@ public:
 		Valueable<bool> ExtraShadow;
 		ValueableIdx<VocClass> DetachedReport;
 
-		ExtData(AnimTypeClass* OwnerObject) : Extension<AnimTypeClass>(OwnerObject)
+		ExtData(AnimTypeClass* OwnerObject) : _Extension<AnimTypeClass>(OwnerObject)
 			, Palette { CustomPalette::PaletteMode::Temperate }
 			, CreateUnit_Facing { DirType::North }
 			, CreateUnit_RandomFacing { true }

@@ -181,13 +181,13 @@ void RadSiteExt::ExtData::Serialize(T& Stm)
 
 void RadSiteExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<RadSiteClass>::LoadFromStream(Stm);
+	_Extension<RadSiteClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 }
 
 void RadSiteExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<RadSiteClass>::SaveToStream(Stm);
+	_Extension<RadSiteClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

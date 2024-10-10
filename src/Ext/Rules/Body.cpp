@@ -386,7 +386,7 @@ void RulesExt::ExtData::Serialize(T& Stm)
 
 void RulesExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<RulesClass>::LoadFromStream(Stm);
+	_Extension<RulesClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 
 	this->ReplaceVoxelLightSources();
@@ -394,7 +394,7 @@ void RulesExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 
 void RulesExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<RulesClass>::SaveToStream(Stm);
+	_Extension<RulesClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

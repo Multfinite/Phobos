@@ -19,7 +19,7 @@ public:
 	static constexpr size_t ExtPointerOffset = 0x18;
 	static constexpr bool ShouldConsiderInvalidatePointer = true;
 
-	class ExtData final : public Extension<RadSiteClass>
+	class ExtData final : public _Extension<RadSiteClass>
 	{
 	public:
 		int LastUpdateFrame;
@@ -28,7 +28,7 @@ public:
 		HouseClass* RadHouse;
 		TechnoClass* RadInvoker;
 
-		ExtData(RadSiteClass* OwnerObject) : Extension<RadSiteClass>(OwnerObject)
+		ExtData(RadSiteClass* OwnerObject) : _Extension<RadSiteClass>(OwnerObject)
 			, LastUpdateFrame { -1 }
 			, RadHouse { nullptr }
 			, RadInvoker { nullptr }

@@ -23,13 +23,13 @@ void TEventExt::ExtData::Serialize(T& Stm)
 
 void TEventExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<TEventClass>::LoadFromStream(Stm);
+	_Extension<TEventClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 }
 
 void TEventExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<TEventClass>::SaveToStream(Stm);
+	_Extension<TEventClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

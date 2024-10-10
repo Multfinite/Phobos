@@ -64,10 +64,10 @@ public:
 
 	static constexpr DWORD Canary = 0x91919191;
 
-	class ExtData final : public Extension<TEventClass>
+	class ExtData final : public _Extension<TEventClass>
 	{
 	public:
-		ExtData(TEventClass* const OwnerObject) : Extension<TEventClass>(OwnerObject)
+		ExtData(TEventClass* const OwnerObject) : _Extension<TEventClass>(OwnerObject)
 		{ }
 
 		virtual ~ExtData() = default;

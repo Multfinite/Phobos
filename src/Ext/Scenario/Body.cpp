@@ -165,13 +165,13 @@ void ScenarioExt::ExtData::Serialize(T& Stm)
 
 void ScenarioExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<ScenarioClass>::LoadFromStream(Stm);
+	_Extension<ScenarioClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 }
 
 void ScenarioExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<ScenarioClass>::SaveToStream(Stm);
+	_Extension<ScenarioClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

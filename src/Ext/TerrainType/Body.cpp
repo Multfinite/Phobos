@@ -105,14 +105,14 @@ void TerrainTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 
 void TerrainTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
 {
-	Extension<TerrainTypeClass>::LoadFromStream(Stm);
+	_Extension<TerrainTypeClass>::LoadFromStream(Stm);
 	this->Serialize(Stm);
 	this->Palette = GeneralUtils::BuildPalette(this->PaletteFile);
 }
 
 void TerrainTypeExt::ExtData::SaveToStream(PhobosStreamWriter& Stm)
 {
-	Extension<TerrainTypeClass>::SaveToStream(Stm);
+	_Extension<TerrainTypeClass>::SaveToStream(Stm);
 	this->Serialize(Stm);
 }
 

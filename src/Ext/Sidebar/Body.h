@@ -15,11 +15,11 @@ public:
 
 	static constexpr DWORD Canary = 0x51DEBA12;
 
-	class ExtData final : public Extension<SidebarClass>
+	class ExtData final : public _Extension<SidebarClass>
 	{
 	public:
 
-		ExtData(SidebarClass* OwnerObject) : Extension<SidebarClass>(OwnerObject)
+		ExtData(SidebarClass* OwnerObject) : _Extension<SidebarClass>(OwnerObject)
 		{ }
 
 		virtual ~ExtData() = default;
