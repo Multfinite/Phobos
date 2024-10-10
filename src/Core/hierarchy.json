@@ -1,0 +1,83 @@
+{
+	"AbstractClass": {
+		"AbstractTypeClass": {
+			"AITriggerTypeClass": {}
+			, "HouseTypeClass": {}
+			, "ObjectTypeClass": {
+				"AnimTypeClass": {}
+				, "BulletTypeClass": {}
+				, "IsometricTileTypeClass": {}
+				, "OverlayTypeClass": {}
+				, "ParticleSystemTypeClass": {}
+				, "ParticleTypeClass": {}
+				, "SmudgeTypeClass": {}
+				, "TechnoTypeClass": {
+					"AircraftTypeClass": {}
+					, "BuildingTypeClass": {}
+					, "InfantryTypeClass": {}
+					, "UnitTypeClass": {}
+				}
+				, "TerrainTypeClass": {}
+				, "VoxelAnimTypeClass": {}
+			}
+			, "ScriptTypeClass": {}
+			, "SideClass": {}
+			, "SuperWeaponTypeClass": {}
+			, "TagTypeClass": {}
+			, "TaskForceClass": {}
+			, "TeamTypeClass": {}
+			, "TiberiumClass": {}
+			, "WarheadTypeClass": {}
+			, "WeaponTypeClass": {}
+		}
+		, "AirstrikeClass": {}
+		, "AlphaShapeClass": {}
+		, "BombClass": {}
+		, "CaptureManagerClass": {}
+		, "CellClass": {}
+		, "DiskLaserClass": {}
+		, "EMPulseClass": {}
+		, "FactoryClass": {}
+		, "HouseClass": {}
+		, "LightSourceClass": {}
+		, "NeuronClass": {}
+		, "ObjectClass": {
+			"AnimClass": {}
+			, "BuildingLightClass": {}
+			, "BulletClass": {}
+			, "MissionClass": {
+				"RadioClass": {
+					"TechnoClass": {
+						"BuildingClass": {}
+						, "FootClass": {
+							"AircraftClass": {}
+							, "InfantryClass": {}
+							, "UnitClass": {}
+						}
+					}					
+				}
+			}
+			, "OverlayClass": {}
+			, "ParticleClass": {}
+			, "ParticleSystemClass": {}
+			, "SmudgeClass": {}
+			, "TerrainClass": {}
+			, "VeinholeMonsterClass": {}
+			, "VoxelAnimClass": {}
+			, "WaveClass": {}
+		}
+		, "ParasiteClass": {}
+		, "RadSiteClass": {}
+		, "ScriptClass": {}
+		, "SlaveManagerClass": {}
+		, "SpawnManagerClass": {}
+		, "SuperClass": {}
+		, "TacticalClass": {}
+		, "TActionClass": {}
+    , "TeamClass":  {}
+		, "TemporalClass": {}
+		, "TEventClass": {}
+		, "TriggerClass": {}
+		, "WaypointPathClass": {}
+	}
+}

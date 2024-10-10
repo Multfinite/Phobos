@@ -55,10 +55,10 @@ public:
 	using value_type = T;
 	using base_type = std::remove_pointer_t<T>;
 
-	Valueable() = default;
-	explicit Valueable(T value) noexcept(noexcept(T { std::move(value) })) : Value(std::move(value)) { }
-	Valueable(Valueable const& other) = default;
-	Valueable(Valueable&& other) = default;
+	constexpr Valueable() = default;
+	constexpr explicit Valueable(T value) noexcept(noexcept(T { std::move(value) })) : Value(std::move(value)) { }
+	constexpr Valueable(Valueable const& other) = default;
+	constexpr Valueable(Valueable&& other) = default;
 
 	Valueable& operator = (Valueable const& value) = default;
 	Valueable& operator = (Valueable&& value) = default;
