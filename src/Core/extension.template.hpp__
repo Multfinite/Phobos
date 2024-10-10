@@ -19,3 +19,17 @@ template<> struct Proxy<${x.Class}> : public ${x.ParentClass}
 	__PROXY_MEMORY_MANAGEMENT
 };
 
+template<> struct Formatter<Extension<${x.Class}>>
+{
+	using type = Extension<${x.Class}>;
+
+	static constexpr auto chain() noexcept
+	{
+		auto const chain = make_chain(static_cast<type*>(nullptr));
+		return chain;
+	}
+
+	__FORMATTER_BODY_GENERIC(type)
+};
+
+__EXTENSION_GENERIC_FORMATTING(${x.Class})

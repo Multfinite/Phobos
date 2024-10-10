@@ -38,8 +38,23 @@ struct Proxy;
 
 /*!
 * @author Multfinite
-* @brief Serialization, deserialization, parsing are detached from Extension<TBase> and Proxy<TBase>
+* @brief Contains the chain of fields for processing. It should be used for formatting and parsing.
 * @brief Formatter provides all these functions and metadata for it.
+* @brief See make_chain(...) functions and its usage.
+* @param T Any type that should be parsed in any case.
 */
-template<typename TBase>
+template<typename T>
 struct Formatter;
+
+template<typename TFormatter>
+concept IsFormatter = requires(
+	  typename TFormatter::type& o
+	, std::ostream& out
+	, std::istream& in
+	, CCINIClass& ini, INI_EX& parser, std::string const& section, std::string const& key
+) {
+	typename TFormatter::type;
+	TFormatter::parse(o, ini, parser, section, key);
+	TFormatter::serialize(out, o);
+	TFormatter::deserialize(in, o);
+};

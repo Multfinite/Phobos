@@ -3,6 +3,7 @@
 #include <AbstractClass.h>
 
 #include "core.extensions.hpp"
+#include "core.formatting.hpp"
 
 template<> class Extension<AbstractClass> : public IExtension
 {
@@ -18,3 +19,18 @@ template<> struct Proxy<AbstractClass> : public AbstractClass
 	__PROXY_BODY(AbstractClass)
 	__PROXY_MEMORY_MANAGEMENT
 };
+
+template<> struct Formatter<Extension<AbstractClass>>
+{
+	using type = Extension<AbstractClass>;
+
+	static constexpr auto chain() noexcept
+	{
+		auto const chain = make_chain(static_cast<type*>(nullptr));
+		return chain;
+	}
+
+	__FORMATTER_BODY(type)
+};
+
+__EXTENSION_GENERIC_FORMATTING(AbstractClass)

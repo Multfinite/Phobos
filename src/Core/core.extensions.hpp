@@ -86,10 +86,16 @@ enum struct ExtensionIdentifier : DWORD
 	, CellClass = 0x91828291
 };
 
+#define __EXTENSION_BODY_PERMANENT(BaseClass) \
+	friend std::ostream& operator<< (std::ostream& s, Extension<BaseClass> const& o); \
+	friend std::istream& operator>>(std::istream& s, Extension<BaseClass>& o); \
+\
+
 /*!
 * @brief Generic implementation of common functionality and metadata for Extension<T = BaseClass>
 */
 #define __EXTENSION_BODY(BaseClass, PointerOffset) \
+	__EXTENSION_BODY_PERMANENT(BaseClass) \
 public: \
 	using base_type = BaseClass; \
 	static constexpr DWORD Identifier = static_cast<DWORD>(ExtensionIdentifier::BaseClass); \
@@ -104,6 +110,7 @@ private: \
 * @brief Generic implementation of common functionality and metadata for Extension<T = BaseClass>
 */
 #define __EXTENSION_BODY_MAPPED(BaseClass) \
+	__EXTENSION_BODY_PERMANENT(BaseClass) \
 public: \
 	using base_type = BaseClass; \
 	static constexpr DWORD Identifier = static_cast<DWORD>(ExtensionIdentifier::BaseClass); \
