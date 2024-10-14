@@ -19,35 +19,10 @@ public:
 	class ExtData final : public _Extension<TeamClass>
 	{
 	public:
-		int WaitNoTargetAttempts;
-		double NextSuccessWeightAward;
-		int IdxSelectedObjectFromAIList;
-		double CloseEnough;
-		int Countdown_RegroupAtLeader;
-		int MoveMissionEndMode;
-		int WaitNoTargetCounter;
-		CDTimerClass WaitNoTargetTimer;
-		CDTimerClass ForceJump_Countdown;
-		int ForceJump_InitialCountdown;
-		bool ForceJump_RepeatMode;
-		FootClass* TeamLeader;
-		std::vector<ScriptClass*> PreviousScriptList;
+
 
 		ExtData(TeamClass* OwnerObject) : _Extension<TeamClass>(OwnerObject)
-			, WaitNoTargetAttempts { 0 }
-			, NextSuccessWeightAward { 0 }
-			, IdxSelectedObjectFromAIList { -1 }
-			, CloseEnough { -1 }
-			, Countdown_RegroupAtLeader { -1 }
-			, MoveMissionEndMode { 0 }
-			, WaitNoTargetCounter { 0 }
-			, WaitNoTargetTimer { }
-			, ForceJump_Countdown { }
-			, ForceJump_InitialCountdown { -1 }
-			, ForceJump_RepeatMode { false }
-			, TeamLeader { nullptr }
-			, PreviousScriptList { }
-		{ }
+
 
 		virtual ~ExtData() = default;
 

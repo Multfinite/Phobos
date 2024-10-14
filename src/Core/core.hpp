@@ -58,3 +58,43 @@ concept IsFormatter = requires(
 	TFormatter::serialize(out, o);
 	TFormatter::deserialize(in, o);
 };
+
+#pragma region Formatting
+
+#include <type_traits>
+#include <concepts>
+#include <Utilities/INIParser.h>
+
+
+
+/*!
+* @author Multfinite
+* @brief Parse object from INI file at specific section with specific key
+*/
+template<typename T, bool Allocate = true>
+void parse(T& data, CCINIClass& ini, INI_EX& parser, std::string const& section, std::string const& key);
+
+/*!
+* @author Mulfinite
+* @brief Save object binary to stream
+*/
+template<typename T>
+T const& serialize(T const& data, std::ostream& stream);
+
+/*!
+* @author Multfinite
+* @brief Load object from binary stream
+*/
+template<typename T>
+T& deserialize(T& data, std::istream& stream);
+
+/*!
+* @author Multfinite
+* @brief Read objects of T as enumerable list
+*/
+template<typename T>
+void read_types();
+
+
+
+#pragma regionend
