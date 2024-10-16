@@ -26,16 +26,16 @@ struct entry_data
 
 	constexpr void parse(base_type& base, CCINIClass& ini, INI_EX& parser, std::string const& section, std::string const& key)
 	{
-		std::string const key_ = sizeof(Key) > 0 ? (key + "." + std::string(Key)) : std::string(Key);
-		formatter_type::parse(base.*Member, ini, parser, section, key_);
+		std::string const key_ = !key.empty() ? (key + "." + std::string(Key)) : std::string(Key);
+		parse(base.*Member, ini, parser, section, key_);
 	}
 	constexpr void serialize(base_type const& base, std::ostream& stream)
 	{
-		formatter_type::serialize(base.*Member, stream);
+		stream << base.*Member;
 	}
 	constexpr void deserialize(base_type& base, std::istream& stream)
 	{
-		formatter_type::deserialize(base.*Member, stream);
+		stream >> base.*Member;
 	}
 };
 

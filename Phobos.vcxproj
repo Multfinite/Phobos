@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ShowAllFiles>true</ShowAllFiles>
@@ -184,7 +184,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\core.extensions.hpp" />
+    <ClInclude Include="src\Core\core.formatting.hpp" />
+    <ClInclude Include="src\Core\core.formatting.impl.hpp" />
     <ClInclude Include="src\Core\core.hpp" />
+    <ClInclude Include="src\Core\core.parsing.hpp" />
     <ClInclude Include="src\Core\extension.abstract.hpp" />
     <ClInclude Include="src\Core\extension.abstract_type.hpp" />
     <ClInclude Include="src\Core\extension.aircraft.hpp" />
