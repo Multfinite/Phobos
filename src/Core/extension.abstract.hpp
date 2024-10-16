@@ -4,6 +4,7 @@
 
 #include "core.extensions.hpp"
 #include "core.formatting.hpp"
+#include "core.formatting.impl.hpp"
 
 template<> class Extension<AbstractClass> : public IExtension
 {
@@ -30,7 +31,7 @@ template<> struct Formatter<Extension<AbstractClass>>
 		return chain;
 	}
 
-	__FORMATTER_BODY(type)
+	__FORMATTER_BODY_GENERIC(type)
 };
 
 __EXTENSION_GENERIC_FORMATTING(AbstractClass)

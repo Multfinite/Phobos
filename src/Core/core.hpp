@@ -86,4 +86,11 @@ T const& serialize(T const& data, std::ostream& stream);
 template<typename T>
 T& deserialize(T& data, std::istream& stream);
 
+/*!
+* @author Multfinite
+* @brief Read objects of T as enumerable list
+*/
+template<typename T>
+void read_types();
+
 #pragma endregion

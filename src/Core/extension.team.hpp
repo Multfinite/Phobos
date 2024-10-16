@@ -21,3 +21,18 @@ template<> struct Proxy<TeamClass> : public TeamClass
 	__PROXY_MEMORY_MANAGEMENT
 };
 
+template<> struct Formatter<Extension<TeamClass>>
+{
+	using type = Extension<TeamClass>;
+
+	static constexpr auto chain() noexcept
+	{
+		auto const chain = make_chain(static_cast<type*>(nullptr)
+		);
+		return chain;
+	}
+
+	__FORMATTER_BODY_GENERIC(type)
+};
+
+__EXTENSION_GENERIC_FORMATTING(TeamClass)
