@@ -39,6 +39,8 @@ enum struct ExtensionIdentifier : DWORD
 	, SmudgeTypeClass = 0xFFFFFF33
 	, SpawnManageClass = 0xFFFFFF34
 	, SuperClass = 0xFFFFFF35
+	, SuperWeaponTypeClass = 0xFFFFFF36
+	, FootClass = 0xFFFFFF37
 	, TacticalClass = 0xFFFFFF38
 	, TagTypeClass = 0xFFFFFF39
 	, TaskForceClass = 0xFFFFFF40
@@ -52,6 +54,7 @@ enum struct ExtensionIdentifier : DWORD
 	, VeinholeMonsterClass = 0xFFFFFF48
 	, WaveClass = 0xFFFFFF49
 	, WaypointTypeClass = 0xFFFFFF50
+	, WaypointPathClass = 0xFFFFFF51
 
 	/* Old definitions */
 
